@@ -15,7 +15,7 @@ const Home = () => {
     console.log('API URL:', process.env.REACT_APP_API_URL);
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${process.env.PUBLIC_URL}/posts${cat}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/posts${cat}`);
         console.log('Received data:', res.data);
         setPosts(res.data);
       } catch (err) {
@@ -57,7 +57,7 @@ const Home = () => {
       {posts.map(post => (
         <div className="post" key={post.id}>
           <div className="img">
-            <img src={`${process.env.PUBLIC_URL}/upload/${post.img}`} alt="" />
+            <img src={`${process.env.REACT_APP_API_URL}/upload/${post.img}`} alt="" />
           </div>
             <div className="content">
               <Link className='link' to={`/post/${post.id}`}>
