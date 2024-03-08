@@ -15,9 +15,15 @@ const Home = () => {
     console.log('API URL:', process.env.REACT_APP_API_URL);
     const fetchData = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/posts${cat}`);
+        const res = await axios.get(`${process.env.PUBLIC_URL}/posts${cat}`);
         console.log('Received data:', res.data);
         setPosts(res.data);
+        if (Array.isArray(res.data)) {
+          setPosts(res.data);
+        } else {
+          console.error('Invalid data format:', typeof res.data);
+          setError('Invalid data format. Please try again later.');
+        }
       } catch (err) {
         console.error('Error fetching data:', err);
         setError('Error fetching data. Please try again later.');
