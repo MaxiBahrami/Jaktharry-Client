@@ -17,9 +17,9 @@ const Home = () => {
         const res = await axios.get(`/posts${cat}`);
         setPosts(res.data);
       } catch (err) {
-        console.log(err);
-        setError("Error fetching data");
-      } finally {
+        console.error(err); // Log the error for debugging purposes
+      setError("Error fetching data. Please try again later."); // Set a user-friendly error message
+   } finally {
         setLoading(false);
       }
     };
