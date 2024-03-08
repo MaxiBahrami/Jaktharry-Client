@@ -16,31 +16,32 @@ const Single = () => {
   const postId = location.pathname.split("/")[2]
   const {currentUser} = useContext(AuthContext)
 
-  useEffect(()=>{
-    const fetchData = async()=>{
-      try{
-        const res = await axios.get(`/posts/${postId}`);
-        setPost(res.data)
-      }catch(err){
-        console.log(err)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/posts/${postId}`);
+        setPost(response.data);
+      } catch (error) {
+        console.log(error);
         setError("Error fetching post data");
-      }
-      finally {
+      } finally {
         setLoading(false);
       }
     };
+  
     fetchData();
   }, [postId]);
 
-  const handleDelete = async ()=>{
-    try{
-      const res = await axios.delete(`/posts/${postId}`);
-      navigate("/")
-    }catch(err){
-      console.log(err)
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/posts/${postId}`);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
       setError("Error deleting post");
     }
-  }
+  };
+  
   if (loading) {
     return <p>Loading...</p>;
   }
