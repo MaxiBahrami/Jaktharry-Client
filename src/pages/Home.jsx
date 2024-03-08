@@ -15,11 +15,12 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const res = await axios.get(`/posts${cat}`);
+        console.log('Received data:', res.data);
         setPosts(res.data);
       } catch (err) {
-        console.error(err); // Log the error for debugging purposes
-      setError("Error fetching data. Please try again later."); // Set a user-friendly error message
-   } finally {
+        console.error('Error fetching data:', err);
+        setError('Error fetching data. Please try again later.');
+      } finally {
         setLoading(false);
       }
     };
