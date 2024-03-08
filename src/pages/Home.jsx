@@ -12,6 +12,7 @@ const Home = () => {
   const cat = useLocation().search;
 
   useEffect(() => {
+    console.log('API URL:', process.env.REACT_APP_API_URL);
     const fetchData = async () => {
       try {
         const res = await axios.get(`${process.env.REACT_APP_API_URL}/posts${cat}`);

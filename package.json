@@ -42,6 +42,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "https://jaktharry-app-130a026cb2e4.herokuapp.com/api/"
+  }
 }
