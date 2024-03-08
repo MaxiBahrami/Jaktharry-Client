@@ -11,10 +11,14 @@ const Home = () => {
 
   const cat = useLocation().search;
 
+  // Define the API URL
+  const apiUrl = 'https://jaktharry-app-130a026cb2e4.herokuapp.com/api';
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/posts${cat}`);
+        // Use the full URL for API requests
+        const res = await axios.get(`${apiUrl}/posts${cat}`);
         setPosts(res.data);
       } catch (err) {
         console.log(err);
@@ -40,7 +44,7 @@ const Home = () => {
           {posts.map((post) => (
             <div className="post" key={post.id}>
               <div className="img">
-                <img src={`../upload/${post.img}`} alt="" />
+                <img src={`../upload/${post.img}`} alt={`${post.title}`}  />
               </div>
               <div className="content">
                 <Link className="link" to={`/post/${post.id}`}>
