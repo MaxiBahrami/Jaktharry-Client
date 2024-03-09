@@ -10,12 +10,13 @@ const Home = () => {
   const navigate = useNavigate();
 
   const cat = useLocation().search;
+  const catQueryParam = cat ? `?${cat}` : '';
 
   useEffect(() => {
   console.log('API URL:', process.env.REACT_APP_API_URL);
   const fetchData = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/posts${cat}`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/posts${catQueryParam}`);
       console.log('Received data:', res.data);
       setPosts(res.data);
     } catch (err) {
