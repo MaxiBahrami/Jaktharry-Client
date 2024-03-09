@@ -10,24 +10,30 @@ const Home = () => {
   const navigate = useNavigate();
 
   const cat = useLocation().search;
-  const catQueryParam = cat ? `?${cat}` : '';
+  const catQueryParam = cat ? `?${encodeURIComponent(cat)}` : '';
 
   useEffect(() => {
-  console.log('API URL:', process.env.REACT_APP_API_URL);
-  const fetchData = async () => {
-    try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/posts${catQueryParam}`);
-      console.log('Received data:', res.data);
-      setPosts(res.data);
-    } catch (err) {
-      console.error('Error fetching data:', err);
-      setError('Error fetching data. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchData();
-}, [cat]);
+    console.log('API URL:', process.env.REACT_APP_API_URL);
+    console.log('Query Parameter:', cat);
+
+    const fetchData = async () => {
+      try {
+        const apiUrl = `${process.env.REACT_APP_API_URL}/posts${catQueryParam}`;
+        console.log('Complete API URL:', apiUrl);
+
+        const res = await axios.get(apiUrl);
+        console.log('Received data:', res.data);
+        setPosts(res.data);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Error fetching data. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [cat, catQueryParam]);
 
   const truncateText = (text, limit) => {
     // Find the second occurrence of a dot (.)
