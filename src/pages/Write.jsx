@@ -15,13 +15,13 @@ const Write = () => {
   const [title, setTitle] = useState(state?.title || "");
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.cat || "");
-  // const [lokaltOptions, setLokaltOptions] = useState([]);
+  const [lokaltOptions, setLokaltOptions] = useState([]);
 
   const upload = async ()=>{
     try{
       const formData = new FormData();
       formData.append("file", file);
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/upload`, formData);
+      const res = await axios.post("/upload", formData);
       return res.data
     }catch(err){
       console.log(err);
@@ -34,13 +34,13 @@ const Write = () => {
       const imgUrl = await upload(); // Wait for the result of the upload function
   
       state
-        ? await axios.put(`${process.env.REACT_APP_API_URL}/posts/${state.id}`, {
+        ? await axios.put(`/posts/${state.id}`, {
             title,
             desc: value,
             cat,
             img: file ? imgUrl : "",
           })
-        : await axios.post(`${process.env.REACT_APP_API_URL}/posts/`, {
+        : await axios.post(`/posts/`, {
             title,
             desc: value,
             cat,
@@ -53,17 +53,17 @@ const Write = () => {
       console.log(err);
     }
 
-  //   const handleCatChange = (e) => {
-  //     setCat(e.target.value);
+    const handleCatChange = (e) => {
+      setCat(e.target.value);
   
-  //     // Check if the selected category is "lokalt" and update the options accordingly
-  //     if (e.target.value === 'lokalt') {
-  //       setLokaltOptions(['Option 1', 'Option 2', 'Option 3']);
-  //     } else {
-  //       // If the category is not "lokalt", reset the options
-  //       setLokaltOptions([]);
-  //     }
-  // }
+      // Check if the selected category is "lokalt" and update the options accordingly
+      if (e.target.value === 'lokalt') {
+        setLokaltOptions(['Option 1', 'Option 2', 'Option 3']);
+      } else {
+        // If the category is not "lokalt", reset the options
+        setLokaltOptions([]);
+      }
+  }
 }
 
   return (
@@ -106,11 +106,11 @@ const Write = () => {
             {cat === 'lokalt' && (
               <div className="cat">
               <p className="">Choose from the following options:</p>
-              {/* <ul>
+              <ul>
                 {lokaltOptions.map((option, index) => (
                 <li key={index}>{option}</li>
             ))}
-            </ul> */}
+            </ul>
           </div>
         )}
           </div>
