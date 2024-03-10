@@ -19,7 +19,7 @@ const Single = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`/posts/${postId}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/posts/${postId}`);
         setPost(response.data);
       } catch (error) {
         console.log(error);
@@ -34,7 +34,7 @@ const Single = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/posts/${postId}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/posts/${postId}`);
       navigate("/");
     } catch (err) {
       console.log(err);
@@ -55,7 +55,7 @@ const Single = () => {
   return (
     <div className="single">
       <div className="content">
-        <img src={`../upload/${post?.img}`}   alt=""  />
+        <img src={`/upload/${post?.img}`}   alt=""  />
         <div className="user">
           {post.userImage && <img
             src={post.userImage}
