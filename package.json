@@ -44,7 +44,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "jaktharry-app-130a026cb2e4.herokuapp.com",
+  "proxy": "https://jaktharry-app-130a026cb2e4.herokuapp.com",
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   },
