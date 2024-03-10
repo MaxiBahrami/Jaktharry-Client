@@ -46,7 +46,6 @@
   },
   "proxy": "https://jaktharry-app-130a026cb2e4.herokuapp.com",
   "devDependencies": {
-    "@babel/plugin-proposal-private-methods": "^7.18.6"
   },
   "babel": {
     "plugins": [
