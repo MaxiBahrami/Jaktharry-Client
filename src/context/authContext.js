@@ -7,13 +7,25 @@ export const AuthContextProvider = ({children})=>{
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("user")|| null))
 
   const login = async(inputs)=>{
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, inputs);
-    setCurrentUser(res.data);
+    try {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, inputs);
+      setCurrentUser(res.data);
+      return res.data; // Return the response data
+    } catch (error) {
+      console.error('Error during login:', error);
+      // Handle the error (e.g., display an error message to the user)
+    }
   };
 
   const logout = async(inputs)=>{
-    await axios.post(`${process.env.REACT_APP_API_URL}/auth/logout`);
-    setCurrentUser(null);
+    try {
+      await axios.post(`${process.env.REACT_APP_API_URL}/auth/logout`);
+      setCurrentUser(null);
+      return true; // Indicate successful logout
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Handle the error (e.g., display an error message to the user)
+    }
   };
 
   useEffect(()=>{

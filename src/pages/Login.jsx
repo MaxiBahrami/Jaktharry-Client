@@ -35,9 +35,9 @@ const Login = () => {
     <Container className='auth'>
       <h1>Logga in</h1>
       <form >
-        <input required type="text" placeholder='Användarnamn ' name="username" onChange={handleChange}/>
-        <input required type="password " placeholder='Lösenord' name="password" onChange={handleChange}/>
-        <Button onClick={handleSubmit}>Logga in</Button>
+        <input required type="text" id="username" placeholder='Användarnamn ' name="username" onChange={handleChange}/>
+        <input required type="password " id="password" placeholder='Lösenord' name="password" onChange={handleChange}/>
+        <Button type="submit" onClick={handleSubmit}>Logga in</Button>
         {err && <p>{err}</p>}
         <span>Har du inget konto?.. <Link to="/register">Registrera</Link></span>
       </form>
