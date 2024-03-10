@@ -53,17 +53,17 @@ const Write = () => {
       console.log(err);
     }
 
-    const handleCatChange = (e) => {
-      setCat(e.target.value);
+  //   const handleCatChange = (e) => {
+  //     setCat(e.target.value);
   
-      // Check if the selected category is "lokalt" and update the options accordingly
-      if (e.target.value === 'lokalt') {
-        setLokaltOptions(['Option 1', 'Option 2', 'Option 3']);
-      } else {
-        // If the category is not "lokalt", reset the options
-        setLokaltOptions([]);
-      }
-  }
+  //     // Check if the selected category is "lokalt" and update the options accordingly
+  //     if (e.target.value === 'lokalt') {
+  //       setLokaltOptions(['Option 1', 'Option 2', 'Option 3']);
+  //     } else {
+  //       // If the category is not "lokalt", reset the options
+  //       setLokaltOptions([]);
+  //     }
+  // }
 }
 
   return (
