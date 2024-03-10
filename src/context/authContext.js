@@ -13,7 +13,7 @@ export const AuthContextProvider = ({children})=>{
       return res.data; // Return the response data
     } catch (error) {
       console.error('Error during login:', error);
-      // Handle the error (e.g., display an error message to the user)
+      throw error; // Re-throwing the error to handle it in the component
     }
   };
 
