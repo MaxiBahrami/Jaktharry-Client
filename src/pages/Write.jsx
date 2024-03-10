@@ -15,7 +15,7 @@ const Write = () => {
   const [title, setTitle] = useState(state?.title || "");
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.cat || "");
-  const [lokaltOptions, setLokaltOptions] = useState([]);
+  // const [lokaltOptions, setLokaltOptions] = useState([]);
 
   const upload = async ()=>{
     try{
