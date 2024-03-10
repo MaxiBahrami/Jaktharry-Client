@@ -21,7 +21,7 @@ const Write = () => {
     try{
       const formData = new FormData();
       formData.append("file", file);
-      const res = await axios.post("/upload", formData);
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/upload`, formData);
       return res.data
     }catch(err){
       console.log(err);
@@ -34,13 +34,13 @@ const Write = () => {
       const imgUrl = await upload(); // Wait for the result of the upload function
   
       state
-        ? await axios.put(`/posts/${state.id}`, {
+        ? await axios.put(`${process.env.REACT_APP_API_URL}/posts/${state.id}`, {
             title,
             desc: value,
             cat,
             img: file ? imgUrl : "",
           })
-        : await axios.post(`/posts/`, {
+        : await axios.post(`${process.env.REACT_APP_API_URL}/posts/`, {
             title,
             desc: value,
             cat,
