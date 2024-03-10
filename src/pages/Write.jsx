@@ -106,11 +106,11 @@ const Write = () => {
             {cat === 'lokalt' && (
               <div className="cat">
               <p className="">Choose from the following options:</p>
-              <ul>
+              {/* <ul>
                 {lokaltOptions.map((option, index) => (
                 <li key={index}>{option}</li>
             ))}
-            </ul>
+            </ul> */}
           </div>
         )}
           </div>
