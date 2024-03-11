@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Menu from "../components/Menu"
+import Menu from "../components/Menu";
 import axios from "axios";
 import moment from "moment";
 import {AuthContext} from "../context/authContext.js";
@@ -65,7 +65,8 @@ const Single = () => {
             <span>{post.username}</span>
             <p>Posted {moment(post.date).fromNow()}</p>
           </div>
-          {currentUser.username === post.username && <div className="edit">
+          {currentUser.username === post.username && (
+          <div className="edit">
             <Link to={`/write?edit=2`} state={post}>
               <img
                 src="https://logowik.com/content/uploads/images/888_edit.jpg"
@@ -76,13 +77,15 @@ const Single = () => {
               src="https://cdn.iconscout.com/icon/free/png-256/free-delete-2902143-2411575.png"
               alt=""
             />
-          </div>}
+          </div>
+          )}
         </div>
         <h1>{post.title}</h1>
         <p>{post.desc}</p>
          {/* Render each paragraph separately */}
       {paragraphs.map((paragraph, index) => (
-      <p key={index} dangerouslySetInnerHTML={{ __html: paragraph.replace(/\n/g, '<br />') }} />
+      <p key={index} 
+      dangerouslySetInnerHTML={{ __html: paragraph.replace(/\n/g, '<br />') }} />
     ))}
         
       </div>
