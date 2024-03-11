@@ -14,8 +14,8 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(process.env.REACT_APP_API_URL);
         const apiUrl = `${process.env.REACT_APP_API_URL}/posts${cat}`;
-        console.log('API URL:', apiUrl);
   
         const res = await axios.get(apiUrl);
         console.log('Received data:', res.data);
