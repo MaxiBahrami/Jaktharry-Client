@@ -22,7 +22,7 @@ const Menu = ({cat}) => {
   return (
     <Container className='menu'>
       <h1>Andra nyheter som du kan gilla</h1>
-      {posts.map(post=>(
+      {posts.map((post)=>(
         <div className="post" key={post.id}>
           <img src={`../upload/${post?.img}`} alt="" />
           <h2>{post.title}</h2>
