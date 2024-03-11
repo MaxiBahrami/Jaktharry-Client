@@ -14,16 +14,15 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(process.env.REACT_APP_API_URL);
         const apiUrl = `${process.env.REACT_APP_API_URL}/posts${cat}`;
-  
+        console.log(apiUrl); // Add this line
         const res = await axios.get(apiUrl);
-        console.log('Received data:', res.data);
-  
         setPosts(res.data);
+
     } catch (err) {
       console.error('Error fetching data:', err);
       setError('Error fetching data. Please try again later.');
+
     } finally {
       setLoading(false);
     }
