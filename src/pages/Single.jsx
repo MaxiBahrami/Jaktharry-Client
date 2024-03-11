@@ -49,7 +49,7 @@ const Single = () => {
   if (error) {
     return <p>Error: {error}</p>;
   }
-  // const paragraphs = post.text ? post.text.split('.') : [];
+  const paragraphs = post.text ? post.text.split('.') : [];
   console.log('post.text:', post.text);
 
   return (
@@ -82,13 +82,12 @@ const Single = () => {
         </div>
         <h1>{post.title}</h1>
         <p>{post.desc}</p>
-        <p>{post.text}</p>
          {/* Render each paragraph separately */}
-      {/* {paragraphs.map((paragraph, index) => (
+      {paragraphs.map((paragraph, index) => (
       <p key={index} 
       dangerouslySetInnerHTML={{ __html: paragraph.replace(/\n/g, '<br />') }} />
     ))}
-         */}
+        
       </div>
       <Menu cat={post.cat}/>
     </div>
