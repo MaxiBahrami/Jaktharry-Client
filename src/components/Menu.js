@@ -8,7 +8,7 @@ const Menu = ({cat}) => {
   useEffect(()=>{
     const fetchData = async()=>{
       try{
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/posts/?cat=${cat}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/?cat=${cat}`);
         setPosts(res.data)
       }catch(err){
         console.log(err)

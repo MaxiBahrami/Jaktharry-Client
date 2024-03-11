@@ -8,7 +8,7 @@ export const AuthContextProvider = ({children})=>{
 
   const login = async (inputs) => {
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, inputs);
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, inputs);
       setCurrentUser(res.data);
     } catch (error) {
       // Handle error (e.g., show a message to the user)
@@ -17,7 +17,7 @@ export const AuthContextProvider = ({children})=>{
   };
 
   const logout = async(inputs)=>{
-    await axios.post(`${process.env.REACT_APP_API_URL}/auth/logout`);
+    await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/logout`);
     setCurrentUser(null);
   };
 

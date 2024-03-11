@@ -19,7 +19,7 @@ const Single = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/posts/${postId}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/${postId}`);
         setPost(response.data);
       } catch (error) {
         console.log(error);
@@ -34,7 +34,7 @@ const Single = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/posts/${postId}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/posts/${postId}`);
       navigate("/");
     } catch (err) {
       console.log(err);

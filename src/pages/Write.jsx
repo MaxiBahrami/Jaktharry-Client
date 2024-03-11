@@ -34,13 +34,13 @@ const Write = () => {
       const imgUrl = await upload(); // Wait for the result of the upload function
   
       state
-        ? await axios.put(`/posts/${state.id}`, {
+        ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
             title,
             desc: value,
             cat,
             img: file ? imgUrl : "",
           })
-        : await axios.post(`/posts/`, {
+        : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
             title,
             desc: value,
             cat,
