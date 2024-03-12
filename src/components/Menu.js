@@ -1,9 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Container, Button} from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const Menu = ({cat}) => {
-  const [posts,setPosts] = useState([])
+  const [posts,setPosts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(()=>{
     const fetchData = async()=>{
@@ -18,6 +20,10 @@ const Menu = ({cat}) => {
     fetchData();
   }, [cat]);
 
+  const handleClick = (postId) => {
+    // Navigate to the single post page with the clicked post ID
+    navigate(`/post/${postId}`);
+  };
 
   return (
     <Container className='menu'>
@@ -26,7 +32,7 @@ const Menu = ({cat}) => {
         <div className="post" key={post.id}>
           <img src={`../upload/${post?.img}`} alt="" />
           <h2>{post.title}</h2>
-          <Button>Läs mer</Button>
+          <Button onClick={() => handleClick(post.id)}>Läs mer</Button>
         </div>
       ))}
     </Container>

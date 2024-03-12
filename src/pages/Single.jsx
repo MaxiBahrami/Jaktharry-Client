@@ -50,7 +50,21 @@ const Single = () => {
   if (error) {
     return <p>Error: {error}</p>;
   }
-  const paragraphs = post.text ? post.text.split('.') : [];
+
+  const splitTextAfterThirdDot = (text) => {
+    const sentences = text.split('.');
+  
+    // Split the array into groups of three sentences
+    const groupedSentences = [];
+    for (let i = 0; i < sentences.length; i += 4) {
+      const group = sentences.slice(i, i + 4).join('.');
+      groupedSentences.push(group);
+    }
+  
+    return groupedSentences;
+  };
+
+  const paragraphs = post.text ? splitTextAfterThirdDot(post.text) : [];
   console.log('post.text:', post.text);
 
   return (
