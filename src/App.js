@@ -43,7 +43,7 @@ const router =createBrowserRouter([
     element: <Layout/>,
     children: [
       { path: "/", element: <Home /> }, 
-      { path: "/write", element: <Write /> }, 
+      { path: "/write", element: <PrivateRoute path="/write" element={<Write />} /> }, 
       { path: "/post/:id", element: <Single /> }, 
     ],
   },
