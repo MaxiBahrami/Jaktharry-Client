@@ -17,6 +17,9 @@ const Single = () => {
   const {currentUser} = useContext(AuthContext)
 
   useEffect(() => {
+
+    const postId = location.pathname.split("/")[2];
+  console.log('postId:', postId);
     const fetchData = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/${postId}`);

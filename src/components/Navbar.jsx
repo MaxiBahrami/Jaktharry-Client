@@ -38,7 +38,7 @@ function CustomNavbar() {
             ) : (
               <Link className="nav-link" to="/login">loggaIN</Link>
             ) }
-            <Link to="/write" className="nav-link write">Skriva</Link>
+            <Link to="/Write" className="nav-link write">Skriva</Link>
           </Nav>
         </Navbar.Collapse>
         </Container>

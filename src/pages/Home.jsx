@@ -15,7 +15,6 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts${cat}`;
-        console.log(apiUrl); // Add this line
         const res = await axios.get(apiUrl);
         setPosts(res.data);
 

@@ -7,14 +7,14 @@ import {
   Routes,
 } from "react-router-dom";
 import Register from "./pages/Register";
-import Login from "./pages/Login"
-import Write from "./pages/Write"
-import Home from "./pages/Home"
-import Single from "./pages/Single"
+import Login from "./pages/Login";
+import Write from "./pages/Write";
+import Home from "./pages/Home";
+import Single from "./pages/Single";
 import Footer from "./components/Footer";
 import CustomNavbar from "./components/Navbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './style.scss'
+import './style.scss';
 import React, { useContext } from "react";
 import { AuthContext } from "./context/authContext";
 
@@ -46,7 +46,7 @@ const router =createBrowserRouter([
     element: <Layout/>,
     children: [
       { path: "/", element: <Home /> }, 
-      { path: "/write", element: <PrivateRoute path="/Write" element={<Write />} /> }, 
+      { path: "/Write", element: <PrivateRoute path="/Write" element={<Write />} /> }, 
       { path: "/post/:id", element: <PrivateRoute path="/post/:id" element={<Single />} /> }, 
     ],
   },
