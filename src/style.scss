@@ -19,12 +19,14 @@ $gray:rgb(78, 78, 78);
 
     //LOGIN & REGISTER
     .auth{
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      height: 80vh;
       background-color: $lightGreen;
+      margin-top: 10px;
 
       h1{
         text-align: center;
@@ -153,7 +155,7 @@ $gray:rgb(78, 78, 78);
     //FOOTER
     
     footer{
-      margin-top: 100px;
+      margin-top: 10px;
       padding: 10px 20px;
       background-color: $lightGreen;
       display: flex;
