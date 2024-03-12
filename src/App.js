@@ -4,6 +4,7 @@ import {
   Outlet,
   Route,
   Navigate,
+  Routes,
 } from "react-router-dom";
 import Register from "./pages/Register";
 import Login from "./pages/Login"
@@ -31,7 +32,9 @@ const PrivateRoute = ({ element, path }) => {
   const { currentUser } = useContext(AuthContext);
 
   return currentUser ? (
-    <Route path={path} element={element} />
+    <Routes>
+      <Route path={path} element={element} />
+    </Routes>
   ) : (
     <Navigate to="/login" />
   );
@@ -49,17 +52,11 @@ const router =createBrowserRouter([
   },
   {
     path: "/register",
-    element: <Layout/>,
-    children: [
-      { path: "/register", element: <Register/> }, 
-    ],
+    element: <Register />,
   },
   {
     path: "/login",
-    element: <Layout/>,
-    children: [
-      { path: "/login", element: <Login/> }, 
-    ],
+    element: <Login />,
   },
 ]);
 

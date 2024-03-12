@@ -41,6 +41,7 @@ const Login = () => {
         {err && <p>{err}</p>}
         <span>Har du inget konto?.. <Link to="/register">Registrera</Link></span>
       </form>
+      <Link className='HemClass nav-link' to="/">Gå hem ..</Link>
     </Container>
   );
 }
