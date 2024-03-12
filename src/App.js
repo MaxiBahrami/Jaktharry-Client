@@ -47,7 +47,12 @@ const router =createBrowserRouter([
     children: [
       { path: "/", element: <Home /> }, 
       { path: "/Write", element: <PrivateRoute path="/Write" element={<Write />} /> }, 
-      { path: "/post/:id/*", element: <PrivateRoute path="/post/:id/*" element={<Single />} /> }, 
+      {
+        path: "/post/:id/*",
+        element: (
+          <PrivateRoute path="/" element={<Single />} />
+        )
+      },
     ],
   },
   {
