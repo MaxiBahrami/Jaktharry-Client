@@ -7,20 +7,18 @@ import 'react-quill/dist/quill.snow.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Write = () => {
-
-  const navigate = useNavigate()
-  const state = useLocation().state
+  const navigate = useNavigate();
+  const state = useLocation().state;
 
   const [value, setValue] = useState(state?.desc || "");
   const [title, setTitle] = useState(state?.title || "");
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.cat || "");
-  // const [lokaltOptions, setLokaltOptions] = useState([]);
 
   const upload = async ()=>{
     try{
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append(`file`, file);
       const res = await axios.post("/upload", formData);
       return res.data
     }catch(err){
@@ -48,22 +46,11 @@ const Write = () => {
             date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
           });
           // Redirect to the home page or any other page
-          navigate("/")
+          navigate("/");
     } catch (err) {
       console.log(err);
     }
 
-  //   const handleCatChange = (e) => {
-  //     setCat(e.target.value);
-  
-  //     // Check if the selected category is "lokalt" and update the options accordingly
-  //     if (e.target.value === 'lokalt') {
-  //       setLokaltOptions(['Option 1', 'Option 2', 'Option 3']);
-  //     } else {
-  //       // If the category is not "lokalt", reset the options
-  //       setLokaltOptions([]);
-  //     }
-  // }
 }
 
   return (
@@ -83,8 +70,8 @@ const Write = () => {
           <span>
             <b>Synlighet: </b> Allmän
           </span>
-          <input style={{display:"none"}} type="file" name="" id="file" onChange={e=>setFile(e.target.files[0])}/>
-          <label className='file' htmlFor="file">Ladda upp bild</label>
+          <input style={{display:"none"}} type="file" name="file" id="file" onChange={e=>setFile(e.target.files[0])}/>
+          <label className='file' htmlFor="file">{file ? `Selected: ${file.name}` : "Ladda upp bild"}</label>
           <div className="buttons">
             <button>Spara som utkast</button>
             <Button onClick={handleClick} >Publicera</Button>

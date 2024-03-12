@@ -22,7 +22,6 @@ const Single = () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/${postId}`);
         setPost(response.data);
-        console.log('Fetched post:', response.data); // Log post data
       } catch (error) {
         console.log(error);
         setError("Error fetching post data");
@@ -66,7 +65,6 @@ const Single = () => {
   };
 
   const paragraphs = post.text ? splitTextAfterThirdDot(post.text) : [];
-  console.log('post.text:', post.text);
 
   return (
     <Container className="single">
