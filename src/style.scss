@@ -410,6 +410,11 @@ $gray:rgb(78, 78, 78);
           text-align: justify;
           line-height: 30px;
         }
+        .descP{
+          color: $lightGreen;
+          font-size: 1.3rem;
+          font-weight: bold;
+        }
       }
 
       .menu{
@@ -456,6 +461,7 @@ $gray:rgb(78, 78, 78);
           }
         }
       }
+
     }
   
     //Write
@@ -555,6 +561,162 @@ $gray:rgb(78, 78, 78);
         }
         form{
           width: 300px;
+        }
+      }
+
+      .single{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+      .content{
+        flex:1;
+        gap: 20px;
+
+        img{
+          margin: 1px auto;
+          width: 80%;
+          height: 150px;
+        }
+        
+        .user{
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 14px;
+          
+          img{
+            width: 40px;
+            height: 40px;
+          }
+        }
+
+        .edit{
+          display: flex;
+          gap: 5px;
+
+          img{
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+          }
+        } 
+        
+        h1{
+          font-size: 30px;
+        }
+
+        p{
+          text-align: justify;
+          line-height: 25px;
+        }
+        .descP{
+          font-size: 1.0rem;
+        }
+      }
+    
+      .menu{
+        margin-top: 20px;
+        flex-direction: column;
+        gap: 15px;
+
+        h1{
+          font-size: 20px;
+        }
+
+        .post{
+
+          img{
+            width: 50%;
+            height: 150px;
+          }
+
+          button{
+            width: max-content;
+            padding: 4.5px 10px;
+          }
+        }
+      }
+    }
+
+    }
+    
+  }
+
+  @media screen and (min-width: 591px) and (max-width: 767px) {
+    .container{
+      
+      .single{
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+
+        .content{
+          flex:1;
+          gap: 10px;
+  
+          img{
+            width: 100%;
+            height: 200px;
+          }
+          
+          .user{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            
+            img{
+              width: 40px;
+              height: 40px;
+            }
+          }
+  
+          .edit{
+            display: flex;
+            gap: 5px;
+  
+            img{
+              width: 20px;
+              height: 20px;
+              cursor: pointer;
+            }
+          } 
+          
+          h1{
+            font-size: 35px;
+          }
+  
+          p{
+            text-align: justify;
+            line-height: 25px;
+          }
+          .descP{
+            font-size: 1.1rem;
+          }
+        }
+      
+        .menu{
+          margin-top: 20px;
+          flex-direction: column;
+          gap: 15px;
+  
+          h1{
+            font-size: 20px;
+          }
+  
+          .post{
+  
+            img{
+              width: 60%;
+              height: 150px;
+            }
+  
+            button{
+              width: max-content;
+              padding: 4.5px 10px;
+            }
+          }
         }
       }
     }

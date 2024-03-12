@@ -4,6 +4,7 @@ import Menu from "../components/Menu";
 import axios from "axios";
 import moment from "moment";
 import {AuthContext} from "../context/authContext.js";
+import { Container } from "react-bootstrap";
 
 const Single = () => {
   const [post,setPost] = useState({});
@@ -68,7 +69,7 @@ const Single = () => {
   console.log('post.text:', post.text);
 
   return (
-    <div className="single">
+    <Container className="single">
       <div className="content">
         <img src={`/upload/${post?.img}`}   alt=""  />
         <div className="user">
@@ -96,16 +97,16 @@ const Single = () => {
           )}
         </div>
         <h1>{post.title}</h1>
-        <p>{post.desc}</p>
+        <p className="descP">{post.desc}</p>
          {/* Render each paragraph separately */}
-      {paragraphs.map((paragraph, index) => (
-      <p key={index} 
-      dangerouslySetInnerHTML={{ __html: paragraph.replace(/\n/g, '<br />') }} />
+        {paragraphs.map((paragraph, index) => (
+          <p key={index} 
+              dangerouslySetInnerHTML={{ __html: paragraph.replace(/\n/g, '<br />') }} />
     ))}
         
       </div>
       <Menu cat={post.cat}/>
-    </div>
+    </Container>
   );
 };
 
