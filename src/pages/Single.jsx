@@ -15,13 +15,13 @@ const Single = () => {
 
   const postId = location.pathname.split("/")[2];
   const {currentUser} = useContext(AuthContext);
-  console.log("-----------------");
+  
   useEffect(() => {
-
     const fetchData = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/${postId}`);
         setPost(response.data);
+        console.log('Fetched post:', response.data); // Log post data
       } catch (error) {
         console.log(error);
         setError("Error fetching post data");
