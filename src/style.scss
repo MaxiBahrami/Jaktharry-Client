@@ -549,6 +549,7 @@ $gray:rgb(78, 78, 78);
         }
       }
     }
+
   }
 
   @media screen and (max-width: 579px){
@@ -569,74 +570,78 @@ $gray:rgb(78, 78, 78);
         flex-direction: column;
         width: 100%;
 
-      .content{
-        flex:1;
-        gap: 20px;
-
-        img{
-          margin: 1px auto;
-          width: 80%;
-          height: 150px;
-        }
-        
-        .user{
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          font-size: 14px;
-          
-          img{
-            width: 40px;
-            height: 40px;
-          }
-        }
-
-        .edit{
-          display: flex;
-          gap: 5px;
+        .content{
+          flex:1;
+          gap: 20px;
 
           img{
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-          }
-        } 
-        
-        h1{
-          font-size: 30px;
-        }
-
-        p{
-          text-align: justify;
-          line-height: 25px;
-        }
-        .descP{
-          font-size: 1.0rem;
-        }
-      }
-    
-      .menu{
-        margin-top: 20px;
-        flex-direction: column;
-        gap: 15px;
-
-        h1{
-          font-size: 20px;
-        }
-
-        .post{
-
-          img{
-            width: 50%;
+            margin: 1px auto;
+            width: 80%;
             height: 150px;
           }
+        
+          .user{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            
+            img{
+              width: 40px;
+              height: 40px;
+            }
+          }
 
-          button{
-            width: max-content;
-            padding: 4.5px 10px;
+          .edit{
+            display: flex;
+            gap: 5px;
+
+            img{
+              width: 20px;
+              height: 20px;
+              cursor: pointer;
+            }
+          } 
+        
+          h1{
+            font-size: 30px;
+          }
+
+          p{
+            text-align: justify;
+            line-height: 25px;
+          }
+          .descP{
+            font-size: 1.0rem;
           }
         }
-      }
+    
+        .menu{
+          margin-top: 20px;
+          flex-direction: column;
+          gap: 15px;
+
+          h1{
+            font-size: 20px;
+          }
+
+          .post{
+
+            img{
+              width: 50%;
+              height: 150px;
+            }
+
+            h3{
+              font-size: 15px;
+            }
+
+            button{
+              width: max-content;
+              padding: 4.5px 10px;
+            }
+          }
+        }
     }
 
     }
@@ -711,7 +716,11 @@ $gray:rgb(78, 78, 78);
               width: 60%;
               height: 150px;
             }
-  
+
+            h3{
+              font-size: 25px;
+            }
+
             button{
               width: max-content;
               padding: 4.5px 10px;
