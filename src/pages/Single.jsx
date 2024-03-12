@@ -10,16 +10,14 @@ const Single = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  const location = useLocation()
-  const navigate = useNavigate()
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const postId = location.pathname.split("/")[2]
-  const {currentUser} = useContext(AuthContext)
+  const postId = location.pathname.split("/")[2];
+  const {currentUser} = useContext(AuthContext);
 
   useEffect(() => {
 
-    const postId = location.pathname.split("/")[2];
-  console.log('postId:', postId);
     const fetchData = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/${postId}`);
