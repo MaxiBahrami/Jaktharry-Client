@@ -9,7 +9,13 @@ export const AuthContextProvider = ({children})=>{
   const login = async (inputs) => {
     try {
       const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, inputs);
-      setCurrentUser(res.data);
+      if (res.data) {
+        // Assuming the response contains user data
+        setCurrentUser(res.data);
+      } else {
+        // Handle the case where the response does not contain the expected user data
+        console.error('Login failed: Unexpected response format');
+      }
     } catch (error) {
       // Handle error (e.g., show a message to the user)
       console.error('Login failed:', error.message);

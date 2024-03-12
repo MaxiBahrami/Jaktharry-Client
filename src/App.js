@@ -2,6 +2,8 @@ import {
   createBrowserRouter, 
   RouterProvider, 
   Outlet,
+  Route,
+  Navigate,
 } from "react-router-dom";
 import Register from "./pages/Register";
 import Login from "./pages/Login"
@@ -12,6 +14,8 @@ import Footer from "./components/Footer";
 import CustomNavbar from "./components/Navbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss'
+import React, { useContext } from "react";
+import { AuthContext } from "./context/authContext";
 
 const Layout = ()=>{
   return (
@@ -22,6 +26,16 @@ const Layout = ()=>{
     </>
   )
 }
+
+const PrivateRoute = ({ element, path }) => {
+  const { currentUser } = useContext(AuthContext);
+
+  return currentUser ? (
+    <Route path={path} element={element} />
+  ) : (
+    <Navigate to="/login" />
+  );
+};
 
 const router =createBrowserRouter([
   {
