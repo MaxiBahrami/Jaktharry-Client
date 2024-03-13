@@ -69,39 +69,80 @@ const Single = () => {
   return (
     <Container className="single">
       <div className="content">
-        <img src={`/upload/${post?.img}`}   alt=""  />
-        <div className="user">
-          {post.userImage && <img
-            src={post.userImage}
-            alt=""
-          />}
-          <div className="info">
-            <span>{post.username}</span>
-            <p>Posted {moment(post.date).fromNow()}</p>
-          </div>
-          {currentUser.username === post.username && (
-          <div className="edit">
-            <Link to={`/write?edit=2`} state={post}>
-              <img
-                src="https://logowik.com/content/uploads/images/888_edit.jpg"
+        <div>
+          <img src={`/upload/${post?.img}`}   alt=""  />
+          <div className="user">
+            {post.userImage && <img
+              src={post.userImage}
+              alt=""
+            />}
+            <div className="info">
+              <span>{post.username}</span>
+              <p>Posted {moment(post.date).fromNow()}</p>
+            </div>
+            {currentUser.username === post.username && (
+            <div className="edit">
+              <Link to={`/write?edit=2`} state={post}>
+                <img
+                  src="https://logowik.com/content/uploads/images/888_edit.jpg"
+                  alt=""
+                />
+              </Link>
+              <img onClick={handleDelete}
+                src="https://cdn.iconscout.com/icon/free/png-256/free-delete-2902143-2411575.png"
                 alt=""
               />
-            </Link>
-            <img onClick={handleDelete}
-              src="https://cdn.iconscout.com/icon/free/png-256/free-delete-2902143-2411575.png"
-              alt=""
-            />
+            </div>
+            )}
           </div>
-          )}
+          <h1>{post.title}</h1>
+          <p className="descP">{post.desc}</p>
+          {/* Render each paragraph separately */}
+          {paragraphs.map((paragraph, index) => (
+            <p key={index} 
+                dangerouslySetInnerHTML={{ __html: paragraph.replace(/\n/g, '<br />') }} />
+          ))}
         </div>
-        <h1>{post.title}</h1>
-        <p className="descP">{post.desc}</p>
-         {/* Render each paragraph separately */}
-        {paragraphs.map((paragraph, index) => (
-          <p key={index} 
-              dangerouslySetInnerHTML={{ __html: paragraph.replace(/\n/g, '<br />') }} />
-    ))}
-        
+        <div class="card w-50">
+          <div class="card-body p-4">
+            <div class="d-flex flex-start w-100">
+              <div class="w-100">
+                        <h5>Add a comment</h5>
+                        <ul class="rating mb-3" data-mdb-toggle="rating">
+                          <li>
+                            <i class="far fa-star fa-sm text-danger" title="Bad"></i>
+                          </li>
+                          <li>
+                            <i class="far fa-star fa-sm text-danger" title="Poor"></i>
+                          </li>
+                          <li>
+                            <i class="far fa-star fa-sm text-danger" title="OK"></i>
+                          </li>
+                          <li>
+                            <i class="far fa-star fa-sm text-danger" title="Good"></i>
+                          </li>
+                          <li>
+                            <i class="far fa-star fa-sm text-danger" title="Excellent"></i>
+                          </li>
+                        </ul>
+                        <div class="form-outline">
+                          <textarea class="form-control" id="textAreaExample" rows="4"></textarea>
+                          <label class="form-label" for="textAreaExample">What is your view?</label>
+                        </div>
+                      
+                        <div class="d-flex justify-content-between mt-3">
+                          <button type="button" class="btn btn-success">Danger</button>
+                          <button type="button" class="btn btn-danger">
+                            Send <i class="fas fa-long-arrow-alt-right ms-1"></i>
+                          </button>
+                        </div>
+              </div>
+
+              
+            </div>
+          </div>
+        </div>
+
       </div>
       <Menu cat={post.cat}/>
     </Container>
