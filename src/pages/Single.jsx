@@ -70,7 +70,13 @@ const Single = () => {
     <Container className="single">
       <div className="content">
         <div>
-          <img src={`/upload/${post?.img}`}   alt=""  />
+        <div className="img">
+  {post.img.startsWith('https') ? (
+    <img src={post.img} alt="" />
+  ) : (
+    <img src={`/upload/${post.img}`} alt="" />
+  )}
+</div>
           <div className="user">
             {post.userImage && <img
               src={post.userImage}

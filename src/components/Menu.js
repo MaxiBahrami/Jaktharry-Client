@@ -30,7 +30,13 @@ const Menu = ({cat}) => {
       <h1>Andra nyheter som du kan gilla</h1>
       {posts.map((post)=>(
         <div className="post" key={post.id}>
-          <img src={`../upload/${post?.img}`} alt="" />
+          <div className="img">
+  {post.img.startsWith('https') ? (
+    <img src={post.img} alt="" />
+  ) : (
+    <img src={`/upload/${post.img}`} alt="" />
+  )}
+</div>
           <h3>{post.title}</h3>
           <Button onClick={() => handleClick(post.id)}>Läs mer</Button>
         </div>
