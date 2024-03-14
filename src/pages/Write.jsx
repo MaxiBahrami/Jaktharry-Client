@@ -10,6 +10,7 @@ import { AuthContext } from "../context/authContext.js";
 const Write = () => {
   const navigate = useNavigate();
   const state = useLocation().state || {};
+  console.log("State ID:", state); 
 
   const [value1, setValue1] = useState(state?.desc || "");
   const [value2, setValue2] = useState(state?.text || "");
@@ -21,28 +22,28 @@ const Write = () => {
   const { currentUser } = useContext(AuthContext);
 
   const userinfo = currentUser.id ;
+  console.log("User Info:", userinfo);
 
   const handleClick = async (e) => {
     e.preventDefault();
     try {
-      state
-        ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
-            title,
-            desc: value1,
-            text: value2,
-            cat,
-            img: imageUrl,
-            url: userinfo.id,
-          })
-        : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
-            title,
-            desc: value1,
-            text: value2,
-            cat,
-            img: imageUrl,
-            url: userinfo.id,
-            date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-          });
+      const postData = {
+        title,
+        desc: value1,
+        text: value2,
+        cat,
+        img: imageUrl,
+        uid: userinfo.id,
+      };
+  
+      if (state) {
+        // Editing an existing post
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, postData);
+      } else {
+        // Creating a new post
+        postData.date = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, postData);
+      }
           // Redirect to the home page or any other page
           navigate("/");
     } catch (err) {
