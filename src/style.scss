@@ -469,7 +469,7 @@ $gray:rgb(78, 78, 78);
     //Write
 
     .add{
-      margin-top: 20px;
+      margin-top: 30px;
       display: flex;
       gap: 20px;
 
@@ -484,8 +484,14 @@ $gray:rgb(78, 78, 78);
           border: 1px solid $darkWhite;
         }
 
-        .editorContainer{
-          height: 300px;
+        .editorContainer1{
+          height: 150px;
+          overflow: scroll;
+          border: 1px solid $darkWhite;
+        }
+
+        .editorContainer2{
+          height: 350px;
           overflow: scroll;
           border: 1px solid $darkWhite;
         }
@@ -503,50 +509,54 @@ $gray:rgb(78, 78, 78);
         gap: 20px;
 
         .item{
-          padding: 10px;
+          padding: 15px;
           border: 1px solid $darkWhite;
           flex:1;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
-          font-size: 12px;
+          font-size: 14px;
           color: $gray;
+          margin-top: 30px;
+          margin-bottom: 30px;
+          background-color:#d5dfd9 ;
 
           h1{
             font-size: 20px;
+            text-align: center;
+            margin: 15px 5px;
           }
 
-          .file{
-            text-decoration: underline;
-            cursor: pointer;
-          }
-
-          .buttons{
-            display: flex;
-            justify-content: space-between;
-
-            :first-child{
-              cursor: pointer;
-              color: $Green;
-              background-color: White;
-              border: 1px solid $lightGreen;
-              padding: 3px 5px;
-            }
-
-            :last-child{
-              cursor: pointer;
-              color: white;
-              background-color: $lightGreen;
-              border: 1px solid $lightGreen;
-              padding: 3px 5px;
-            }
+          input {
+            padding: 7px;
+            margin: 15px 5px;
           }
 
           .cat{
             display: flex;
             align-items: center;
-            gap: 2px;
+            gap: 4px;
             color :$Green;
+            font-size: 16px;
+          }
+
+          .item2{
+            text-align: center;
+            padding: 7px 5px;
+            border: 1px solid $darkWhite;
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+          }
+
+          Button{
+            cursor: pointer;
+            color: white;
+            background-color: $lightGreen;
+            border: 1px solid $lightGreen;
+            padding: 4px 5px;
+            width: 150px;
+            text-align: center;
+            margin-right: auto;
           }
         }
       }
@@ -644,7 +654,49 @@ $gray:rgb(78, 78, 78);
             }
           }
         }
-    }
+      }
+
+      .add{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    
+        .content{
+          gap: 10px;
+          width: 90%;
+    
+          input{
+            padding: 5px;
+          }
+        }
+    
+        .menu{
+          width: 70%;
+          gap: 5px;
+    
+          .item{
+            padding: 5px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+    
+            input {
+              padding: 5px;
+              margin: 5px 5px;
+            }
+    
+            .cat{
+              gap: 2px;
+            }
+    
+            .item2{
+              padding: 5px 5px;
+              margin-top: 7px;
+              margin-bottom: 7px;
+            }
+          }
+        }
+      }
 
     }
     
@@ -730,6 +782,145 @@ $gray:rgb(78, 78, 78);
           }
         }
       }
+
+      .add{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    
+        .content{
+          gap: 10px;
+          width: 100%;
+    
+          input{
+            padding: 5px;
+          }
+        }
+    
+        .menu{
+          width: 70%;
+          gap: 10px;
+    
+          .item{
+            padding: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+    
+            input {
+              padding: 5px;
+              margin: 10px 5px;
+            }
+    
+            .cat{
+              gap: 2px;
+            }
+    
+            .item2{
+              padding: 5px 5px;
+              margin-top: 7px;
+              margin-bottom: 7px;
+            }
+          }
+        }
+      }
     }
   }
+
+  @media screen and (min-width: 768px) and (max-width: 1199px) {
+    .add{
+      margin-top: 30px;
+      display: flex;
+      gap: 20px;
+  
+      .content{
+        flex:5;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+  
+        input{
+          padding: 10px;
+          border: 1px solid $darkWhite;
+        }
+  
+        .editorContainer1{
+          height: 150px;
+          overflow: scroll;
+          border: 1px solid $darkWhite;
+        }
+  
+        .editorContainer2{
+          height: 350px;
+          overflow: scroll;
+          border: 1px solid $darkWhite;
+        }
+  
+        .editor{
+          height: 100%;
+          border: none;
+        }
+      }
+  
+      .menu{
+        flex:2;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+  
+        .item{
+          padding: 15px;
+          border: 1px solid $darkWhite;
+          flex:1;
+          display: flex;
+          flex-direction: column;
+          font-size: 14px;
+          color: $gray;
+          margin-top: 30px;
+          margin-bottom: 30px;
+          background-color:#d5dfd9 ;
+  
+          h1{
+            font-size: 20px;
+            text-align: center;
+            margin: 15px 5px;
+          }
+  
+          input {
+            padding: 7px;
+            margin: 15px 5px;
+          }
+  
+          .cat{
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color :$Green;
+            font-size: 16px;
+          }
+  
+          .item2{
+            text-align: center;
+            padding: 7px 5px;
+            border: 1px solid $darkWhite;
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+          }
+  
+          Button{
+            cursor: pointer;
+            color: white;
+            background-color: $lightGreen;
+            border: 1px solid $lightGreen;
+            padding: 4px 5px;
+            width: 150px;
+            text-align: center;
+            margin-right: auto;
+          }
+        }
+      }
+    }
+  }
+
 }
