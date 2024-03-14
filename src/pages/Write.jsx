@@ -7,7 +7,7 @@ import moment from "moment";
 import { Button } from "react-bootstrap";
 
 const Write = () => {
-  
+
   const state = useLocation().state;
 
   const [title, setTitle] = useState(state?.title || "");
@@ -50,7 +50,7 @@ const Write = () => {
         <input type="text" value={title} placeholder='Ange titel' onChange={e=>setTitle(e.target.value)}/>
         <hr />
         <div className="editorContainer1">
-          <ReactQuill className='editor'  placeholder= "Beskrivning av nyheterna" theme="snow" value={value1} onChange={setValue1} />
+          <input type="text" value={value1} placeholder='Beskrivning av nyheterna' onChange={e=>setValue1(e.target.value)}/>
         </div>
         <hr />
         <div className="editorContainer2">
