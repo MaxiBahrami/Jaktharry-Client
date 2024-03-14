@@ -31,12 +31,8 @@ const Menu = ({cat}) => {
       {posts.map((post)=>(
         <div className="post" key={post.id}>
           <div className="img">
-  {post.img.startsWith('https') ? (
-    <img src={post.img} alt="" />
-  ) : (
-    <img src={`/upload/${post.img}`} alt="" />
-  )}
-</div>
+            <img src={post.img} alt="" />
+          </div>
           <h3>{post.title}</h3>
           <Button onClick={() => handleClick(post.id)}>Läs mer</Button>
         </div>
