@@ -1,25 +1,30 @@
 import axios from 'axios';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import ReactQuill from'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from "../context/authContext.js";
 
 const Write = () => {
   const navigate = useNavigate();
-  const state = useLocation().state;
+  const state = useLocation().state || {};
 
   const [value1, setValue1] = useState(state?.desc || "");
-  const [value2, setValue2] = useState(state?.desc || "");
+  const [value2, setValue2] = useState(state?.text || "");
   const [title, setTitle] = useState(state?.title || "");
   const [imageUrl, setImageUrl] = useState(state?.img || "");
   const [cat, setCat] = useState(state?.cat || "");
 
-  const handleClick = async e=>{
-    e.preventDefault()
+
+  const { currentUser } = useContext(AuthContext);
+
+  const userinfo = currentUser.id ;
+
+  const handleClick = async (e) => {
+    e.preventDefault();
     try {
-  
       state
         ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
             title,
@@ -27,6 +32,7 @@ const Write = () => {
             text: value2,
             cat,
             img: imageUrl,
+            url: userinfo.id,
           })
         : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
             title,
@@ -34,6 +40,7 @@ const Write = () => {
             text: value2,
             cat,
             img: imageUrl,
+            url: userinfo.id,
             date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
           });
           // Redirect to the home page or any other page
