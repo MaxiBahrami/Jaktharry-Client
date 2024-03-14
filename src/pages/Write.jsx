@@ -1,61 +1,49 @@
-import axios from 'axios';
-import moment from 'moment';
-import React, { useState } from 'react';
-import { Button } from 'react-bootstrap';
-import ReactQuill from'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
+import moment from "moment";
+import { Button } from "react-bootstrap";
 
 const Write = () => {
-  const navigate = useNavigate();
+  
   const state = useLocation().state;
-  const token = localStorage.getItem('accessToken'); 
 
-  const [value1, setValue1] = useState(state ? state.desc : "");
-  const [value2, setValue2] = useState(state ? state.text : "");
-  const [title, setTitle] = useState(state ? state.title : "");
-  const [imageUrl, setImageUrl] = useState(state ? state.img : "");
-  const [cat, setCat] = useState(state ? state.cat : "");
+  const [title, setTitle] = useState(state?.title || "");
+  const [value1, setValue1] = useState(state?.desc || "");
+  const [value2, setValue2] = useState(state?.text || "");
+  const [imgUrl, setimgUrl] = useState(state?.img || "");
+  const [cat, setCat] = useState(state?.cat || "");
 
-  const handleClick = async e=>{
-    e.preventDefault()
+  const navigate = useNavigate()
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+
     try {
-      const apiUrl = process.env.REACT_APP_API_URL;
-      const endpoint = state ? `${apiUrl}/api/posts/${state.id}` : `${apiUrl}/api/posts`;
-
-      const postData = {
-        title,
-        desc: value1,
-        text: value2,
-        cat,
-        img: imageUrl,
-      };
-
-      if (!token) {
-        console.error('JWT token is missing.'); // Handle missing token
-        return;
-      }
-
-      const headers = {
-        Authorization: `Bearer ${token}`, // Include token in request headers
-      };
-
-      if (state) {
-        await axios.put(endpoint, postData, { headers }); // Send PUT request with token in headers
-      } else {
-        const newPostData = {
-          ...postData,
-          date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-        };
-        await axios.post(endpoint, newPostData, { headers }); // Send POST request with token in headers
-      }
-
-          // Redirect to the home page or any other page
-          navigate("/");
+      state
+        ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
+            title,
+            desc: value1,
+            text: value2,
+            cat,
+            img: imgUrl,
+          })
+        : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
+            title,
+            desc: value1,
+            text: value2,
+            cat,
+            img: imgUrl,
+            date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+          });
+          navigate("/")
     } catch (err) {
       console.log(err);
     }
-  }
+  };
+
   return (
     <div className='add'>
       <div className="content">
@@ -72,7 +60,7 @@ const Write = () => {
       <div className="menu">
         <div className="item">
           <h1>Ange bildlänken</h1>
-          <input type="text" value={imageUrl} placeholder='Image URL' onChange={e => setImageUrl(e.target.value)} />
+          <input type="text" value={imgUrl} placeholder='Image URL' onChange={e => setimgUrl(e.target.value)} />
           <hr />
           <div className="item">
             <h1>Category</h1>
@@ -87,6 +75,7 @@ const Write = () => {
             <div className="cat">
               <input type="radio" checked={cat === "lokalt"} name="cat" value="lokalt" id="lokalt" onChange={e=>setCat(e.target.value)}/>
               <label htmlFor="lokalt">Lokalt</label>
+              
             </div>
             <div className="cat">
               <input type="radio" checked={cat === "aktiviteter"} name="cat" value="aktiviteter" id="aktiviteter" onChange={e=>setCat(e.target.value)}/>
