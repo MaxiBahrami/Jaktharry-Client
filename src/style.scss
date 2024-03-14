@@ -479,8 +479,9 @@ $gray:rgb(78, 78, 78);
         flex-direction: column;
         gap: 20px;
 
-        input{
-          padding: 10px;
+        .editorContainer{
+          height: 150px;
+          overflow: scroll;
           border: 1px solid $darkWhite;
         }
 

@@ -1,16 +1,14 @@
 import axios from 'axios';
 import moment from 'moment';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import ReactQuill from'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AuthContext } from "../context/authContext.js";
 
 const Write = () => {
   const navigate = useNavigate();
-  const state = useLocation().state || {};
-  console.log("State ID:", state); 
+  const state = useLocation();
 
   const [value1, setValue1] = useState(state?.desc || "");
   const [value2, setValue2] = useState(state?.text || "");
@@ -18,44 +16,35 @@ const Write = () => {
   const [imageUrl, setImageUrl] = useState(state?.img || "");
   const [cat, setCat] = useState(state?.cat || "");
 
-
-  const { currentUser } = useContext(AuthContext);
-
-  const userinfo = currentUser.id ;
-  console.log("User Info:", userinfo);
-
-  const handleClick = async (e) => {
-    e.preventDefault();
+  const handleClick = async e=>{
+    e.preventDefault()
     try {
-      const postData = {
-        title,
-        desc: value1,
-        text: value2,
-        cat,
-        img: imageUrl,
-        uid: userinfo.id,
-      };
-  
-      if (state) {
-        // Editing an existing post
-        await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, postData);
-      } else {
-        // Creating a new post
-        postData.date = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
-        await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, postData);
-      }
+      state     
+        ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
+            title,
+            desc: value1,
+            text: value2,
+            cat,
+            img: imageUrl,
+          })
+        : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts`, {
+            title,
+            desc: value1,
+            text: value2,
+            cat,
+            img: imageUrl,
+            date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+          });
           // Redirect to the home page or any other page
-          navigate("/");
+          navigate("/")
     } catch (err) {
       console.log(err);
     }
-
-}
-
+  }
   return (
     <div className='add'>
       <div className="content">
-        <input type="text" value={title} placeholder='Titel' onChange={e=>setTitle(e.target.value)}/>
+        <input type="text" value={title} placeholder='Ange titel' onChange={e=>setTitle(e.target.value)}/>
         <hr />
         <div className="editorContainer1">
           <ReactQuill className='editor'  placeholder= "Beskrivning av nyheterna" theme="snow" value={value1} onChange={setValue1} />
@@ -83,11 +72,6 @@ const Write = () => {
             <div className="cat">
               <input type="radio" checked={cat === "lokalt"} name="cat" value="lokalt" id="lokalt" onChange={e=>setCat(e.target.value)}/>
               <label htmlFor="lokalt">Lokalt</label>
-              {cat === 'lokalt' && (
-                <div className="cat">
-                  <p className="">Choose from the following options:</p>
-                </div>
-              )}
             </div>
             <div className="cat">
               <input type="radio" checked={cat === "aktiviteter"} name="cat" value="aktiviteter" id="aktiviteter" onChange={e=>setCat(e.target.value)}/>
