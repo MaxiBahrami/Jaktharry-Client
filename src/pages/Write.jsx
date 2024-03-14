@@ -8,35 +8,50 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const Write = () => {
   const navigate = useNavigate();
-  const state = useLocation();
+  const state = useLocation().state;
+  const token = localStorage.getItem('accessToken'); 
 
-  const [value1, setValue1] = useState(state?.desc || "");
-  const [value2, setValue2] = useState(state?.text || "");
-  const [title, setTitle] = useState(state?.title || "");
-  const [imageUrl, setImageUrl] = useState(state?.img || "");
-  const [cat, setCat] = useState(state?.cat || "");
+  const [value1, setValue1] = useState(state ? state.desc : "");
+  const [value2, setValue2] = useState(state ? state.text : "");
+  const [title, setTitle] = useState(state ? state.title : "");
+  const [imageUrl, setImageUrl] = useState(state ? state.img : "");
+  const [cat, setCat] = useState(state ? state.cat : "");
 
   const handleClick = async e=>{
     e.preventDefault()
     try {
-      state     
-        ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
-            title,
-            desc: value1,
-            text: value2,
-            cat,
-            img: imageUrl,
-          })
-        : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts`, {
-            title,
-            desc: value1,
-            text: value2,
-            cat,
-            img: imageUrl,
-            date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-          });
+      const apiUrl = process.env.REACT_APP_API_URL;
+      const endpoint = state ? `${apiUrl}/api/posts/${state.id}` : `${apiUrl}/api/posts`;
+
+      const postData = {
+        title,
+        desc: value1,
+        text: value2,
+        cat,
+        img: imageUrl,
+      };
+
+      if (!token) {
+        console.error('JWT token is missing.'); // Handle missing token
+        return;
+      }
+
+      const headers = {
+        Authorization: `Bearer ${token}`, // Include token in request headers
+      };
+
+      if (state) {
+        await axios.put(endpoint, postData, { headers }); // Send PUT request with token in headers
+      } else {
+        const newPostData = {
+          ...postData,
+          date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+        };
+        await axios.post(endpoint, newPostData, { headers }); // Send POST request with token in headers
+      }
+
           // Redirect to the home page or any other page
-          navigate("/")
+          navigate("/");
     } catch (err) {
       console.log(err);
     }
