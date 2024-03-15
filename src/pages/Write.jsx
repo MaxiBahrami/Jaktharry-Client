@@ -26,34 +26,23 @@ const Write = () => {
     e.preventDefault();
 
     try {
-      const accessToken = localStorage.getItem('access_token');
-      console.log(accessToken)
-
-      const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
-      };
-
-      if (state) {
-        await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
-          title,
-          desc: value1,
-          text: value2,
-          cat,
-          img: imgUrl,
-        }, { headers });
-      } else {
-        await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
-          title,
-          desc: value1,
-          text: value2,
-          cat,
-          img: imgUrl,
-          date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-        }, { headers });
-      }
-      
-      navigate("/");
+      state
+        ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
+            title,
+            desc: value1,
+            text: value2,
+            cat,
+            img: imgUrl,
+          })
+        : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
+            title,
+            desc: value1,
+            text: value2,
+            cat,
+            img: imgUrl,
+            date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+          });
+          navigate("/")
     } catch (err) {
       console.log(err);
     }
