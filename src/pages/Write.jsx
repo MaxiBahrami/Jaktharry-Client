@@ -7,8 +7,6 @@ import moment from "moment";
 import { Button } from "react-bootstrap";
 import {AuthContext} from "../context/authContext.js";
 
-
-
 const Write = () => {
   
   const { currentUser } = useContext(AuthContext);
@@ -34,7 +32,7 @@ const Write = () => {
             cat,
             img: imgUrl,
             uid: currentUser.id,
-          })
+          }, { withCredentials: true })
         : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
             title,
             desc: value1,
@@ -43,7 +41,7 @@ const Write = () => {
             img: imgUrl,
             uid: currentUser.id,
             date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-          });
+          }, { withCredentials: true });
           navigate("/")
     } catch (err) {
       console.log(err);
