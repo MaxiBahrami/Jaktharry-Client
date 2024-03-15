@@ -11,7 +11,7 @@ export const AuthContextProvider = ({children})=>{
       const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, inputs);
       console.log('Response Data:', res.data);
 
-      if (res.data && res.data.token) {
+      if (res.data) {
         // Assuming the response contains user data and access token
         setCurrentUser(res.data.user);
         localStorage.setItem('access_token', res.data.token);
