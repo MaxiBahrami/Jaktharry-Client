@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { Button } from "react-bootstrap";
+import {AuthContext} from "../context/authContext.js";
 
 const Write = () => {
   
+  const { currentUser } = useContext(AuthContext);
   const state = useLocation().state;
 
   const [title, setTitle] = useState(state?.title || "");
@@ -20,7 +22,7 @@ const Write = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-
+console.log(currentUser.id);
     try {
       state
         ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
@@ -29,6 +31,7 @@ const Write = () => {
             text: value2,
             cat,
             img: imgUrl,
+            uid: currentUser.id,
           })
         : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
             title,
@@ -36,6 +39,7 @@ const Write = () => {
             text: value2,
             cat,
             img: imgUrl,
+            uid: currentUser.id,
             date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
           });
           navigate("/")
