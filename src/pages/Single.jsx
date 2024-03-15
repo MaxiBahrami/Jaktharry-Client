@@ -8,8 +8,6 @@ import { Container } from "react-bootstrap";
 
 const Single = () => {
   const [post, setPost] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -26,10 +24,7 @@ const Single = () => {
         setPost(response.data);
       } catch (error) {
         console.log(error);
-        setError("Error fetching post data");
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchData();
@@ -43,17 +38,8 @@ const Single = () => {
       navigate("/");
     } catch (err) {
       console.log(err);
-      setError("Error deleting post");
     }
   };
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
 
   const splitTextAfterThirdDot = (text) => {
     const sentences = text.split(".");

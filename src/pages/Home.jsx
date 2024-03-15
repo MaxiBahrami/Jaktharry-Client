@@ -5,11 +5,9 @@ import axios from 'axios';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   const cat = useLocation().search;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,12 +18,9 @@ const Home = () => {
 
     } catch (err) {
       console.error('Error fetching data:', err);
-      setError('Error fetching data. Please try again later.');
-
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
+
   fetchData();
 }, [cat]);
 
@@ -49,30 +44,24 @@ const Home = () => {
 
   return (
     <Container className='home'>
-  {error ? (
-    <p>Error: {error}</p>
-  ) : loading ? (
-    <p>Loading...</p>
-  ) : (
     <div className="posts">
       {posts.map(post => (
         <div className="post" key={post.id}>
           <div className="img">
             <img src={post.img} alt="" />
           </div>
-            <div className="content">
-              <Link className='link' to={`/post/${post.id}`}>
-                <h1>{post.title}</h1>
-                {/* Use the truncateText function for post.desc */}
-                <p>{truncateText(post.desc, 150)}</p>
-                <Button onClick={() => handleClick(post.id)}>Läs mer</Button>
-              </Link>
-            </div>
+          <div className="content">
+            <Link className='link' to={`/post/${post.id}`}>
+              <h1>{post.title}</h1>
+              {/* Use the truncateText function for post.desc */}
+              <p>{truncateText(post.desc, 150)}</p>
+              <Button onClick={() => handleClick(post.id)}>Läs mer</Button>
+            </Link>
           </div>
-        ))}
-     </div>
-  )}
-</Container>
+        </div>
+      ))}
+    </div>
+    </Container>
   );
 };
 

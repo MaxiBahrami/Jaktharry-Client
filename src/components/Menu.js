@@ -14,7 +14,6 @@ const Menu = ({cat}) => {
         setPosts(res.data)
       }catch(err){
         console.log(err)
-
       }
     };
     fetchData();

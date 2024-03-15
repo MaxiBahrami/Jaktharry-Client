@@ -24,13 +24,13 @@ const Layout = ()=>{
   )
 }
 
-const router =createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout/>,
     children: [
       { path: "/", element: <Home /> }, 
-      { path: "/write/*", element: <Write />},
+      { path: "/write", element: <Write />},
       { path: "/post/:id/*", element: <Single />},
     ],
   },
