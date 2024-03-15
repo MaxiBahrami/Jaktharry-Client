@@ -16,8 +16,7 @@ const Write = () => {
   const [imgUrl, setimgUrl] = useState(state?.img || "");
   const [cat, setCat] = useState(state?.cat || "");
 
-  const navigate = useNavigate()
-  axios.defaults.withCredentials = true;
+  const navigate = useNavigate();
 
   const handleClick = async (e) => {
     e.preventDefault();
