@@ -19,6 +19,7 @@ const Write = () => {
   const [cat, setCat] = useState(state?.cat || "");
 
   const navigate = useNavigate()
+  axios.defaults.withCredentials = true;
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -31,17 +32,15 @@ const Write = () => {
             text: value2,
             cat,
             img: imgUrl,
-            uid: currentUser.id,
-          }, { withCredentials: true })
+          })
         : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
             title,
             desc: value1,
             text: value2,
             cat,
             img: imgUrl,
-            uid: currentUser.id,
             date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-          }, { withCredentials: true });
+          });
           navigate("/")
     } catch (err) {
       console.log(err);
