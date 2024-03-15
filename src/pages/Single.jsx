@@ -41,6 +41,10 @@ const Single = () => {
     }
   };
 
+  const handleWriteClick = () => {
+    navigate("/write", { state: { currentUser, ...post } });
+  };
+
   const splitTextAfterThirdDot = (text) => {
     const sentences = text.split(".");
 
@@ -72,7 +76,7 @@ const Single = () => {
             </div>
             {currentUser.username === post.username && (
               <div className="edit">
-                <Link to={`/write?edit=2`} state={post}>
+                <Link to={`/write?edit=2`} state={post} onClick={handleWriteClick}>
                   <img
                     src="https://logowik.com/content/uploads/images/888_edit.jpg"
                     alt=""

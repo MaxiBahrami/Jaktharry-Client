@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
-import { Button } from "react-bootstrap";
+import { Button} from "react-bootstrap";
+import bild from "../img/enter.png"
+import { AuthContext } from "../context/authContext.js";
 
 const Write = () => {
   
   const state = useLocation().state;
+  const { currentUser } = useContext(AuthContext);
 
   const [title, setTitle] = useState(state?.title || "");
   const [value1, setValue1] = useState(state?.desc || "");
@@ -44,6 +47,18 @@ const Write = () => {
     }
   };
 
+    // Render the login message if currentUser is null
+  if (!currentUser) {
+    return (
+      <div className='wadd'>
+        <img src={bild} alt="Hero Bild" className="imgClass"/>
+        <h1>Vänligen .. Logga in för att skriva</h1>
+        <Link to="/login" className="link linkclass">login &gt;&gt; </Link>
+      </div>
+    );
+  }
+
+   // Render the write form if currentUser is not null
   return (
     <div className='add'>
       <div className="content">

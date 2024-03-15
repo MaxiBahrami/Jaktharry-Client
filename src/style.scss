@@ -468,11 +468,46 @@ $gray:rgb(78, 78, 78);
   
     //Write
 
+    .wadd{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 50vh;
+
+      .imgClass{
+        width: 150px;
+        height: 150px;
+      }
+
+      h1{
+        color: $Green;
+      }
+
+      .linkclass{
+        margin: 10px;
+        font-size: 20px;
+        color: $gray;
+        width: 200px;
+        text-align: center;
+
+        &:hover{
+          color: white;
+          background-color: #779482;
+        }
+      }
+    }
+
     .add{
       margin-top: 30px;
       display: flex;
       gap: 20px;
 
+      .imgClass{
+        width: 200px;
+        height: 200px;
+      }
       .content{
         flex:5;
         display: flex;
