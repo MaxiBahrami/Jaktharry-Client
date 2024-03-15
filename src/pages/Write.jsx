@@ -8,10 +8,6 @@ import { Button } from "react-bootstrap";
 import {AuthContext} from "../context/authContext.js";
 
 
-axios.interceptors.request.use(config => {
-  config.withCredentials = true; // Include cookies with requests
-  return config;
-});
 
 const Write = () => {
   
