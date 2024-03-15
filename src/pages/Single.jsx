@@ -63,6 +63,7 @@ const Single = () => {
           <div className="img">
             <img src={post.img} alt="" />
           </div>
+          {currentUser && (
           <div className="user">
             {post.userImage && <img src={post.userImage} alt="" />}
             <div className="info">
@@ -84,7 +85,7 @@ const Single = () => {
                 />
               </div>
             )}
-          </div>
+          </div>)}
           <h1>{post.title}</h1>
           <p className="descP">{post.desc}</p>
           {/* Render each paragraph separately */}
