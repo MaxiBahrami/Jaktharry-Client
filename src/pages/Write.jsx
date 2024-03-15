@@ -26,23 +26,34 @@ const Write = () => {
     e.preventDefault();
 
     try {
-      state
-        ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
-            title,
-            desc: value1,
-            text: value2,
-            cat,
-            img: imgUrl,
-          })
-        : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
-            title,
-            desc: value1,
-            text: value2,
-            cat,
-            img: imgUrl,
-            date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-          });
-          navigate("/")
+      const token = currentUser.token; 
+      console.log(token);
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      };
+
+      if (state) {
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
+          title,
+          desc: value1,
+          text: value2,
+          cat,
+          img: imgUrl,
+        }, { headers });
+      } else {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
+          title,
+          desc: value1,
+          text: value2,
+          cat,
+          img: imgUrl,
+          date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+        }, { headers });
+      }
+      
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
