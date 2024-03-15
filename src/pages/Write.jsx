@@ -26,12 +26,12 @@ const Write = () => {
     e.preventDefault();
 
     try {
-      const token = currentUser.token; 
-      console.log(token);
+      const accessToken = localStorage.getItem('access_token');
+      console.log(accessToken)
 
       const headers = {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${accessToken}`,
       };
 
       if (state) {
