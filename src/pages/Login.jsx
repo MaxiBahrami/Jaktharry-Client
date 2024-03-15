@@ -24,20 +24,35 @@ const Login = () => {
   const handleSubmit = async e =>{
     e.preventDefault();
     try{
-      await login(inputs);
+      const { username, password } = inputs;
+      const response = await login({ username, password });
+      const { token } = response.data;
+      
+      // Store the token in localStorage
+      localStorage.setItem('access_token', token);
+      
       navigate("/");
-    }catch(err){
-      setError(err.response.data);
+    }catch(error) {
+    if (error.response) {
+      // Server responded with an error status code
+      setError(error.response.data.message);
+    } else if (error.request) {
+      // The request was made but no response was received
+      setError("Server did not respond. Please try again later.");
+    } else {
+      // Something else happened in making the request
+      setError("An unexpected error occurred. Please try again later.");
     }
+  }
   };
 
   return (
     <Container className='auth'>
       <h1>Logga in</h1>
-      <form >
+      <form onSubmit={handleSubmit}>
         <input required type="text" placeholder='Användarnamn ' name="username" onChange={handleChange}/>
         <input required type="password " placeholder='Lösenord' name="password" onChange={handleChange}/>
-        <Button onClick={handleSubmit}>Logga in</Button>
+        <Button type="submit">Logga in</Button>
         {err && <p>{err}</p>}
         <span>Har du inget konto?.. <Link to="/register">Registrera</Link></span>
       </form>
