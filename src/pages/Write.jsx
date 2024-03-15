@@ -7,6 +7,12 @@ import moment from "moment";
 import { Button } from "react-bootstrap";
 import {AuthContext} from "../context/authContext.js";
 
+
+axios.interceptors.request.use(config => {
+  config.withCredentials = true; // Include cookies with requests
+  return config;
+});
+
 const Write = () => {
   
   const { currentUser } = useContext(AuthContext);
@@ -22,7 +28,7 @@ const Write = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-console.log(currentUser.id);
+
     try {
       state
         ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
