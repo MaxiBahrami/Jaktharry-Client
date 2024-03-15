@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import axios from "axios";
@@ -7,7 +7,7 @@ import moment from "moment";
 import { Button } from "react-bootstrap";
 
 const Write = () => {
-
+  
   const state = useLocation().state;
 
   const [title, setTitle] = useState(state?.title || "");
@@ -17,8 +17,10 @@ const Write = () => {
   const [cat, setCat] = useState(state?.cat || "");
 
   const navigate = useNavigate()
+
   const handleClick = async (e) => {
     e.preventDefault();
+
     try {
       state
         ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
