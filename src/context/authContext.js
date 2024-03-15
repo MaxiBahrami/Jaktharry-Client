@@ -4,9 +4,7 @@ import { createContext, useEffect, useState } from "react";
 export const AuthContext = createContext()
 
 export const AuthContextProvider = ({children})=>{
-  const storedUser = localStorage.getItem("user");
-  const [currentUser, setCurrentUser] = useState(storedUser ? JSON.parse(storedUser) : null);
-
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("user")|| null))
 
   const login = async (inputs) => {
     try {
