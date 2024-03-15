@@ -20,6 +20,7 @@ const Write = () => {
   const [cat, setCat] = useState(state?.cat || "");
 
   const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
 
   const handleClick = async (e) => {
     e.preventDefault();
