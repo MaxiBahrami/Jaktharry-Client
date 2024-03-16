@@ -33,6 +33,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> }, 
       { path: "/write", element: <Write />},
       { path: "/post/:id/*", element: <Single />},
+      { path: "/admindash", element: <Admindash /> },
     ],
   },
   {
@@ -40,9 +41,6 @@ const router = createBrowserRouter([
   },
   {
     path: "/login", element: <Login />,
-  },
-  { 
-    path: "/Admindash", element: <Admindash /> 
   }, 
 ]);
 

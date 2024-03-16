@@ -155,6 +155,28 @@ $gray:rgb(78, 78, 78);
           }
         }
       }
+
+      .linkClass{
+        width: 100px;
+        height: 100px;
+        margin-right: 10px;
+        border: none;
+        color:$darkWhite ;
+        font-weight: 700;
+        justify-content: center;
+        text-align: center;
+        text-decoration: none;
+
+          &:hover{
+            color: $gold;
+          }
+
+        .adClass{
+          width: 60px;
+          height: 60px;
+        }
+        
+      }
     }
 
     //FOOTER

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import {Link} from 'react-router-dom';
 import Logo from "../img/JaktHarryLogo.png"
+import adsett from "../img/adsett.png"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar,NavDropdown, Container, Nav } from 'react-bootstrap';
 import { AuthContext } from '../context/authContext';
@@ -8,6 +9,9 @@ import { AuthContext } from '../context/authContext';
 function CustomNavbar() {
 
   const { currentUser, logout } = useContext(AuthContext);
+
+  // Check if currentUser is admin
+  const isAdmin = currentUser && currentUser.role === 1;
 
   return (
     <Navbar collapseOnSelect expand="lg"  className="bg-dark navbar-dark">
@@ -43,7 +47,12 @@ function CustomNavbar() {
           </Nav>
         </Navbar.Collapse>
       </Container>
-      <Link className="nav-link itemClass">admin</Link>
+      {isAdmin && (
+      <Link to="/admindash" className="linkClass">
+        <img src={adsett} alt="" className='adClass'/>
+        <h6>Adminpanel</h6>  
+      </Link>
+      )}
     </Navbar>
   );
 };
