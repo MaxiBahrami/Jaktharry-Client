@@ -620,7 +620,7 @@ $gray:rgb(78, 78, 78);
       }
     }
 
-    //Admindash
+    //Panel
 
     .conLayout{
       width: 100%;
@@ -636,7 +636,6 @@ $gray:rgb(78, 78, 78);
 
       .rowClass{
         margin: 10px;
-        height: 100vh;
 
         .col1Class{
           
@@ -649,13 +648,48 @@ $gray:rgb(78, 78, 78);
               opacity: 0.5;
               font-size: 1.4em;
               font-weight: bold;
-            }            
+            } 
+          
           }
         }
 
         .col2Class{
           border: solid 1px $gold;
         }
+      }
+    }
+
+    .PostClass {
+
+      .iconClass1{
+        width: 30px;
+        height: 30px;
+        background-color: $darkWhite;
+        padding: 3px;
+        border-radius: 50%;
+      }
+
+      .iconClass2{
+        width: 30px;
+        height: 30px;
+        padding: 3px;
+        border-radius: 50%;
+        background-color: rgb(241, 190, 190);
+      }
+
+      td{
+        color: #2A5913;
+        
+      }
+
+      .titleClass{
+        color: #2A5913;
+        background-color: inherit;
+        text-align: start;
+        display: flex;
+        justify-content: start;
+        text-decoration: none;
+        font-weight: 500;
       }
     }
 

@@ -1,55 +1,71 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import moment from "moment";
+import del from "../img/del.png";
+import edit from "../img/edit.png";
+import { Link, useNavigate } from "react-router-dom";
 
 export const TabContent2 = () => {
-
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
+
+  const handleClick = (postId) => {
+    // Navigate to the single post page with the clicked post ID
+    navigate(`/post/${postId}`);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts`;
-        console.log(apiUrl)
+        console.log(apiUrl);
         const res = await axios.get(apiUrl);
         setPosts(res.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
 
-    } catch (err) {
-      console.error('Error fetching data:', err);
-    } 
-  };
-
-  fetchData();
+    fetchData();
   }, []);
 
   return (
-    <div>
+    <div className="PostClass">
       <div class="table-responsive">
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Date</th>
-          <th>Title</th>
-          <th>Cat</th>
-          {/* <th>skribent</th>
-          <th>Redigera</th>
-          <th>Ta bort</th> */}
-        </tr>
-      </thead>
-      <tbody>
-        {posts.map(post => (
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th width="20%">Datum</th>
+              <th width="40%">Titel</th>
+              <th>kategori</th>
+              <th width="10%">Redigera</th>
+              <th width="10%">Ta bort</th>
+            </tr>
+          </thead>
+          <tbody>
+            {posts.map((post) => (
               <tr key={post.id}>
                 <td>{post.id}</td>
-                <td>{post.date}</td>
-                <td>{post.title}</td>
+                <td width="20%">{moment(post.date).format("LL")}</td>
+                <td width="40%">
+                <Link className="titleClass" onClick={() => handleClick(post.id)}>{post.title}</Link>
+                </td>
                 <td>{post.cat}</td>
-                {/* <td>{post.skribent}</td> */}
+                <td width="10%">
+                  <Link to="/your-link-here">
+                    <img src={edit} alt="" className="iconClass1" />
+                  </Link>
+                </td>
+                <td width="10%">
+                  <img src={del} alt="" className="iconClass2" />
+                </td>
                 {/* Add your edit and delete buttons here */}
               </tr>
             ))}
-      </tbody>
-    </table>
-  </div>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
