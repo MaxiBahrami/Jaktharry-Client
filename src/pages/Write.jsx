@@ -26,6 +26,9 @@ const Write = () => {
     e.preventDefault();
 
     try {
+      const token = localStorage.getItem('accessToken'); // Retrieve the token from local storage
+      const headers = { Authorization: `Bearer ${token}` }; // Create the Authorization header
+
       state
         ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
             title,
@@ -33,7 +36,7 @@ const Write = () => {
             text: value2,
             cat,
             img: imgUrl,
-          })
+          }, { headers })
         : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
             title,
             desc: value1,
@@ -41,7 +44,7 @@ const Write = () => {
             cat,
             img: imgUrl,
             date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-          });
+          }, { headers });
           navigate("/")
     } catch (err) {
       console.log(err);
