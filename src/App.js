@@ -8,7 +8,7 @@ import Login from "./pages/Login";
 import Write from "./pages/Write";
 import Home from "./pages/Home";
 import Single from "./pages/Single";
-import Admindash from "./pages/Admindash";
+import Admindash from "./pages/Admindash.jsx";
 import Footer from "./components/Footer";
 import CustomNavbar from "./components/Navbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
