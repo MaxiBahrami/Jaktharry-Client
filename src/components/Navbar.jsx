@@ -42,7 +42,8 @@ function CustomNavbar() {
             <Link ></Link>
           </Nav>
         </Navbar.Collapse>
-        </Container>
+      </Container>
+      <Link className="nav-link itemClass">admin</Link>
     </Navbar>
   );
 };
