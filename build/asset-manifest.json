@@ -1,15 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.b9284efb.css",
-    "main.js": "/static/js/main.8551402a.js",
+    "main.css": "/static/css/main.f9f81a52.css",
+    "main.js": "/static/js/main.eeef6858.js",
     "static/media/hero-bild.jpg": "/static/media/hero-bild.295a077a6cab66fd3bbf.jpg",
+    "static/media/adsett.png": "/static/media/adsett.4be1d9df42b23ac58690.png",
     "static/media/JaktHarryLogo.png": "/static/media/JaktHarryLogo.2ecc3d5269413774a6cd.png",
     "index.html": "/index.html",
-    "main.b9284efb.css.map": "/static/css/main.b9284efb.css.map",
-    "main.8551402a.js.map": "/static/js/main.8551402a.js.map"
+    "main.f9f81a52.css.map": "/static/css/main.f9f81a52.css.map",
+    "main.eeef6858.js.map": "/static/js/main.eeef6858.js.map"
   },
   "entrypoints": [
-    "static/css/main.b9284efb.css",
-    "static/js/main.8551402a.js"
+    "static/css/main.f9f81a52.css",
+    "static/js/main.eeef6858.js"
   ]
 }
