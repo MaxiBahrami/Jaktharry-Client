@@ -598,6 +598,45 @@ $gray:rgb(78, 78, 78);
       }
     }
 
+    //Admindash
+
+    .conLayout{
+      width: 100%;
+      text-align: center;
+
+      h1{
+        margin: 15px;
+        padding: 15px;
+        background-color: $gold;
+        color: $Green;
+        font-weight: bold;
+      }
+
+      .rowClass{
+        margin: 10px;
+        height: 100vh;
+
+        .col1Class{
+          
+          .groupClass{
+            margin-top: 20px;
+            border: solid 1px $gold;
+            gap: 5px;
+            
+            .non-clickable {
+              opacity: 0.5;
+              font-size: 1.4em;
+              font-weight: bold;
+            }            
+          }
+        }
+
+        .col2Class{
+          border: solid 1px $gold;
+        }
+      }
+    }
+
   }
 
   @media screen and (max-width: 579px){

@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Write from "./pages/Write";
 import Home from "./pages/Home";
 import Single from "./pages/Single";
+import Admindash from "./pages/Admindash";
 import Footer from "./components/Footer";
 import CustomNavbar from "./components/Navbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -40,6 +41,9 @@ const router = createBrowserRouter([
   {
     path: "/login", element: <Login />,
   },
+  { 
+    path: "/Admindash", element: <Admindash /> 
+  }, 
 ]);
 
 function App() {

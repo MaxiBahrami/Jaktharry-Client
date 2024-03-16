@@ -28,7 +28,7 @@ function CustomNavbar() {
                 <Link to="/?cat=lans" className="nav-link itemClass">LÄNS</Link>
               </NavDropdown.Item>
               <NavDropdown.Item>
-                <Link to="/?cat=lokalt" className="nav-link itemClass">LOKALT</Link>
+                <Link to="/?cat=kretsar" className="nav-link itemClass">KRETSAR</Link>
               </NavDropdown.Item>
             </NavDropdown>
             <Link to="/?cat=aktiviteter" className="nav-link">AKTIVITETER</Link>
