@@ -5,6 +5,7 @@ import axios from "axios";
 import moment from "moment";
 import { AuthContext } from "../context/authContext.js";
 import { Container } from "react-bootstrap";
+import DOMPurify from 'dompurify'; 
 
 const Single = () => {
   const [post, setPost] = useState({});
@@ -91,13 +92,13 @@ const Single = () => {
             )}
           </div>)}
           <h1>{post.title}</h1>
-          <p className="descP">{post.desc}</p>
+          <p className="descP" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.desc) }}></p>
           {/* Render each paragraph separately */}
           {paragraphs.map((paragraph, index) => (
             <p
               key={index}
               dangerouslySetInnerHTML={{
-                __html: paragraph.replace(/\n/g, "<br />"),
+                __html: DOMPurify.sanitize(paragraph.replace(/\n/g, "<br />")),
               }}
             />
           ))}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Container, Button } from 'react-bootstrap';
 import axios from 'axios';
+import DOMPurify from 'dompurify';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -42,6 +43,10 @@ const Home = () => {
     navigate(`/post/${postId}`);
   };
 
+  const sanitizeHTML = (html) => {
+    return { __html: DOMPurify.sanitize(html) };
+  };
+
   return (
     <Container className='home'>
     <div className="posts">
@@ -54,8 +59,8 @@ const Home = () => {
             <Link className='link' to={`/post/${post.id}`}>
               <h1>{post.title}</h1>
               {/* Use the truncateText function for post.desc */}
-              <p>{truncateText(post.desc, 150)}</p>
-              <Button onClick={() => handleClick(post.id)}>Läs mer</Button>
+              <p dangerouslySetInnerHTML={sanitizeHTML(truncateText(post.desc, 150))}></p>
+                <Button onClick={() => handleClick(post.id)}>Läs mer</Button>
             </Link>
           </div>
         </div>
