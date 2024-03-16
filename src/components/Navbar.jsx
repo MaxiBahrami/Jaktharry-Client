@@ -48,7 +48,7 @@ function CustomNavbar() {
         </Navbar.Collapse>
       </Container>
       {isAdmin && (
-      <Link to="/admindash" className="linkClass">
+      <Link to="/panel" className="linkClass">
         <img src={adsett} alt="" className='adClass'/>
         <h6>Adminpanel</h6>  
       </Link>
