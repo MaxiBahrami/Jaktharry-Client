@@ -831,6 +831,35 @@ $gray:rgb(78, 78, 78);
         }
       }
 
+      .conLayout{
+        margin: 15px auto;
+  
+        .rowClass{
+          margin: 5px 0px;
+          font-size: 14px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+  
+          .col1Class{
+            width: 80%;
+            
+            .groupClass{
+              margin-top: 10px;
+              gap: 1px;
+              font-size: 16px; 
+            }
+          }
+  
+          .col2Class{
+            border: solid 1px $gold;
+            padding: 0;
+            width: 100%;
+            margin-top: 20px;
+          }
+        }
+      }
     }
     
   }
@@ -957,6 +986,36 @@ $gray:rgb(78, 78, 78);
           }
         }
       }
+
+      .conLayout{
+        margin: 15px auto;
+  
+        .rowClass{
+          margin: 5px 0px;
+          font-size: 14px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+  
+          .col1Class{
+            width: 80%;
+            
+            .groupClass{
+              margin-top: 10px;
+              gap: 1px;
+              font-size: 16px; 
+            }
+          }
+  
+          .col2Class{
+            border: solid 1px $gold;
+            padding: 0;
+            width: 100%;
+            margin-top: 20px;
+          }
+        }
+      }
     }
   }
 
@@ -1054,6 +1113,32 @@ $gray:rgb(78, 78, 78);
         }
       }
     }
+
+    .conLayout{
+      width: 100%;
+      text-align: center;
+      margin: 15px auto;
+
+      .rowClass{
+        margin: 5px 0px;
+        font-size: 14px;
+
+        .col1Class{
+         
+          .groupClass{
+            margin-top: 10px;
+            gap: 1px;
+            font-size: 14px; 
+          }
+        }
+
+        .col2Class{
+          border: solid 1px $gold;
+          padding: 0;
+        }
+      }
+    }
+
   }
 
 }
