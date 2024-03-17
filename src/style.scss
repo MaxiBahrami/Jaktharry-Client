@@ -112,12 +112,15 @@ $gray:rgb(78, 78, 78);
           
           #collapsible-nav-dropdown{
             font-weight: bold;
-            
             &:hover{
               color: $gold;
             }
           }
 
+          .item{
+            background-color: $lightGreen;
+            border: solid $gold 2px;
+          }
           .nav-link{
             border: none;
             color:$darkWhite ;
@@ -132,6 +135,17 @@ $gray:rgb(78, 78, 78);
             background-color: $lightGreen;
             padding-top: 0px;
             padding-bottom: 0px;
+          }
+
+          .itemClass2{
+            background-color: $darkWhite;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            color:$Green;
+
+            &:hover{
+              background-color: $lightGreen;
+            }
           }
 
           .write{

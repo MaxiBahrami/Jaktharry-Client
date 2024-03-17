@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import del from "../img/del.png";
 import edit from "../img/edit.png";
@@ -307,20 +307,49 @@ export const TabContent5 = () => {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
 
+  const kretsarList = useMemo(() => [
+    "StockholmCentrala",
+    "Hallstavik",
+    "HaningeTyresö",
+    "Lidingö",
+    "Mälarö",
+    "Norrort",
+    "NorrtäljeNorra",
+    "NorrtäljeSödra",
+    "Nynäshamn",
+    "Rimbo",
+    "SolnaSundbyberg",
+    "Söderort",
+    "Södertälje",
+    "UpplandsBro",
+    "WermdöNacka",
+    "VäsbySollentunaJärfälla",
+    "Västerort",
+    "ÖsteråkerVaxholm"
+  ], []);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=kretsar`;
-        console.log(apiUrl);
-        const res = await axios.get(apiUrl);
-        setPosts(res.data);
+        const promises = kretsarList.map(async (category) => {
+          const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=${category}`;
+          console.log(apiUrl);
+          const res = await axios.get(apiUrl);
+          return res.data;
+        });
+
+        const results = await Promise.all(promises);
+
+        const allPosts = results.reduce((acc, curr) => acc.concat(curr), []);
+
+        setPosts(allPosts);
       } catch (err) {
         console.error("Error fetching data:", err);
       }
     };
 
     fetchData();
-  }, []);
+  }, [kretsarList]);
 
   const handleClick = (postId) => {
     // Navigate to the single post page with the clicked post ID

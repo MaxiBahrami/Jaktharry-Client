@@ -13,6 +13,28 @@ function CustomNavbar() {
   // Check if currentUser is admin
   const isAdmin = currentUser && currentUser.role === 1;
 
+   // Define kretsarList
+   const kretsarList = [
+    "StockholmCentrala",
+    "Hallstavik",
+    "HaningeTyresö",
+    "Lidingö",
+    "Mälarö",
+    "Norrort",
+    "NorrtäljeNorra",
+    "NorrtäljeSödra",
+    "Nynäshamn",
+    "Rimbo",
+    "SolnaSundbyberg",
+    "Söderort",
+    "Södertälje",
+    "UpplandsBro",
+    "WermdöNacka",
+    "VäsbySollentunaJärfälla",
+    "Västerort",
+    "ÖsteråkerVaxholm"
+  ];
+
   return (
     <Navbar collapseOnSelect expand="lg"  className="bg-dark navbar-dark">
       <Container>
@@ -25,15 +47,19 @@ function CustomNavbar() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto navClass" >
             <NavDropdown title="NYHETER" id="collapsible-nav-dropdown">
-              <NavDropdown.Item>
+              <NavDropdown.Item className="item">
                 <Link to="/?cat=riks" className="nav-link itemClass">RIKS</Link>
               </NavDropdown.Item>
-              <NavDropdown.Item>
+              <NavDropdown.Item className="item">
                 <Link to="/?cat=lans" className="nav-link itemClass">LÄNS</Link>
               </NavDropdown.Item>
-              <NavDropdown.Item>
-                <Link to="/?cat=kretsar" className="nav-link itemClass">KRETSAR</Link>
-              </NavDropdown.Item>
+              <NavDropdown title="KRETSAR" id="kretsar-dropdown" className="item">
+                {kretsarList.map((krets, index) => (
+                  <NavDropdown.Item key={index}>
+                    <Link to={`/?cat=${krets}`} className="nav-link itemClass2">{krets}</Link>
+                  </NavDropdown.Item>
+                ))}
+              </NavDropdown>
             </NavDropdown>
             <Link to="/?cat=aktiviteter" className="nav-link">AKTIVITETER</Link>
             <Link to="#" className="nav-link">{currentUser?.username}</Link>
