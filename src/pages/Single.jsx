@@ -31,14 +31,26 @@ const Single = () => {
     fetchData();
   }, [postId]);
 
-  const handleDelete = async () => {
+  const handleDelete = async (post) => {
     try {
-      await axios.delete(
-        `${process.env.REACT_APP_API_URL}/api/posts/${postId}`
-      );
+      // Ask for confirmation before deleting
+      const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+      if (!confirmDelete) return;
+  
+      // Retrieve the token from local storage
+      const token = localStorage.getItem('accessToken');
+      console.log(token);
+  
+      // Create headers with the Authorization header
+      const headers = { Authorization: `Bearer ${token}` };
+  
+      // Perform the delete operation with the Authorization header
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/${post.id}`;
+      await axios.delete(apiUrl, { headers });
+
       navigate("/");
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.error("Error deleting post:", error);
     }
   };
 
@@ -84,7 +96,7 @@ const Single = () => {
                   />
                 </Link>
                 <img
-                  onClick={handleDelete}
+                  onClick={() => handleDelete(post)}
                   src="https://cdn.iconscout.com/icon/free/png-256/free-delete-2902143-2411575.png"
                   alt=""
                 />
