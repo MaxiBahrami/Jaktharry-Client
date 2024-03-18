@@ -528,11 +528,79 @@ export const TabContent7 = () => {
 };
 
 export const TabContent8 = () => {
-  // Add functionality for Tab pane content 8
+  const [posts, setPosts] = useState([]);
+  const [username, setUsername] = useState('');
+  const [userId, setUserId] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=aktiviteter&userId=${userId}`;
+        console.log(apiUrl);
+        const res = await axios.get(apiUrl);
+        setPosts(res.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+    fetchData();
+  }, [userId]);
+  const handleClick = (postId) => {
+    // Navigate to the single post page with the clicked post ID
+    navigate(`/post/${postId}`);
+  };
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handleSearch = async () => {
+    try {
+      // Fetch user ID based on the entered username
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users?username=${username}`;
+      const res = await axios.get(apiUrl);
+      const userData = res.data;
+      if (userData.length > 0) {
+        // If user found, set the user ID
+        setUserId(userData[0].id);
+      } else {
+        // If user not found, handle appropriately (e.g., show error message)
+        console.log("User not found");
+      }
+    } catch (error) {
+      console.error("Error searching for user:", error);
+    }
+  };
+
   return (
     <div>
-      {/* Content for Tab pane content 8 */}
-      <p>Content for Tab pane content 8</p>
+      <span>Användarnamn</span>
+      <input type="text" value={username} onChange={handleUsernameChange} />
+      <button onClick={handleSearch}>Sök</button>
+      <h3>Alla aktiviteter som användaren har registrerat sig för är:</h3>
+      <div className="table-responsive">
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th width="10%">#</th>
+              <th width="20%">Datum</th>
+              <th width="40%">Titel</th>
+            </tr>
+          </thead>
+          <tbody>
+            {posts.map((post, index) => (
+              <tr key={post.id}>
+                <td width="10%">{index + 1}</td>
+                <td width="20%">{moment(post.date).format("LL")}</td>
+                <td width="40%">
+                  <Link className="titleClass" onClick={() => handleClick(post.id)}>{post.title}</Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

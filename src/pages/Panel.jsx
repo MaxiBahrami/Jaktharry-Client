@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Container, ListGroup, Row, Tab } from "react-bootstrap";
 import { TabContent2, TabContent3, TabContent4, 
   TabContent5, TabContent7, TabContent8, TabContent9, 
-  TabContent10, TabContent11, TabContent12, } from "../components/adminContent.js";
+  TabContent11, TabContent12, } from "../components/adminContent.js";
 
 // Define the array containing tab items
 const tabItems = [
@@ -17,11 +17,11 @@ const tabItems2 = [
   { id: '#link6', title: 'AKTIVITETER' },
   { id: '#link7', title: 'Alla', content: <TabContent7 /> },
   { id: '#link8', title: 'För en användare', content: <TabContent8 /> },
-  { id: '#link9', title: 'För en Krets', content: <TabContent9 /> },
+  { id: '#link9', title: 'För en aktivitet', content: <TabContent9 /> },
 ];
 
 const tabItems3 = [
-  { id: '#link10', title: 'Användarna', content: <TabContent10 /> },
+  { id: '#link10', title: 'Användarna' },
   { id: '#link11', title: 'Alla användare', content: <TabContent11 /> },
   { id: '#link12', title: 'Moderatorer', content: <TabContent12 /> },
 ];

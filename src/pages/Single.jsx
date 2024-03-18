@@ -4,8 +4,11 @@ import Menu from "../components/Menu";
 import axios from "axios";
 import moment from "moment";
 import { AuthContext } from "../context/authContext.js";
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import DOMPurify from 'dompurify'; 
+import del from "../img/del.png";
+import edit from "../img/edit.png";
+import StarRating from "../components/StarRating.jsx";
 
 const Single = () => {
   const [post, setPost] = useState({});
@@ -15,6 +18,8 @@ const Single = () => {
 
   const postId = location.pathname.split("/")[2];
   const { currentUser } = useContext(AuthContext);
+
+  const [userIsSignedUp, setUserIsSignedUp] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +34,29 @@ const Single = () => {
     };
 
     fetchData();
-  }, [postId]);
+    if (currentUser) {
+      const checkIsUserSignedUp = async () => {
+        try {
+          const data = { postId };
+          const res = await axios.post(
+            `${process.env.REACT_APP_API_URL}/posts/signup/status`,
+            data
+          );
+
+          const { status } = res.data;
+
+          setUserIsSignedUp(status);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+
+      checkIsUserSignedUp();
+    }
+  }, [postId, currentUser]);
+
+  const handleUserSignUp = async () => {
+  };
 
   const handleDelete = async (post) => {
     try {
@@ -90,20 +117,19 @@ const Single = () => {
             {currentUser.username === post.username && (
               <div className="edit">
                 <Link to={`/write?edit=2`} state={post} onClick={handleWriteClick}>
-                  <img
-                    src="https://logowik.com/content/uploads/images/888_edit.jpg"
-                    alt=""
-                  />
+                <img src={edit} alt="" className="iconClass1" />
                 </Link>
                 <img
                   onClick={() => handleDelete(post)}
-                  src="https://cdn.iconscout.com/icon/free/png-256/free-delete-2902143-2411575.png"
-                  alt=""
+                  src={del} alt=""
                 />
               </div>
             )}
           </div>)}
           <h1>{post.title}</h1>
+
+          <StarRating initUserHasRated disabled={!currentUser} userId={currentUser?.id} post={post} className="star-rating"/>
+
           <p className="descP" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.desc) }}></p>
           {/* Render each paragraph separately */}
           {paragraphs.map((paragraph, index) => (
@@ -116,6 +142,11 @@ const Single = () => {
           ))}
         </div>
 
+        {post.cat === "aktiviteter" && <div className="text-center">
+          <Button onClick={handleUserSignUp} disabled={userIsSignedUp}>
+            Sign up to Aktivitet
+          </Button>
+        </div>}
       </div>
       <Menu cat={post.cat} />
     </Container>

@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Container, Button } from 'react-bootstrap';
 import axios from 'axios';
 import DOMPurify from 'dompurify';
+import StarRating from '../components/StarRating';
+import { AuthContext } from '../context/authContext';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
-
+  const { currentUser } = useContext(AuthContext);
   const cat = useLocation().search;
   const navigate = useNavigate();
 
@@ -60,6 +62,7 @@ const Home = () => {
               <h1>{post.title}</h1>
               {/* Use the truncateText function for post.desc */}
               <p dangerouslySetInnerHTML={sanitizeHTML(truncateText(post.desc, 150))}></p>
+              <StarRating disabled userId={currentUser?.id} post={post} />
                 <Button onClick={() => handleClick(post.id)}>Läs mer</Button>
             </Link>
           </div>
