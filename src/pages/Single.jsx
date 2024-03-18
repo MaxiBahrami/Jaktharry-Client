@@ -33,25 +33,32 @@ const Single = () => {
 
   const handleUserSignUp = async () => {
     if (!currentUser) {
-    const shouldLogin = window.confirm("Login to sign the activity");
-    if (shouldLogin) {
-      navigate("/login");
-    }}
-    else {
-    try {
-      const token = localStorage.getItem('accessToken'); 
-      const headers = { Authorization: `Bearer ${token}` }; 
-    
-    console.log(postId)
-
-    await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId }, { headers });
-
-    navigate("/")
-  } catch (error) {
-    console.error("Error signing up for activity:", error);
-  }  
-};
-  }
+      const shouldLogin = window.confirm("Login to sign the activity");
+      if (shouldLogin) {
+        navigate("/login");
+      }
+    } else {
+      try {
+        const token = localStorage.getItem('accessToken'); 
+        const headers = { Authorization: `Bearer ${token}` }; 
+  
+        console.log(postId);
+  
+        const response = await axios({
+          method: 'post',
+          url: `${process.env.REACT_APP_API_URL}/api/posts/signup`,
+          data: { postId },
+          headers: headers
+        });
+  
+        console.log(response.data); // Log the response data if needed
+  
+        navigate("/");
+      } catch (error) {
+        console.error("Error signing up for activity:", error);
+      }  
+    }
+  };
 
   const handleDelete = async (post) => {
     try {
