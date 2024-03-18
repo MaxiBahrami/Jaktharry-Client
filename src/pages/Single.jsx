@@ -9,7 +9,6 @@ import DOMPurify from 'dompurify';
 
 const Single = () => {
   const [post, setPost] = useState({});
-
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -32,31 +31,26 @@ const Single = () => {
     fetchData();
   }, [postId]);
 
-  const handleUserSignUp = async (e) => {
-    e.preventDefault();
+  const handleUserSignUp = async () => {
+    if (!currentUser) {
+    const shouldLogin = window.confirm("Login to sign the activity");
+    if (shouldLogin) {
+      navigate("/login");
+    }}
+    else {
     try {
       const token = localStorage.getItem('accessToken'); 
-      console.log(token)
       const headers = { Authorization: `Bearer ${token}` }; 
+    
+    console.log(postId)
 
-    const data = { postId };
-    console.log(data)
+    await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId }, { headers });
 
-    await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, {
-        data}, { headers });
     navigate("/")
-  } catch (err) {
-    console.log(err);
-  }
+  } catch (error) {
+    console.error("Error signing up for activity:", error);
+  }  
 };
-    // Render the login message if currentUser is null
-  if (!currentUser) {
-    return (
-      <div className='wadd'>
-        <h1>Vänligen .. Logga in för att skriva</h1>
-        <Link to="/login" className="link linkclass">login &gt;&gt; </Link>
-      </div>
-    );
   }
 
   const handleDelete = async (post) => {
@@ -156,6 +150,6 @@ const Single = () => {
       <Menu cat={post.cat} />
     </Container>
   );
-};
+}
 
 export default Single;
