@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import UserAvatar from "../components/UserAvatar";
 import "../assets/styles/userProfile.scss";
 import PostCard from "../components/PostCard";
-import axios from "../axios";
+import axios from "axios";
 import { AuthContext } from "../context/authContext";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";

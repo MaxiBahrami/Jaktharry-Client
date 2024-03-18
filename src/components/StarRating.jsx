@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import StarOutline from "../assets/img/star-outline.svg";
 import StarIcon from "../assets/img/star.svg";
 import HalfStarIcon from "../assets/img/star-half.svg";
-import axios from "../axios";
+import axios from "axios";
 
 const defArr = Array(5)
   .fill(0)
@@ -38,7 +38,7 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 
       setIsLoading(true);
 
-      await axios.put(`/posts/rate`, data);
+      await axios.put(`${process.env.REACT_APP_API_URL}/posts/rate`, data);
 
       setMessage("rating submitted successfully");
       setIsLoading(false);

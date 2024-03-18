@@ -6,9 +6,6 @@ import moment from "moment";
 import { AuthContext } from "../context/authContext.js";
 import { Button, Container } from "react-bootstrap";
 import DOMPurify from 'dompurify'; 
-import del from "../img/del.png";
-import edit from "../img/edit.png";
-import StarRating from "../components/StarRating.jsx";
 
 const Single = () => {
   const [post, setPost] = useState({});
@@ -18,8 +15,7 @@ const Single = () => {
 
   const postId = location.pathname.split("/")[2];
   const { currentUser } = useContext(AuthContext);
-
-  const [userIsSignedUp, setUserIsSignedUp] = useState(false);
+  axios.defaults.withCredentials = true;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,29 +30,34 @@ const Single = () => {
     };
 
     fetchData();
-    if (currentUser) {
-      const checkIsUserSignedUp = async () => {
-        try {
-          const data = { postId };
-          const res = await axios.post(
-            `${process.env.REACT_APP_API_URL}/posts/signup/status`,
-            data
-          );
+  }, [postId]);
 
-          const { status } = res.data;
+  const handleUserSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('accessToken'); 
+      console.log(token)
+      const headers = { Authorization: `Bearer ${token}` }; 
 
-          setUserIsSignedUp(status);
-        } catch (err) {
-          console.log(err);
-        }
-      };
+    const data = { postId };
+    console.log(data)
 
-      checkIsUserSignedUp();
-    }
-  }, [postId, currentUser]);
-
-  const handleUserSignUp = async () => {
-  };
+    await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, {
+        data}, { headers });
+    navigate("/")
+  } catch (err) {
+    console.log(err);
+  }
+};
+    // Render the login message if currentUser is null
+  if (!currentUser) {
+    return (
+      <div className='wadd'>
+        <h1>Vänligen .. Logga in för att skriva</h1>
+        <Link to="/login" className="link linkclass">login &gt;&gt; </Link>
+      </div>
+    );
+  }
 
   const handleDelete = async (post) => {
     try {
@@ -117,19 +118,20 @@ const Single = () => {
             {currentUser.username === post.username && (
               <div className="edit">
                 <Link to={`/write?edit=2`} state={post} onClick={handleWriteClick}>
-                <img src={edit} alt="" className="iconClass1" />
+                  <img
+                    src="https://logowik.com/content/uploads/images/888_edit.jpg"
+                    alt=""
+                  />
                 </Link>
                 <img
                   onClick={() => handleDelete(post)}
-                  src={del} alt=""
+                  src="https://cdn.iconscout.com/icon/free/png-256/free-delete-2902143-2411575.png"
+                  alt=""
                 />
               </div>
             )}
           </div>)}
           <h1>{post.title}</h1>
-
-          <StarRating initUserHasRated disabled={!currentUser} userId={currentUser?.id} post={post} className="star-rating"/>
-
           <p className="descP" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.desc) }}></p>
           {/* Render each paragraph separately */}
           {paragraphs.map((paragraph, index) => (
@@ -141,12 +143,15 @@ const Single = () => {
             />
           ))}
         </div>
+        
+        {post.cat === "aktiviteter" && (
+          <div className="text-center">
+            <Button onClick={handleUserSignUp}>
+                Delta i aktiviteten
+            </Button>
+          </div>
+        )}
 
-        {post.cat === "aktiviteter" && <div className="text-center">
-          <Button onClick={handleUserSignUp} disabled={userIsSignedUp}>
-            Sign up to Aktivitet
-          </Button>
-        </div>}
       </div>
       <Menu cat={post.cat} />
     </Container>

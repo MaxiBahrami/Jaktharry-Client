@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../assets/styles/updatePassword.scss";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import axios from "../axios";
+import axios from "axios";
 
 const UpdatePassword = () => {
   const navigate = useNavigate();
