@@ -31,7 +31,9 @@ const Single = () => {
     fetchData();
   }, [postId]);
 
-  const handleUserSignUp = async () => {
+  const handleUserSignUp = async (postId, e) => {
+    e.preventDefault();
+
     if (!currentUser) {
       const shouldLogin = window.confirm("Login to sign the activity");
       if (shouldLogin) {
@@ -41,22 +43,34 @@ const Single = () => {
       try {
         const token = localStorage.getItem('accessToken'); 
         const headers = { Authorization: `Bearer ${token}` }; 
-  
-        console.log(postId);
-  
-        const response = await axios({
-          method: 'post',
-          url: `${process.env.REACT_APP_API_URL}/api/posts/signup`,
-          data: { postId },
-          headers: headers
-        });
-  
-        console.log(response.data); // Log the response data if needed
-  
-        navigate("/");
+
+        const exist = await userPostExist(postId);;
+
+        if (!exist) {
+          await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId }, { headers });
+          navigate("/");
+        } else {
+          console.error("User already signed up for this post");
+        }
       } catch (error) {
         console.error("Error signing up for activity:", error);
-      }  
+      }
+    }
+  };
+
+  const userPostExist = async (postId) => {
+    try {
+      const token = localStorage.getItem('accessToken'); 
+      const headers = { Authorization: `Bearer ${token}` }; 
+  
+      // Make a request to your backend to check user post status
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/signup/status?postId=${postId}`, { headers });
+      
+      // Response should contain a boolean indicating if the user has already signed up
+      return response.data.exists;
+    } catch (error) {
+      console.error("Error checking if user post exists:", error);
+      return false; // Assuming it doesn't exist if there's an error
     }
   };
 
@@ -72,7 +86,7 @@ const Single = () => {
   
       // Create headers with the Authorization header
       const headers = { Authorization: `Bearer ${token}` };
-  
+      
       // Perform the delete operation with the Authorization header
       const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/${post.id}`;
       await axios.delete(apiUrl, { headers });
@@ -147,7 +161,7 @@ const Single = () => {
         
         {post.cat === "aktiviteter" && (
           <div className="text-center">
-            <Button onClick={handleUserSignUp}>
+            <Button onClick={(e) => handleUserSignUp(post.id, e)}>
                 Delta i aktiviteten
             </Button>
           </div>
