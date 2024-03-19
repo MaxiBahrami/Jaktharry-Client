@@ -32,6 +32,7 @@ const Single = () => {
   }, [postId]);
 
   const handleUserSignUp = async (postId, e) => {
+    
     e.preventDefault();
 
     if (!currentUser) {
@@ -40,14 +41,16 @@ const Single = () => {
         navigate("/login");
       }
     } else {
+      console.log("--------------" + {postId})
       try {
         const token = localStorage.getItem('accessToken'); 
         const headers = { Authorization: `Bearer ${token}` }; 
 
-        const exist = await userPostExist(postId);;
+        const exist = await userPostExist(postId);
 
         if (!exist) {
           await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId }, { headers });
+          console.log("Successfully signed up for the activity");
           navigate("/");
         } else {
           console.error("User already signed up for this post");
@@ -59,10 +62,11 @@ const Single = () => {
   };
 
   const userPostExist = async (postId) => {
+    
     try {
       const token = localStorage.getItem('accessToken'); 
       const headers = { Authorization: `Bearer ${token}` }; 
-  
+      console.log({postId})
       // Make a request to your backend to check user post status
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/signup/status?postId=${postId}`, { headers });
       
