@@ -54,7 +54,7 @@ const Single = () => {
           navigate("/");
         } else {
           console.error("User already signed up for this post");
-          alert("You are already signed up for this post");
+          window.alert("Du är redan registrerad för denna aktivitet");
         }
       } catch (error) {
         console.error("Error signing up for activity:", error);
