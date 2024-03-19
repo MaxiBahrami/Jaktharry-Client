@@ -41,13 +41,12 @@ const Single = () => {
         navigate("/login");
       }
     } else {
-      console.log("--------------" + {postId})
       try {
         const token = localStorage.getItem('accessToken'); 
         const headers = { Authorization: `Bearer ${token}` }; 
 
         const exist = await userPostExist(postId);
-
+        console.log("++++++++++++++++");
         if (!exist) {
           await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId }, { headers });
           console.log("Successfully signed up for the activity");
@@ -66,10 +65,10 @@ const Single = () => {
     try {
       const token = localStorage.getItem('accessToken'); 
       const headers = { Authorization: `Bearer ${token}` }; 
-      console.log({postId})
+    
       // Make a request to your backend to check user post status
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/signup/status?postId=${postId}`, { headers });
-      
+      console.log("---------------");
       // Response should contain a boolean indicating if the user has already signed up
       return response.data.exists;
     } catch (error) {
