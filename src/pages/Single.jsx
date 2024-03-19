@@ -15,8 +15,7 @@ const Single = () => {
   const postId = location.pathname.split("/")[2];
   const { currentUser } = useContext(AuthContext);
   axios.defaults.withCredentials = true;
-  // const [isLoading, setIsLoading] = useState(false); 
-  const [userIsSignedUp, setUserIsSignedUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,114 +26,64 @@ const Single = () => {
         setPost(response.data);
       } catch (error) {
         console.log(error);
-      }
+      } 
     };
 
     fetchData();
+  }, [postId]);
 
-    if (currentUser) {
-      const checkIsUserSignedUp = async () => {
-        try {
-          const data = { postId };
-          const res = await axios.post(
-            `${process.env.REACT_APP_API_URL}/api/posts/signup/status`,
-            data
-          );
+  const handleUserSignUp = async (postId, e) => {
+    
+    e.preventDefault();
 
-          const { status } = res.data;
+    if (!currentUser) {
+      const shouldLogin = window.confirm("Login to sign the activity");
+      if (shouldLogin) {
+        navigate("/login");
+      }
+    } else {
+      try {
+        const token = localStorage.getItem('accessToken'); 
+        const headers = { Authorization: `Bearer ${token}` }; 
+        setIsLoading(true);
 
-          setUserIsSignedUp(status);
-        } catch (err) {
-          console.log(err);
+        const exist = await userPostExist(postId);
+         console.log(exist)
+         
+         if (exist !== true) {
+          await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId }, { headers });
+          ;
+          window.alert("Du är registrerad för denna aktivitet");
+          navigate("/");
+        } else {
+          console.error("User already signed up for this post");
+          window.alert("Du är redan registrerad för denna aktivitet");
         }
-      };
-
-      checkIsUserSignedUp();
-    }
-  }, [postId, currentUser]);
-
-  const handleUserSignUp = async () => {
-    try {
-      const data = { postId };
-
-      await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/posts/signup`,
-        data
-      );
-
-      setUserIsSignedUp(true);
-    } catch (err) {
-      console.log(err);
+      } catch (error) {
+        console.error("Error signing up for activity:", error);
+      }finally {
+        setIsLoading(false); // Reset loading state regardless of the outcome
+      }
     }
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${process.env.REACT_APP_API_URL}/api/posts/${postId}`
-  //       );
-  //       setPost(response.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     } 
-  //   };
-
-  //   fetchData();
-  // }, [postId]);
-
-  // const handleUserSignUp = async (postId, e) => {
+  const userPostExist = async (postId) => {
     
-  //   e.preventDefault();
-
-  //   if (!currentUser) {
-  //     const shouldLogin = window.confirm("Login to sign the activity");
-  //     if (shouldLogin) {
-  //       navigate("/login");
-  //     }
-  //   } else {
-  //     try {
-  //       const token = localStorage.getItem('accessToken'); 
-  //       const headers = { Authorization: `Bearer ${token}` }; 
-  //       setIsLoading(true);
-
-  //       const exist = await userPostExist(postId);
-  //        console.log(exist)
-         
-  //        if (exist !== true) {
-  //         await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId }, { headers });
-  //         ;
-  //         window.alert("Du är registrerad för denna aktivitet");
-  //         navigate("/");
-  //       } else {
-  //         console.error("User already signed up for this post");
-  //         window.alert("Du är redan registrerad för denna aktivitet");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error signing up for activity:", error);
-  //     }finally {
-  //       setIsLoading(false); // Reset loading state regardless of the outcome
-  //     }
-  //   }
-  // };
-
-  // const userPostExist = async (postId) => {
+    try {
+      const token = localStorage.getItem('accessToken'); 
+      const headers = { Authorization: `Bearer ${token}` }; 
     
-  //   try {
-  //     const token = localStorage.getItem('accessToken'); 
-  //     const headers = { Authorization: `Bearer ${token}` }; 
-    
-  //     // Make a request to your backend to check user post status
-  //     const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/signup/status?postId=${postId}`, { headers });
-  //     console.log(response)
+      // Make a request to your backend to check user post status
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/signup/status?postId=${postId}`, { headers });
+      console.log(response)
       
-  //     // Response should contain a boolean indicating if the user has already signed up
-  //     return response.data;
-  //   } catch (error) {
-  //     console.error("Error checking if user post exists:", error);
-  //     return false; // Assuming it doesn't exist if there's an error
-  //   }
-  // };
+      // Response should contain a boolean indicating if the user has already signed up
+      return response.data;
+    } catch (error) {
+      console.error("Error checking if user post exists:", error);
+      return false; // Assuming it doesn't exist if there's an error
+    }
+  };
 
   const handleDelete = async (post) => {
     try {
