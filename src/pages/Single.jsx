@@ -48,9 +48,9 @@ const Single = () => {
         const exist = await userPostExist(postId);
          console.log(exist)
          
-        if (!exist) {
+         if (exist !== true) {
           await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId }, { headers });
-          console.log("Successfully signed up for the activity");
+          ;
           window.alert("Du är registrerad för denna aktivitet");
         } else {
           console.error("User already signed up for this post");
