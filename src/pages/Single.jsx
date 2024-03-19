@@ -72,7 +72,7 @@ const Single = () => {
       console.log(response)
       
       // Response should contain a boolean indicating if the user has already signed up
-      return response.data.exists;
+      return response.data;
     } catch (error) {
       console.error("Error checking if user post exists:", error);
       return false; // Assuming it doesn't exist if there's an error
