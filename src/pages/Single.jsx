@@ -48,12 +48,12 @@ const Single = () => {
         setIsLoading(true);
 
         const exist = await userPostExist(postId);
-         console.log(exist)
+         console.log(exist);
          
-         if (exist !== true) {
+         if (!exist) {
           await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId }, { headers });
           ;
-          window.alert("Du är registrerad för denna aktivitet");
+          window.alert("Perfect ... Du är registrerad för denna aktivitet");
           navigate("/");
         } else {
           console.error("User already signed up for this post");
@@ -78,7 +78,7 @@ const Single = () => {
       console.log(response)
       
       // Response should contain a boolean indicating if the user has already signed up
-      return response.data;
+      return response.data.exists;
     } catch (error) {
       console.error("Error checking if user post exists:", error);
       return false; // Assuming it doesn't exist if there's an error
