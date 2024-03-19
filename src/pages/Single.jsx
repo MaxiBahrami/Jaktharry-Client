@@ -15,6 +15,7 @@ const Single = () => {
   const postId = location.pathname.split("/")[2];
   const { currentUser } = useContext(AuthContext);
   axios.defaults.withCredentials = true;
+  const [isLoading, setIsLoading] = useState(false); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +45,7 @@ const Single = () => {
       try {
         const token = localStorage.getItem('accessToken'); 
         const headers = { Authorization: `Bearer ${token}` }; 
+        setIsLoading(true);
 
         const exist = await userPostExist(postId);
          console.log(exist)
@@ -59,6 +61,8 @@ const Single = () => {
         }
       } catch (error) {
         console.error("Error signing up for activity:", error);
+      }finally {
+        setIsLoading(false); // Reset loading state regardless of the outcome
       }
     }
   };
@@ -168,9 +172,9 @@ const Single = () => {
         
         {post.cat === "aktiviteter" && (
           <div className="text-center">
-            <Button onClick={(e) => handleUserSignUp(post.id, e)} className="BtnClass">
-                Delta i aktiviteten
-            </Button>
+            <Button onClick={(e) => handleUserSignUp(post.id, e)} className="BtnClass" disabled={isLoading}>
+            {isLoading ? 'Vänta...' : 'Delta i aktiviteten'}
+          </Button>
           </div>
         )}
 
