@@ -513,7 +513,18 @@ $gray:rgb(78, 78, 78);
           font-weight: bold;
         }
 
-
+        .BtnClass{
+          padding: 10px;
+          border: none;
+          background-color: $lightGreen;
+          cursor:pointer;
+          color: white;
+          &:hover{
+            background-color: $gold;
+            color: $Green;
+            font-weight: bold;
+          }
+        }
       }
 
       .menu{

@@ -51,7 +51,7 @@ const Single = () => {
         if (!exist) {
           await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId }, { headers });
           console.log("Successfully signed up for the activity");
-          navigate("/");
+          window.alert("Du är registrerad för denna aktivitet");
         } else {
           console.error("User already signed up for this post");
           window.alert("Du är redan registrerad för denna aktivitet");
@@ -167,7 +167,7 @@ const Single = () => {
         
         {post.cat === "aktiviteter" && (
           <div className="text-center">
-            <Button onClick={(e) => handleUserSignUp(post.id, e)}>
+            <Button onClick={(e) => handleUserSignUp(post.id, e)} className="BtnClass">
                 Delta i aktiviteten
             </Button>
           </div>
