@@ -52,6 +52,7 @@ const Single = () => {
           await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId }, { headers });
           ;
           window.alert("Du är registrerad för denna aktivitet");
+          navigate("/");
         } else {
           console.error("User already signed up for this post");
           window.alert("Du är redan registrerad för denna aktivitet");
