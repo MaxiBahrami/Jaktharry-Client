@@ -73,7 +73,7 @@ const Single = () => {
         userInfo: currentUser.id // Assuming userInfo contains the user ID
       };
       // Make a request to your backend to check user post status
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, requestData, { headers });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/signup/status`, requestData, { headers });
       console.log(response)
       
       // Response should contain a boolean indicating if the user has already signed up
