@@ -540,8 +540,10 @@ export const TabContent8 = () => {
           // Fetch activities associated with the user ID
           const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/activities?userId=${userId}`;
           const res = await axios.get(apiUrl);
-          const { postsOfActivities } = res.data;
-          setPosts(postsOfActivities);
+          const { data } = res;
+          if (data && data.postsOfActivities) {
+            setPosts(data.postsOfActivities); // Assuming data.postsOfActivities is an array of posts
+          }
         }
       } catch (err) {
         console.error("Error fetching data:", err);
