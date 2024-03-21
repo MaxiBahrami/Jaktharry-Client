@@ -536,16 +536,19 @@ export const TabContent8 = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=aktiviteter&userId=${userId}`;
-        console.log(apiUrl);
-        const res = await axios.get(apiUrl);
-        setPosts(res.data);
+        if (userId) {
+          // Fetch activities associated with the user ID
+          const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/activities?userId=${userId}`;
+          const res = await axios.get(apiUrl);
+          setPosts(res.data);
+        }
       } catch (err) {
         console.error("Error fetching data:", err);
       }
     };
     fetchData();
   }, [userId]);
+
   const handleClick = (postId) => {
     // Navigate to the single post page with the clicked post ID
     navigate(`/post/${postId}`);
@@ -558,27 +561,38 @@ export const TabContent8 = () => {
   const handleSearch = async () => {
     try {
       // Fetch user ID based on the entered username
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users?username=${username}`;
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/check?username=${username}`;
       const res = await axios.get(apiUrl);
       const userData = res.data;
-      if (userData.length > 0) {
+      if (userData.userExists) {
         // If user found, set the user ID
-        setUserId(userData[0].id);
+        setUserId(userData.userId);
       } else {
         // If user not found, handle appropriately (e.g., show error message)
-        console.log("User not found");
+        console.log("Användaren hittades inte");
+        window.confirm("Användaren hittades inte .. Verifiera användarnamnet");
       }
     } catch (error) {
       console.error("Error searching for user:", error);
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+  const handleDelete = async (post) => {
+
+  };
+
   return (
-    <div>
-      <span>Användarnamn</span>
-      <input type="text" value={username} onChange={handleUsernameChange} />
-      <button onClick={handleSearch}>Sök</button>
-      <h3>Alla aktiviteter som användaren har registrerat sig för är:</h3>
+    <div className="PostClass PostClass8" >
+      <label class="form-label"  htmlFor="form1" className="labelClass">Ange användarnamnet</label>
+      <input className="inputClass" type="search" value={username} onChange={handleUsernameChange} onKeyDown={handleKeyDown} />
+      <button class="btnClass" onClick={handleSearch}>Sök</button>
+      
+      <h4>Alla aktiviteter som användaren har registrerat sig för är:</h4>
       <div className="table-responsive">
         <table className="table table-bordered">
           <thead>
@@ -586,6 +600,7 @@ export const TabContent8 = () => {
               <th width="10%">#</th>
               <th width="20%">Datum</th>
               <th width="40%">Titel</th>
+              <th width="10%">Ta bort</th>
             </tr>
           </thead>
           <tbody>
@@ -596,6 +611,11 @@ export const TabContent8 = () => {
                 <td width="40%">
                   <Link className="titleClass" onClick={() => handleClick(post.id)}>{post.title}</Link>
                 </td>
+                <td width="10%">
+                  <Link to="" onClick={() => handleDelete(post)}>
+                  <img src={del} alt="" className="iconClass2" />
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -604,6 +624,9 @@ export const TabContent8 = () => {
     </div>
   );
 };
+
+
+
 
 export const TabContent9 = () => {
   // Add functionality for Tab pane content 9

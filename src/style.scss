@@ -781,6 +781,43 @@ $gray:rgb(78, 78, 78);
       }
     }
 
+    .PostClass8{
+      margin: 25px auto;
+
+      .labelClass{
+        font-size: 20px;
+        padding-right: 15px;
+      }
+
+      .inputClass{
+        height: 30px;
+        width: 250px;
+        align-self: center;
+        margin: 0px 2px;
+      }
+
+      h4{
+        margin: 25px auto;
+      }
+
+      .btnClass{
+        width: max-content;
+        padding: 3px 20px;
+        border: none;
+        cursor: pointer;
+        border: 1px solid teal;
+        background-color: $gold;
+        color: $Green;
+        font-size: 18px;
+
+        &:hover{
+          border: 1px solid $gold;
+          background-color: $lightGreen;
+          color: $darkWhite;
+        }
+      }
+    }
+
   }
 
   @media screen and (max-width: 579px){
