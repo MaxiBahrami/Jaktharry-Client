@@ -806,7 +806,8 @@ $gray:rgb(78, 78, 78);
       }
 
       h4{
-        margin: 25px auto;
+        margin: 30px auto;
+        color: $Green;
       }
 
       .btnClass{
@@ -824,6 +825,44 @@ $gray:rgb(78, 78, 78);
           background-color: $lightGreen;
           color: $darkWhite;
         }
+      }
+
+      .btnDiv{
+        width: 100%px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+        margin: 10px 0px;
+        flex-direction: column;
+
+        .ulclass{
+
+          .liOptions{
+            text-align: start;
+            margin:5px 2px;
+          }
+        }
+        
+      }
+      .btnClass2{
+        width: max-content;
+        padding: 3px 7px;
+        border: none;
+        cursor: pointer;
+        align-self: end;
+        background-color: $darkWhite;
+
+        &:hover{
+          background-color: $lightGreen;
+          color: white;
+        }
+
+        span{
+          padding: 0px 2px;
+          font-size: 14px;
+        }
+
+        
       }
     }
 

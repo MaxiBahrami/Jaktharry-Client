@@ -1,8 +1,9 @@
 import React from "react";
 import { Col, Container, ListGroup, Row, Tab } from "react-bootstrap";
 import { TabContent2, TabContent3, TabContent4, 
-  TabContent5, TabContent7, TabContent8, TabContent9, 
-  TabContent11, TabContent12, } from "../components/adminContent.js";
+  TabContent5} from "../components/adminContent.js";
+import { TabContent7, TabContent8, TabContent9, 
+    TabContent11, TabContent12, } from "../components/adminContent2.js";
 
 // Define the array containing tab items
 const tabItems = [
