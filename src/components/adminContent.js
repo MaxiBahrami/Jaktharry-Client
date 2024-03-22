@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import moment from "moment";
 import del from "../img/del.png";
 import edit from "../img/edit.png";
+// import group from "../img/group.png";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext.js";
 
@@ -536,14 +537,16 @@ export const TabContent8 = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (userId) {
+        if (userId) { 
+          console.log(userId)
           // Fetch activities associated with the user ID
           const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/activities?userId=${userId}`;
           const res = await axios.get(apiUrl);
-          const { data } = res;
-          if (data && data.postsOfActivities) {
-            setPosts(data.postsOfActivities); // Assuming data.postsOfActivities is an array of posts
-          }
+          console.log(res.data.length)
+          if (res.data.length > 0) { // Check if data is not empty
+            console.log(res.data[0]); // Log the first post for debugging
+            setPosts(res.data);  // Set the posts state
+          } 
         }
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -628,9 +631,6 @@ export const TabContent8 = () => {
   );
 };
 
-
-
-
 export const TabContent9 = () => {
   // Add functionality for Tab pane content 9
   return (
@@ -640,6 +640,9 @@ export const TabContent9 = () => {
     </div>
   );
 };
+
+
+
 
 export const TabContent10 = () => {
   // Add functionality for Tab pane content 10
