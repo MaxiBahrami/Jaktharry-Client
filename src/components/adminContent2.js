@@ -172,6 +172,7 @@ export const TabContent8 = () => {
   
   const handleDelete = async (post) => {
     try {
+      const postId = post.id;
       // Ask for confirmation before deleting
       const confirmDelete = window.confirm("Är du säker på att du vill radera denna aktivitet?");
       if (!confirmDelete) return;
@@ -183,9 +184,9 @@ export const TabContent8 = () => {
       const headers = { Authorization: `Bearer ${token}` };
   
       // Perform the delete operation with the Authorization header
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/${post.id}`;
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/delete/${postId}/${userId}`;
       await axios.delete(apiUrl, { headers });
-  
+      setReloadData(prev => !prev);
       // Update the UI after successful deletion
       setPosts(posts.filter(p => p.id !== post.id));
     } catch (error) {
@@ -295,11 +296,170 @@ export const TabContent8 = () => {
 };
 
 export const TabContent9 = () => {
-  // Add functionality for Tab pane content 9
+  const [posts, setPosts] = useState([]);
+  const [selectedActivity, setSelectedActivity] = useState('');
+  const [users, setUsers] = useState([]);
+  const [error, setError] = useState(null);
+  const [activitySearched, setActivitySearched] = useState(false);
+  const [newUserName, setNewUserName] = useState(''); 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=aktiviteter`;
+        const res = await axios.get(apiUrl);
+        setPosts(res.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError("Error fetching activities. Please try again later.");
+      }
+    };
+    fetchData();
+  }, []);
+
+  const fetchUsersForActivity = async () => {
+    try {
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/activityUsers?activity=${selectedActivity}`;
+      const res = await axios.get(apiUrl);
+      console.log(res)
+      setUsers(res.data.data);
+      setActivitySearched(true); 
+    } catch (err) {
+      console.error("Error fetching users:", err);
+      setError("Error fetching users. Please try again later.");
+    }
+  };
+
+  const handleOptionSelect = (e) => {
+    setSelectedActivity(e.target.value);
+  };
+
+  const handleDelete = async (userId) => {
+    try {
+      // Ask for confirmation before deleting
+      const confirmDelete = window.confirm("Är du säker på att du vill avregistrera användaren från denna aktivitet?");
+      if (!confirmDelete) return;
+  
+      // Retrieve the token from local storage
+      const token = localStorage.getItem('accessToken');
+      const headers = { Authorization: `Bearer ${token}` };
+  
+      const postId = selectedActivity;
+      // Perform the delete operation with the Authorization header
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/delete/${postId}/${userId}`;
+      await axios.delete(apiUrl, { headers });
+      fetchUsersForActivity();
+    } catch (error) {
+      console.error("Error deleting user from activity:", error);
+    }
+  };
+
+  const handleAdd = async () => {
+    try {
+      const postId = selectedActivity;
+      
+      const userId = await checkUserExist(); // Wait for checkUserExist to complete
+      console.log("Adding new user:", userId, "to activity:", postId);
+  
+      // Proceed only if userId is not null (i.e., user exists)
+      if (userId !== null) {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/signup/status2?postId=${postId}&userId=${userId}`);
+        const exist = response.data.exists;
+  
+        if (!exist) {
+          await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/adminsignup`, { postId: postId, userId: userId });
+          fetchUsersForActivity();
+          window.alert("Perfect ... Du är registrerad för denna aktivitet");
+        } else {
+          console.error("User already signed up for this post");
+          window.alert("Du är redan registrerad för denna aktivitet");
+        }
+      } else {
+        // Handle case where userId is null (user does not exist)
+        console.log("User does not exist");
+        window.alert("Användaren hittades inte. Vänligen verifiera användarnamnet.");
+      }
+  
+      // Reset newUserName after adding
+      setNewUserName('');
+    } catch (error) {
+      console.error("Error adding user to activity:", error);
+    }
+  };
+  
+  const checkUserExist = async () => { // Added async keyword
+    try {
+      // Fetch user ID based on the entered username
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/check?username=${newUserName}`;
+      const res = await axios.get(apiUrl); // Wait for axios call to finish
+      const userData = res.data;
+      if (userData.userExists) {
+        return userData.userId;
+      } else {
+        console.log("Användaren hittades inte");
+        window.confirm("Användaren hittades inte .. Verifiera användarnamnet");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error searching for user:", error);
+      throw error;
+    }
+  }
+
   return (
-    <div>
-      {/* Content for Tab pane content 9 */}
-      <p>Content for Tab pane content 9</p>
+    <div className="PostClass PostClass9">
+      <h3 className="labelClass" htmlFor="form1">Välj aktivitetens namn</h3>
+      <select className="inputClass" onChange={handleOptionSelect}>
+        <option>Välj en aktivitet</option>
+        {posts.map((activity, index) => (
+          <option key={index} value={activity.id}>{activity.title}</option>
+        ))}
+      </select>
+      <button className="btnClass" onClick={fetchUsersForActivity}>Sök</button>
+      <div>
+        {error && <p>Error: {error}</p>} {/* Display error message if error is not null */}
+        <h4>Användare registrerade för vald aktivitet:</h4>
+
+        <div className="table-responsive">
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th width="10%">#</th>
+              <th width="30%">Användarnamn</th>
+              <th width="40%">e-post</th>
+              <th width="10%">Ta bort</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user, index) => (
+              <tr key={user.id}>
+                <td width="10%">{index + 1}</td>
+                <td width="30%">{user.username}</td>
+                <td width="40%">{user.email}</td>
+                <td width="10%">
+                  <Link to="" onClick={() => handleDelete(user.id)}>
+                    <img src={del} alt="delete" className="iconClass2" />
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {activitySearched && (
+          <div className="btnDiv">
+            <label className="form-label" htmlFor="form1">registrera en ny användare</label>
+            <input type="text" value={newUserName} onChange={(e) => setNewUserName(e.target.value)} 
+              placeholder="Användarnamn"  />
+            <button className="btnClass2" onClick={handleAdd}>
+              <img src={plus} alt="" className="iconClass1" />
+              <span>Lägg till</span>
+            </button>
+          </div>
+        )}
+
+      </div>
     </div>
   );
 };

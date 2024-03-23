@@ -866,6 +866,55 @@ $gray:rgb(78, 78, 78);
       }
     }
 
+    .PostClass9{
+      margin: 25px auto;
+
+      .labelClass{
+        font-size: 30px;
+      }
+
+      .inputClass{
+        height: 40px;
+        width: 70%;
+        align-self: center;
+        margin: 20px auto;
+        border: 1px solid $lightGreen;
+      }
+
+      h4{
+        margin: 30px auto;
+        color: $Green;
+      }
+
+      .btnClass{
+        width: max-content;
+        padding: 3px 20px;
+        border: none;
+        cursor: pointer;
+        border: 1px solid teal;
+        background-color: $gold;
+        color: $Green;
+        font-size: 20px;
+        margin-left: 5px;
+
+        &:hover{
+          border: 1px solid $gold;
+          background-color: $lightGreen;
+          color: $darkWhite;
+        }
+      }  
+
+      .btnDiv{
+        width: 100%px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+        margin: 20px 0px;
+        flex-direction: column;
+        font-size: 15px;
+        gap: 5px;
+      } 
+    }
   }
 
   @media screen and (max-width: 579px){
