@@ -919,6 +919,12 @@ $gray:rgb(78, 78, 78);
         gap: 5px;
       } 
     }
+
+    .PostClass12{
+      .userClass{
+        text-align: left;
+      }
+    }
   }
 
   @media screen and (max-width: 579px){

@@ -16,7 +16,6 @@ export const TabContent2 = () => {
     const fetchData = async () => {
       try {
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts`;
-        console.log(apiUrl);
         const res = await axios.get(apiUrl);
         setPosts(res.data);
       } catch (err) {
@@ -47,9 +46,6 @@ export const TabContent2 = () => {
   
       // Retrieve the token from local storage
       const token = localStorage.getItem('accessToken');
-      console.log(token);
-  
-      // Create headers with the Authorization header
       const headers = { Authorization: `Bearer ${token}` };
   
       // Perform the delete operation with the Authorization header
@@ -147,9 +143,6 @@ export const TabContent3 = () => {
   
       // Retrieve the token from local storage
       const token = localStorage.getItem('accessToken');
-      console.log(token);
-  
-      // Create headers with the Authorization header
       const headers = { Authorization: `Bearer ${token}` };
   
       // Perform the delete operation with the Authorization header
@@ -248,9 +241,6 @@ export const TabContent4 = () => {
   
       // Retrieve the token from local storage
       const token = localStorage.getItem('accessToken');
-      console.log(token);
-  
-      // Create headers with the Authorization header
       const headers = { Authorization: `Bearer ${token}` };
   
       // Perform the delete operation with the Authorization header
@@ -377,9 +367,7 @@ export const TabContent5 = () => {
   
       // Retrieve the token from local storage
       const token = localStorage.getItem('accessToken');
-      console.log(token);
-  
-      // Create headers with the Authorization header
+      
       const headers = { Authorization: `Bearer ${token}` };
   
       // Perform the delete operation with the Authorization header
