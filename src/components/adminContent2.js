@@ -490,8 +490,8 @@ export const TabContent11 = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       // Send a PUT request to update the user's role
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/role`;
-      await axios.put(apiUrl, { userId: userId, role: newRole }, { headers });
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/role/${userId}`;
+      await axios.put(apiUrl, { role: newRole }, { headers });
 
       setUsers(prevUsers => {
         return prevUsers.map(user => {
