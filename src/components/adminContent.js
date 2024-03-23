@@ -63,7 +63,6 @@ export const TabContent2 = () => {
     }
   };
 
-
   return (
     <div className="PostClass">
       <div className="table-responsive">

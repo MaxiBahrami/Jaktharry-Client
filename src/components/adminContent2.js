@@ -464,28 +464,115 @@ export const TabContent9 = () => {
   );
 };
 
-
-
-
-export const TabContent10 = () => {
-  // Add functionality for Tab pane content 10
-  return (
-    <div>
-      {/* Content for Tab pane content 10 */}
-      <p>Content for Tab pane content 10</p>
-    </div>
-  );
-};
-
 export const TabContent11 = () => {
-  // Add functionality for Tab pane content 11
+  const [users, setUsers] = useState([]);
+  // const navigate = useNavigate();
+  // const { currentUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const apiUrl = `${process.env.REACT_APP_API_URL}/api/users`;
+        console.log(apiUrl);
+        const res = await axios.get(apiUrl);
+        setUsers(res.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleRoleChange = async (userId, newRole) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const headers = { Authorization: `Bearer ${token}` };
+
+      // Send a PUT request to update the user's role
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/role`;
+      await axios.put(apiUrl, { userId: userId, role: newRole }, { headers });
+
+      setUsers(prevUsers => {
+        return prevUsers.map(user => {
+            if (user.id === userId) {
+                return { ...user, role: newRole };
+            }
+            return user;
+        });
+    });
+    } catch (error) {
+      console.error("Error changing user role:", error);
+    }
+  };
+
+  const handleDelete = async (user) => {
+    try {
+      // Ask for confirmation before deleting
+      const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+      if (!confirmDelete) return;
+
+      const token = localStorage.getItem('accessToken');
+      const headers = { Authorization: `Bearer ${token}` };
+  
+      // Perform the delete operation with the Authorization header
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/${user.id}`;
+      await axios.delete(apiUrl, { headers });
+  
+      // Update the UI after successful deletion
+      setUsers(users.filter(p => p.id !== user.id));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+
+
   return (
-    <div>
-      {/* Content for Tab pane content 11 */}
-      <p>Content for Tab pane content 11</p>
+    <div className="PostClass">
+      <h6>"Notera att: .. användarroll = 1 (admin).. & .. roll = 2 (lokal administratör)"</h6>
+      <div className="table-responsive">
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th width="10%">#</th>
+              <th width="20%">Användarnamn</th>
+              <th width="30%">e-post</th>
+              <th width="10%">roll</th>
+              <th width="10%">Byta roll</th>
+              <th width="10%">Ta bort</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user, index) => (
+              <tr width="10%" key={user.id}>
+                <td>{index + 1}</td>
+                <td width="20%">{user.username}</td>
+                <td width="30%">{user.email}  </td>
+                <td width="10%">{user.role}</td>
+                <td width="10%">
+                <select onChange={(e) => handleRoleChange(user.id, e.target.value)}>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                  </select>
+                </td>
+                <td width="10%">
+                  <Link to="" onClick={() => handleDelete(user)}>
+                  <img src={del} alt="" className="iconClass2" />
+                  </Link>
+                </td>
+                {/* Add your edit and delete buttons here */}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
+
+
+
 
 export const TabContent12 = () => {
   // Add functionality for Tab pane content 12
