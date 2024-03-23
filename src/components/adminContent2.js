@@ -48,7 +48,6 @@ export const TabContent7 = () => {
   
       // Retrieve the token from local storage
       const token = localStorage.getItem('accessToken');
-      console.log(token);
   
       // Create headers with the Authorization header
       const headers = { Authorization: `Bearer ${token}` };
@@ -115,7 +114,7 @@ export const TabContent8 = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [options, setOptions] = useState([]);
-  const navigate = useNavigate();
+  const [reloadData, setReloadData] = useState(false); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -135,7 +134,7 @@ export const TabContent8 = () => {
       }
     };
     fetchData();
-  }, [userId]);
+  }, [userId, reloadData]); 
 
   const handleClick = (postId) => {
     const postUrl = `${window.location.origin}/post/${postId}`;
@@ -179,7 +178,6 @@ export const TabContent8 = () => {
   
       // Retrieve the token from local storage
       const token = localStorage.getItem('accessToken');
-      console.log(token);
   
       // Create headers with the Authorization header
       const headers = { Authorization: `Bearer ${token}` };
@@ -200,28 +198,23 @@ export const TabContent8 = () => {
   };
 
   const handleOptionSelect = async (option) => {
-    setSelectedOption(option.id);
-    const postId = option.id;
+    setSelectedOption(option.title); 
+    const postId = option; 
+
     setShowOptions(false);
 
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/signup/status2?postId=${postId}&userId=${userId}`);
-    console.log(response)
-    const exist = response.data.exists
+    const exist = response.data.exists;
 
     if (!exist) {
-      await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup2`, { postId, userId });
-      ;
-      window.alert("Perfect ... Du är registrerad för denna aktivitet");
-      navigate("/");
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/adminsignup`, { postId: postId, userId: userId });
+        setReloadData(prev => !prev);
+        window.alert("Perfect ... Du är registrerad för denna aktivitet");
     } else {
-      console.error("User already signed up for this post");
-      window.alert("Du är redan registrerad för denna aktivitet");
+        console.error("User already signed up for this post");
+        window.alert("Du är redan registrerad för denna aktivitet");
     }
-
-    
-
-
-  };
+};
 
   useEffect(() => {
     const fetchOptionsFromDatabase = async () => {
@@ -229,7 +222,7 @@ export const TabContent8 = () => {
         // Fetch options from the database
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=aktiviteter`;
         const res = await axios.get(apiUrl);
-        const optionsData = res.data.map(post => post.title);
+        const optionsData = res.data;
         setOptions(optionsData); // Set the options state
       } catch (error) {
         console.error("Error fetching options:", error);
@@ -241,9 +234,9 @@ export const TabContent8 = () => {
 
   return (
     <div className="PostClass PostClass8" >
-      <label class="form-label"  htmlFor="form1" className="labelClass">Ange användarnamnet</label>
+      <label className="form-label labelClass"  htmlFor="form1">Ange användarnamnet</label>
       <input className="inputClass" type="search" value={username} onChange={handleUsernameChange} onKeyDown={handleKeyDown} />
-      <button class="btnClass" onClick={handleSearch}>Sök</button>
+      <button className="btnClass" onClick={handleSearch}>Sök</button>
       
       <h4>Användare är registrerad i dessa aktiviteter</h4>
 
@@ -257,8 +250,8 @@ export const TabContent8 = () => {
             <div>
               <ul className="ulclass">
                 {options.map((option, index) => (
-                  <li className="liOptions" key={index} onClick={() => handleOptionSelect(option)}>
-                    <Link>{option}</Link>
+                  <li className="liOptions" key={index} onClick={() => handleOptionSelect(option.id)}>
+                    <Link>{option.title}</Link>
                   </li>
                 ))}
               </ul>
