@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../assets/styles/updatePassword.scss";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import instance from "../axios";
 
 const UpdatePassword = () => {
   const navigate = useNavigate();
@@ -29,29 +29,28 @@ const UpdatePassword = () => {
         confirmPassword,
       };
 
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/users/update-password`,
-        data
-      );
+      await instance.put(`/api/users/update-password`, data);
 
-      setMessage("Password updated successfully");
+      setMessage("Lösenordet har uppdaterats");
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
       navigate("/");
     } catch (err) {
-      setMessage(err?.response?.data || "Error updating your password");
+      setMessage(
+        err?.response?.data || "Det gick inte att uppdatera ditt lösenord"
+      );
       setIsLoading(false);
     }
   };
 
   return (
     <div className="password-update-form-container">
-      <h2>Password Update</h2>
+      <h2>Lösenord Uppdatering</h2>
       {message && <p className="message">{message}</p>}
       <form onSubmit={handleUpdatePassword}>
         <div className="form-group">
-          <label htmlFor="oldPassword">Old Password:</label>
+          <label htmlFor="oldPassword">Gammalt lösenord :</label>
           <input
             type="password"
             id="oldPassword"
@@ -61,7 +60,7 @@ const UpdatePassword = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="newPassword">New Password:</label>
+          <label htmlFor="newPassword">Nytt lösenord :</label>
           <input
             type="password"
             id="newPassword"
@@ -71,7 +70,7 @@ const UpdatePassword = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm Password:</label>
+          <label htmlFor="confirmPassword">Bekräfta lösenord :</label>
           <input
             type="password"
             id="confirmPassword"
@@ -81,7 +80,7 @@ const UpdatePassword = () => {
           />
         </div>
         <Button type="submit" disabled={isLoading}>
-          Update Password
+          Uppdatera lösenord
         </Button>
       </form>
     </div>

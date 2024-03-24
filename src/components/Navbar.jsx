@@ -43,7 +43,9 @@ function CustomNavbar() {
           <img src={Logo} alt="" className='imgClass'/>
           </Link>
         </Navbar.Brand>
+        
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto navClass" >
             <NavDropdown title="NYHETER" id="collapsible-nav-dropdown">
@@ -69,10 +71,15 @@ function CustomNavbar() {
               <Link className="nav-link" to="/login">loggaIN</Link>
             ) }
             <Link to="/write" className="nav-link write">Skriva</Link>
-            <Link ></Link>
+            {currentUser && (
+              <Link to="/profile" className="nav-link">
+                Profil
+              </Link>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
+
       {isAdmin && (
       <Link to="/panel" className="linkClass">
         <img src={adsett} alt="" className='adClass'/>
