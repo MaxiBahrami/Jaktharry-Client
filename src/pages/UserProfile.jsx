@@ -6,6 +6,7 @@ import instance from "../axios";
 import { AuthContext } from "../context/authContext";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const UserProfile = () => {
   const { currentUser } = useContext(AuthContext);
@@ -34,7 +35,7 @@ const UserProfile = () => {
     setLoading(true);
     try {
       const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/post-signups?userId=${userId}`;
-      const res = await instance.get(apiUrl);
+      const res = await axios.get(apiUrl);
       setPosts(res.data.data);
       setLoading(false);
     } catch (err) {
