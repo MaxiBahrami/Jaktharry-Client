@@ -33,7 +33,7 @@ const UserProfile = () => {
   const fetchData = async (currentUser) => {
     setLoading(true);
     try {
-      const apiUrl = `/api/users/post-signups?userId=${currentUser}`;
+      const apiUrl = `/api/users/user-activity?userId=${currentUser}`;
       const res = await instance.get(apiUrl);
       setPosts(res.data.data);
       setLoading(false);
