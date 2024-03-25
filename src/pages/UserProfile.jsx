@@ -30,7 +30,7 @@ const UserProfile = () => {
     if (!isError) await fetchData();
   };
 
-  const fetchData = async () => {
+  const fetchData = async (currentUser) => {
     setLoading(true);
     try {
       const apiUrl = `/api/users/post-signups`;
@@ -52,7 +52,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [currentUser]);
 
   return (
     <>
