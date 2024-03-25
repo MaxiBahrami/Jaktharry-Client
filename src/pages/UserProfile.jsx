@@ -6,13 +6,13 @@ import instance from "../axios";
 import { AuthContext } from "../context/authContext";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const UserProfile = () => {
   const { currentUser } = useContext(AuthContext);
 
   const [posts, setPosts] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+
 
   const handlePostCardButtonClick = async (postId) => {
     let isError = false;
@@ -24,25 +24,9 @@ const UserProfile = () => {
     } catch (err) {
       isError = true;
       console.error("Error unsubscribing activtiy:", err);
-      setError("Error unsubscribing activtiy. Please try again later.");
     }
 
     if (!isError) await fetchData();
-  };
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/post-signups?`;
-      
-      const res = await instance.get(apiUrl);
-      setPosts(res.data.data);
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching data:", err);
-      setError("Error fetching data. Please try again later.");
-      setLoading(false);
-    }
   };
 
   const updateUserProfileImg = (img) => {
@@ -51,17 +35,31 @@ const UserProfile = () => {
     localStorage.setItem("user", JSON.stringify(currentUser));
   };
 
+  const fetchData = async (currentUser) => {
+    const userId = currentUser.id;
+    try {
+      if (userId) {
+        // Fetch activities associated with the user ID
+        const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/user-activity?userId=${userId}`;
+        const res = await axios.get(apiUrl);
+        const items = res.data.data;
+
+        if (items.length > 0) {
+          // Check if data is not empty
+          setPosts(items); // Set the posts state
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
   useEffect(() => {
-    fetchData();
-  }, []);
+    
+    fetchData(currentUser);
+  });
   
   return (
     <>
-      {error ? (
-        <p>Error: {error}</p>
-      ) : loading ? (
-        <p>Loading...</p>
-      ) : (
         <div className="user-profile-pg ">
           <div className="allChildrenCenter d-flex justify-content-center align-items-center">
             <UserAvatar
@@ -96,7 +94,7 @@ const UserProfile = () => {
             )}
           </div>
         </div>
-      )}
+    
     </>
   );
 };
