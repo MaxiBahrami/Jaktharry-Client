@@ -34,8 +34,8 @@ const UserProfile = () => {
     setLoading(true);
     try {
       console.log(currentUser.id)
-      // const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/post-signups?userId=${currentUser}`;
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/user-activity?userId=${currentUser}`;
+      // const apiUrl = `/api/users/post-signups?userId=${currentUser}`;
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/user-activity?userId=${currentUser.id}`;
       
       const res = await instance.get(apiUrl);
       setPosts(res.data.data);
