@@ -33,9 +33,9 @@ const UserProfile = () => {
   const fetchData = async (currentUser) => {
     setLoading(true);
     try {
-      // console.log(currentUser.id)
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/post-signups?userId=${currentUser}`;
-      // const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/user-activity?userId=${currentUser}`;
+      console.log(currentUser.id)
+      // const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/post-signups?userId=${currentUser}`;
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/user-activity?userId=${currentUser}`;
       
       const res = await instance.get(apiUrl);
       setPosts(res.data.data);
