@@ -30,13 +30,10 @@ const UserProfile = () => {
     if (!isError) await fetchData();
   };
 
-  const fetchData = async (currentUser) => {
+  const fetchData = async (userId) => {
     setLoading(true);
     try {
-      console.log(currentUser.id)
-      // const apiUrl = `/api/users/post-signups?userId=${currentUser}`;
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/user-activity?userId=${currentUser.id}`;
-      
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/post-signups?userId=${userId}`;
       const res = await instance.get(apiUrl);
       setPosts(res.data.data);
       setLoading(false);
@@ -46,15 +43,16 @@ const UserProfile = () => {
       setLoading(false);
     }
   };
-
+  
   const updateUserProfileImg = (img) => {
     currentUser.img = img;
-
     localStorage.setItem("user", JSON.stringify(currentUser));
   };
-
+  
   useEffect(() => {
-    fetchData();
+    if (currentUser && currentUser.id) {
+      fetchData(currentUser.id);
+    }
   }, [currentUser]);
   
   return (
