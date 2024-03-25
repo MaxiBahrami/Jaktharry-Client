@@ -20,7 +20,8 @@ const PostCard = ({ post = {}, onButtonClick }) => {
           style={{ backgroundImage: `url(${post.img})` }}
         ></div>
       )}
-      <div className="post-content">{post.text}</div>
+      {/* <div className="post-content">{post.text}</div> */}
+      <div className="post-content">{post.title}</div>
       <div>
         <Button size="sm" href={`/post/${post.id}`}>
           Läs mer

@@ -34,7 +34,6 @@ const UserProfile = () => {
     setLoading(true);
     try {
       const apiUrl = `/api/users/post-signups`;
-
       const res = await instance.get(apiUrl);
       setPosts(res.data.data);
       setLoading(false);
