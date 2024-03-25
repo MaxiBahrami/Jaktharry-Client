@@ -33,8 +33,7 @@ const UserProfile = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // const apiUrl = `/api/users/post-signups`;
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/user-activity?userId=${currentUser.id}`;
+      const apiUrl = `/api/users/post-signups`;
       const res = await instance.get(apiUrl);
       setPosts(res.data.data);
       setLoading(false);
@@ -54,6 +53,7 @@ const UserProfile = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
   return (
     <>
       {error ? (
