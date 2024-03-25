@@ -64,13 +64,14 @@ function CustomNavbar() {
               </NavDropdown>
             </NavDropdown>
             <Link to="/?cat=aktiviteter" className="nav-link">AKTIVITETER</Link>
+            <Link to="/write" className="nav-link write">Skriva</Link>
             <Link to="#" className="nav-link">{currentUser?.username}</Link>
             {currentUser ? (
               <Link className="nav-link" onClick={logout} to="/">LoggaUt</Link>
             ) : (
               <Link className="nav-link" to="/login">loggaIN</Link>
             ) }
-            <Link to="/write" className="nav-link write">Skriva</Link>
+            
             {currentUser && (
               <Link to="/profile" className="nav-link">
                 Profil
