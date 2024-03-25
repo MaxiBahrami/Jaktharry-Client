@@ -6,7 +6,6 @@ import instance from "../axios";
 import { AuthContext } from "../context/authContext";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 const UserProfile = () => {
   const { currentUser } = useContext(AuthContext);
@@ -31,20 +30,20 @@ const UserProfile = () => {
     if (!isError) await fetchData();
   };
 
-  // const fetchData = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/post-signups?`;
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/post-signups?`;
       
-  //     const res = await instance.get(apiUrl);
-  //     setPosts(res.data.data);
-  //     setLoading(false);
-  //   } catch (err) {
-  //     console.error("Error fetching data:", err);
-  //     setError("Error fetching data. Please try again later.");
-  //     setLoading(false);
-  //   }
-  // };
+      const res = await instance.get(apiUrl);
+      setPosts(res.data.data);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+      setError("Error fetching data. Please try again later.");
+      setLoading(false);
+    }
+  };
 
   const updateUserProfileImg = (img) => {
     currentUser.img = img;
@@ -52,33 +51,9 @@ const UserProfile = () => {
     localStorage.setItem("user", JSON.stringify(currentUser));
   };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  const fetchData = async (currentUser) => {
-    const userId = currentUser.id;
-    try {
-      if (userId) {
-        // Fetch activities associated with the user ID
-        const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/user-activity?userId=${userId}`;
-        const res = await axios.get(apiUrl);
-        const items = res.data.data;
-
-        if (items.length > 0) {
-          // Check if data is not empty
-          setPosts(items); // Set the posts state
-        }
-        setLoading(false);
-      }
-    } catch (err) {
-      console.error("Error fetching data:", err);
-    }
-  };
   useEffect(() => {
-    
-    fetchData(currentUser);
-  });
+    fetchData();
+  }, []);
   
   return (
     <>
