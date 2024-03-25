@@ -6,7 +6,6 @@ import instance from "../axios";
 import { AuthContext } from "../context/authContext";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 const UserProfile = () => {
   const { currentUser } = useContext(AuthContext);
@@ -31,11 +30,12 @@ const UserProfile = () => {
     if (!isError) await fetchData();
   };
 
-  const fetchData = async (userId) => {
+  const fetchData = async () => {
     setLoading(true);
     try {
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/post-signups?userId=${userId}`;
-      const res = await axios.get(apiUrl);
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/post-signups?`;
+      
+      const res = await instance.get(apiUrl);
       setPosts(res.data.data);
       setLoading(false);
     } catch (err) {
@@ -44,17 +44,16 @@ const UserProfile = () => {
       setLoading(false);
     }
   };
-  
+
   const updateUserProfileImg = (img) => {
     currentUser.img = img;
+
     localStorage.setItem("user", JSON.stringify(currentUser));
   };
-  
+
   useEffect(() => {
-    if (currentUser && currentUser.id) {
-      fetchData(currentUser.id);
-    }
-  }, [currentUser]);
+    fetchData();
+  }, []);
   
   return (
     <>
