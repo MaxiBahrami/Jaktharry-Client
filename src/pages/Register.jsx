@@ -8,6 +8,7 @@ const Register = () => {
     username:"",
     email:"",
     password:"",
+    role: 0,
   })
 
   const [err,setError] = useState(null);
