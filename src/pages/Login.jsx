@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
+import axios from 'axios';
 
 const Login = () => {
 
@@ -21,10 +22,25 @@ const Login = () => {
     setInputs(prev=>({...prev, [e.target.name]: e.target.value}))
   };
 
+  const updateLastActivity = async (userId) => {
+    console.log(userId)
+    try {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/users/update-last-activity/${userId}`);
+    } catch (error) {
+      console.error('Error updating last activity:', error);
+    }
+  };
+
   const handleSubmit = async e =>{
     e.preventDefault();
     try{
       await login(inputs);
+      const currentUser = JSON.parse(localStorage.getItem('user'));
+      console.log(currentUser )
+      if (currentUser  && currentUser.id) {
+        updateLastActivity(currentUser.id); 
+        
+      }
       navigate("/");
     }catch(err){
       setError(err.response.data);

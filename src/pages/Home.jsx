@@ -17,7 +17,8 @@ const Home = () => {
       try {
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts${cat}`;
         const res = await axios.get(apiUrl);
-        setPosts(res.data);
+        const sortedPosts = res.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setPosts(sortedPosts);
 
     } catch (err) {
       console.error('Error fetching data:', err);
