@@ -12,9 +12,9 @@ export const AuthContextProvider = ({children})=>{
       if (res.data && res.data.token) {
         // Assuming the response contains user data and a token
         setCurrentUser(res.data); // Set current user data
+        console.log('Current user after login:', res.data);
         // Store token in local storage or state for future requests
         localStorage.setItem('accessToken', res.data.token);
-        console.log('Token:', res.data.token); // Log the token to the console
       } else {
         // Handle the case where the response does not contain the expected user data or token
         console.error('Login failed: Unexpected response format');

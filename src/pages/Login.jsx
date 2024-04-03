@@ -1,5 +1,5 @@
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Button, Container } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
@@ -14,15 +14,25 @@ const Login = () => {
 
   const [err,setError] = useState(null);
   const navigate = useNavigate();
-  const { login} = useContext(AuthContext);
-  const { currentUser} = useContext(AuthContext);
+  const { login,currentUser} = useContext(AuthContext);
   
+  useEffect(() => {
+    // Check if currentUser has been updated after login
+    if (currentUser) {
+      console.log('Current user after login:', currentUser);
+      console.log(currentUser.id);
+      if (currentUser && currentUser.id) {
+        updateLastActivity(currentUser.id);
+      }
+      navigate("/");
+    }
+  }, [currentUser, navigate]);
+
   const handleChange = e =>{
     setInputs(prev=>({...prev, [e.target.name]: e.target.value}))
   };
 
-  const updateLastActivity = async (userId) => {
-    
+  const updateLastActivity = async (userId) => { 
     try {
       await axios.put(`${process.env.REACT_APP_API_URL}/api/users/update-last-activity/${userId}`);
     } catch (error) {
@@ -30,17 +40,12 @@ const Login = () => {
     }
   };
 
-  const handleSubmit = async e =>{
+  const handleSubmit = async e => {
     e.preventDefault();
-    try{
+    try {
       await login(inputs);
-      console.log(currentUser.id);
-    if (currentUser && currentUser.id) {
-      updateLastActivity(currentUser.id); 
-    }
-      navigate("/");
-    }catch(err){
-      setError(err.response.data);
+    } catch (err) {
+      setError(err.response?.data || "An error occurred");
     }
   };
 
