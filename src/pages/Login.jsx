@@ -13,17 +13,16 @@ const Login = () => {
   })
 
   const [err,setError] = useState(null);
-
   const navigate = useNavigate();
-
   const { login} = useContext(AuthContext);
-
+  const { currentUser} = useContext(AuthContext);
+  
   const handleChange = e =>{
     setInputs(prev=>({...prev, [e.target.name]: e.target.value}))
   };
 
   const updateLastActivity = async (userId) => {
-    console.log(userId)
+    
     try {
       await axios.put(`${process.env.REACT_APP_API_URL}/api/users/update-last-activity/${userId}`);
     } catch (error) {
@@ -35,12 +34,10 @@ const Login = () => {
     e.preventDefault();
     try{
       await login(inputs);
-      const currentUser = JSON.parse(localStorage.getItem('user'));
-      console.log(currentUser )
-      if (currentUser  && currentUser.id) {
-        updateLastActivity(currentUser.id); 
-        
-      }
+      console.log(currentUser.id);
+    if (currentUser && currentUser.id) {
+      updateLastActivity(currentUser.id); 
+    }
       navigate("/");
     }catch(err){
       setError(err.response.data);
