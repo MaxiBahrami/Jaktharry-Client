@@ -48,6 +48,11 @@ function CustomNavbar() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto navClass">
             <NavDropdown title="NYHETER" id="collapsible-nav-dropdown">
+            <NavDropdown.Item className="item">
+                <Link to="/" className="nav-link itemClass">
+                alla nyheter
+                </Link>
+              </NavDropdown.Item>
               <NavDropdown.Item className="item">
                 <Link to="/?cat=riks" className="nav-link itemClass">
                   RIKS
