@@ -19,7 +19,6 @@ const Login = () => {
   useEffect(() => {
     // Check if currentUser has been updated after login
     if (currentUser) {
-      console.log('Current user after login:', currentUser);
       console.log(currentUser.id);
       if (currentUser && currentUser.id) {
         updateLastActivity(currentUser.id);

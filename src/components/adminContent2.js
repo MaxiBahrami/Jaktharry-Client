@@ -4,6 +4,7 @@ import moment from "moment";
 import del from "../img/del.png";
 import edit from "../img/edit.png";
 import plus from "../img/plus.png";
+import circle from "../img/green-circle.png";
 // import group from "../img/group.png";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext.js";
@@ -579,6 +580,18 @@ export const TabContent11 = () => {
     }
   };
 
+  const formatLastActivity = (lastActivity) => {
+    const now = moment();
+    const activityTime = moment(lastActivity);
+    const minutesDiff = now.diff(activityTime, 'minutes');
+
+    if (minutesDiff < 5) {
+      return 'Online';
+    } else {
+      return activityTime.format('LLL'); // Format the timestamp as desired
+    }
+  };
+
   return (
     <div className="PostClass">
       <h6>
@@ -588,21 +601,26 @@ export const TabContent11 = () => {
         <table className="table table-bordered">
           <thead>
             <tr>
-              <th width="10%">#</th>
+              <th width="5%">#</th>
+              <th width="20%">Senaste aktivitet</th>
               <th width="20%">Användarnamn</th>
               <th width="30%">e-post</th>
-              <th width="10%">roll</th>
+              <th width="5%">roll</th>
               <th width="10%">Byta roll</th>
               <th width="10%">Ta bort</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user, index) => (
-              <tr width="10%" key={user.id}>
+              <tr width="5%" key={user.id}>
                 <td>{index + 1}</td>
+                <td width="20%">{formatLastActivity(user.lastActivity) === 'Online' && (
+                    <img src={circle} alt="Online" style={{ width: '12px', marginRight: '5px' }} />
+                  )}
+                  {formatLastActivity(user.lastActivity)}</td>
                 <td width="20%">{user.username}</td>
                 <td width="30%">{user.email} </td>
-                <td width="10%">{user.role}</td>
+                <td width="5%">{user.role}</td>
                 <td width="10%">
                   <select
                     onChange={(e) => handleRoleChange(user.id, e.target.value)}
