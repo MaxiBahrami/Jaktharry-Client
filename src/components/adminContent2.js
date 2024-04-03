@@ -19,7 +19,8 @@ export const TabContent7 = () => {
       try {
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=aktiviteter`;
         const res = await axios.get(apiUrl);
-        setPosts(res.data);
+        const sortedPosts = res.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setPosts(sortedPosts);
       } catch (err) {
         console.error("Error fetching data:", err);
       }
@@ -136,10 +137,10 @@ export const TabContent8 = () => {
           const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/user-activity?userId=${userId}`;
           const res = await axios.get(apiUrl);
           const items = res.data.data;
-
+          const sorteditems = items.sort((a, b) => new Date(b.date) - new Date(a.date));
           if (items.length > 0) {
             // Check if data is not empty
-            setPosts(items); // Set the posts state
+            setPosts(sorteditems); // Set the posts state
           }
         }
       } catch (err) {

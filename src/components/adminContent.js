@@ -17,7 +17,8 @@ export const TabContent2 = () => {
       try {
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts`;
         const res = await axios.get(apiUrl);
-        setPosts(res.data);
+        const sortedPosts = res.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setPosts(sortedPosts);
       } catch (err) {
         console.error("Error fetching data:", err);
       }
@@ -113,7 +114,8 @@ export const TabContent3 = () => {
       try {
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=riks`;
         const res = await axios.get(apiUrl);
-        setPosts(res.data);
+        const sortedPosts = res.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setPosts(sortedPosts);
       } catch (err) {
         console.error("Error fetching data:", err);
       }
@@ -211,7 +213,8 @@ export const TabContent4 = () => {
       try {
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=lans`;
         const res = await axios.get(apiUrl);
-        setPosts(res.data);
+        const sortedPosts = res.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setPosts(sortedPosts);
       } catch (err) {
         console.error("Error fetching data:", err);
       }
@@ -338,6 +341,8 @@ export const TabContent5 = () => {
         const allPosts = results.reduce((acc, curr) => acc.concat(curr), []);
 
         setPosts(allPosts);
+        const sortedPosts = allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setPosts(sortedPosts);
       } catch (err) {
         console.error("Error fetching data:", err);
       }
