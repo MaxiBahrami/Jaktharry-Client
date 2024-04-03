@@ -29,6 +29,28 @@ export const AuthContextProvider = ({children})=>{
     setCurrentUser(null);
   };
 
+  useEffect(() => {
+    const updateLastActivity = async () => {
+      try {
+        if (currentUser && currentUser.id) {
+          await axios.put(
+            `${process.env.REACT_APP_API_URL}/api/users/update-last-activity/${currentUser.id}`
+          );
+          setCurrentUser((prevUser) => ({
+            ...prevUser,
+            lastActivity: new Date().toISOString(),
+          }));
+        }
+      } catch (error) {
+        console.error("Error updating last activity:", error.message);
+      }
+    };
+
+    const interval = setInterval(updateLastActivity, 60000); // Update every 1 minute
+    // const interval = setInterval(updateLastActivity, 300000); // Update every 5 minutes
+    return () => clearInterval(interval);
+  }, [currentUser]);
+
   useEffect(()=>{
     localStorage.setItem("user", JSON.stringify(currentUser));
   },[currentUser]);
