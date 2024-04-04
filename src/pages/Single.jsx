@@ -4,11 +4,19 @@ import Menu from "../components/Menu";
 import axios from "axios";
 import moment from "moment";
 import { AuthContext } from "../context/authContext.js";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container,Card , Toast } from "react-bootstrap";
 import DOMPurify from 'dompurify'; 
 
 const Single = () => {
   const [post, setPost] = useState({});
+  
+  const [comment, setComment] = useState("");
+  const [addPostRes , setAddPostRes] = useState("")
+  const [ getPostRes ,  setgetPostRes] = useState("")
+
+  const [error , setError] = useState(false)
+  const [showToast, setShowToast] = useState(false); 
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -127,6 +135,54 @@ const Single = () => {
 
   const paragraphs = post.text ? splitTextAfterThirdDot(post.text) : [];
 
+  useEffect(() => {
+    const fetchCommentData = async () => {
+      try {
+        // making request too get the comment data of news post
+        const response = await axios.get(
+        `http://116.202.210.102:6969/api/comments/get/${postId}`
+        );
+        setgetPostRes(response.data)
+       console.log(response)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchCommentData();
+  }, [postId, addPostRes]);
+
+
+  const handleUserComment = async (postId, e) => {
+    e.preventDefault();
+    try {
+      const newComment = e.target.elements.newscomment.value;
+      setComment(newComment);
+      const values = {
+        postId : postId, 
+        comment: newComment
+      }
+       const token = localStorage.getItem("accessToken");
+        const config = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      };
+
+      const response = await axios.post(
+        "http://116.202.210.102:6969/api/comments/add",
+        values, config
+      );
+      setAddPostRes(response)
+      setShowToast(true);
+       e.target.elements.newscomment.value = "";
+    } catch (error) {
+      setError("Urnauthorized User Please login!!")
+      console.log("Error in Adding Comments", error);
+    }
+    setComment("");
+  };
+
+
   return (
     <Container className="single">
       <div className="content">
@@ -169,7 +225,48 @@ const Single = () => {
             />
           ))}
         </div>
-        
+        {currentUser && post.cat !== "aktiviteter" && (
+           <>
+           <h3 className="text-danger">Visa föregående kommentarer{comment}</h3>
+            <div style={{ marginTop: "20px" }}>
+              <h5>Posta en kommentar</h5>
+              <form onSubmit={(e) => handleUserComment(postId, e)}>
+                <div className="comment-section">
+                  <textarea
+                    name="newscomment"
+                    id="newscomment"
+                    cols="26"
+                    placeholder="Gå med i diskussionen..."></textarea>
+                  <div>
+                    <div style={{color:"red", padding :"4px"}}>{error}</div>
+                    <Button type="submit" variant="primary">
+                      Add a Comment
+                    </Button>
+                  </div> 
+                </div>
+              </form>
+            </div>
+               <Card style={{ width: "100%", border: "0px"}}>
+               <Card.Body> 
+              {getPostRes.length === 0 ? (
+               <div>
+              <Card.Title>No Comments on this Post</Card.Title>
+               </div>
+             ) : (  
+             <>
+        <Card.Title>Comments on this Post</Card.Title>
+        {getPostRes.map((comment, index) => (
+          <div className="comment-box" key={index}>
+          <hr />
+            <Card.Text>*{comment.comments}</Card.Text>
+          </div>
+        ))}
+      </>
+    )}
+  </Card.Body>
+</Card>
+           </>
+          )}
         {post.cat === "aktiviteter" && (
           <div className="text-center">
             <Button onClick={(e) => handleUserSignUp(post.id, e)} className="BtnClass" disabled={isLoading}>
@@ -180,6 +277,25 @@ const Single = () => {
 
       </div>
       <Menu cat={post.cat} />
+      <Toast
+        onClose={() => setShowToast(false)}
+        show={showToast}
+        delay={3000}
+        autohide
+        style={{
+          position: "fixed",
+         bottom: "20px", 
+        left: "20px",
+         zIndex: 9999, 
+         backgroundColor: "#0B5ED7",
+         color: "white"
+        }}
+      >
+        <Toast.Header>
+          <strong className="me-auto">Success</strong>
+        </Toast.Header>
+        <Toast.Body>Your comment has been successfully submitted!</Toast.Body>
+      </Toast>
     </Container>
   );
 }
