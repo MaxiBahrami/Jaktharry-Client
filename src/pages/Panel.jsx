@@ -1,10 +1,25 @@
-import React from "react";
+import React , { useContext }from "react";
 import { Col, Container, ListGroup, Row, Tab } from "react-bootstrap";
 import { TabContent2, TabContent3, TabContent4, 
   TabContent5} from "../components/adminContent.js";
 import { TabContent7, TabContent8, TabContent9, 
     TabContent11} from "../components/adminContent2.js";
-import { TabContent12 } from "../components/adminContent3.js";    
+import { TabContent12 } from "../components/adminContent3.js";  
+import { AuthContext } from "../context/authContext";  
+
+
+const Panel = () => {
+  const { currentUser } = useContext(AuthContext); // Get the current user from the context
+
+
+  // Check if the current user is an admin
+  const isAdmin = currentUser && currentUser.role === 1;
+
+  // If the user is not an admin, redirect them to the home page
+  if (!isAdmin) {
+    window.location.href = "/";
+    return null;
+  }
 
 // Define the array containing tab items
 const tabItems = [
@@ -31,8 +46,6 @@ const tabItems3 = [
 // Define the array containing non-clickable link IDs
 const nonClickableLinks = ['#link1', '#link6', '#link10'];
 
-const Panel = () => {
-  
   return (
     <Container className="conLayout">
       <h1>Admin Dashboard</h1>
