@@ -11,6 +11,7 @@ function CustomNavbar() {
 
   // Check if currentUser is admin
   const isAdmin = currentUser && currentUser.role === 1;
+  const isModerator = currentUser && currentUser.role === 2;
 
   // Define kretsarList
   const kretsarList = [
@@ -48,9 +49,9 @@ function CustomNavbar() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="ms-auto navClass">
             <NavDropdown title="NYHETER" id="collapsible-nav-dropdown">
-            <NavDropdown.Item className="item">
+              <NavDropdown.Item className="item">
                 <Link to="/" className="nav-link itemClass">
-                alla nyheter
+                  alla nyheter
                 </Link>
               </NavDropdown.Item>
               <NavDropdown.Item className="item">
@@ -80,26 +81,26 @@ function CustomNavbar() {
             <Link to="/?cat=aktiviteter" className="nav-link">
               AKTIVITETER
             </Link>
-            <Link to="#" className="nav-link">
-              {currentUser?.username}
-            </Link>
             {currentUser ? (
-              <Link className="nav-link" onClick={logout} to="/">
-                LoggaUt
-              </Link>
+              <>
+                <Link to="/profile" className="nav-link">
+                  {currentUser?.username} Profil
+                </Link>
+                <Link className="nav-link" onClick={logout} to="/">
+                  LoggaUt
+                </Link>
+              </>
             ) : (
               <Link className="nav-link" to="/login">
                 loggaIN
               </Link>
             )}
-            <Link to="/write" className="nav-link write">
-              Skriva
-            </Link>
-            {currentUser && (
-              <Link to="/profile" className="nav-link">
-                Profil
-              </Link>
-            )}
+            {currentUser &&
+              (currentUser.role === 1 || currentUser.role === 2) && (
+                <Link to="/write" className="nav-link write">
+                  Skriva
+                </Link>
+              )}
           </Nav>
         </Navbar.Collapse>
       </Container>
@@ -110,6 +111,14 @@ function CustomNavbar() {
           <h6>Adminpanel</h6>
         </Link>
       )}
+      {isModerator && (
+        <Link to="/moderatorPanel" className="linkClass">
+          <img src={adsett} alt="" className="adClass" />
+          <h6>Moderator</h6>
+        </Link>
+      )}
+
+
     </Navbar>
   );
 }

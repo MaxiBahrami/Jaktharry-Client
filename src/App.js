@@ -19,6 +19,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
 import React, { useContext } from "react";
 import Panel from "./pages/Panel";
+import ModeratorPanel from "./pages/ModeratorPanel";
 import { AuthContext } from "./context/authContext";
 
 const Layout = ()=>{
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
       { path: "/write", element: <Write />},
       { path: "/post/:id/*", element: <Single />},
       { path: "/panel", element: <Panel /> },
+      { path: "/moderatorPanel", element: <ModeratorPanel /> },
       {
         path: "/profile",
         element: (

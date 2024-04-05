@@ -5,7 +5,6 @@ import del from "../img/del.png";
 import edit from "../img/edit.png";
 import plus from "../img/plus.png";
 import circle from "../img/green-circle.png";
-// import group from "../img/group.png";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext.js";
 
@@ -19,7 +18,9 @@ export const TabContent7 = () => {
       try {
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=aktiviteter`;
         const res = await axios.get(apiUrl);
-        const sortedPosts = res.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const sortedPosts = res.data.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
         setPosts(sortedPosts);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -137,14 +138,14 @@ export const TabContent8 = () => {
           const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/user-activity?userId=${userId}`;
           const res = await axios.get(apiUrl);
           const items = res.data.data;
-          const sorteditems = items.sort((a, b) => new Date(b.date) - new Date(a.date));
+          const sorteditems = items.sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          );
           if (items.length > 0) {
             // Check if data is not empty
             setPosts(sorteditems); // Set the posts state
           }
         }
-
-        
       } catch (err) {
         console.error("Error fetching data:", err);
       }
@@ -360,7 +361,7 @@ export const TabContent9 = () => {
     try {
       const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/activityUsers?activity=${selectedActivity}`;
       const res = await axios.get(apiUrl);
-      
+
       setUsers(res.data.data);
       setActivitySearched(true);
     } catch (err) {
@@ -586,14 +587,19 @@ export const TabContent11 = () => {
   const formatLastActivity = (lastActivity) => {
     const now = moment();
     const activityTime = moment(lastActivity);
-    const minutesDiff = now.diff(activityTime, 'minutes');
+    const minutesDiff = now.diff(activityTime, "minutes");
 
     if (minutesDiff < 5) {
-      return 'Online';
+      return "Online";
     } else {
-      return activityTime.format('LLL'); // Format the timestamp as desired
+      return activityTime.format("LLL"); // Format the timestamp as desired
     }
   };
+  const sortedUsers = [...users].sort((a, b) => {
+    const isAOnline = formatLastActivity(a.lastActivity) === "Online";
+    const isBOnline = formatLastActivity(b.lastActivity) === "Online";
+    return isBOnline - isAOnline;
+  });
 
   return (
     <div className="PostClass">
@@ -614,13 +620,19 @@ export const TabContent11 = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map((user, index) => (
+            {sortedUsers.map((user, index) => (
               <tr width="5%" key={user.id}>
                 <td>{index + 1}</td>
-                <td width="20%">{formatLastActivity(user.lastActivity) === 'Online' && (
-                    <img src={circle} alt="Online" style={{ width: '12px', marginRight: '5px' }} />
+                <td width="20%">
+                  {formatLastActivity(user.lastActivity) === "Online" && (
+                    <img
+                      src={circle}
+                      alt="Online"
+                      style={{ width: "12px", marginRight: "5px" }}
+                    />
                   )}
-                  {formatLastActivity(user.lastActivity)}</td>
+                  {formatLastActivity(user.lastActivity)}
+                </td>
                 <td width="20%">{user.username}</td>
                 <td width="30%">{user.email} </td>
                 <td width="5%">{user.role}</td>
@@ -648,83 +660,3 @@ export const TabContent11 = () => {
   );
 };
 
-export const TabContent12 = () => {
-  const [users, setUsers] = useState([]);
-  const [userPosts, setUserPosts] = useState({});
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const apiUrl = `${process.env.REACT_APP_API_URL}/api/users`;
-        
-        const res = await axios.get(apiUrl);
-        const filteredUsers = res.data.filter((user) => user.role === 2);
-        setUsers(filteredUsers);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const fetchUserPosts = async (userId) => {
-    try {
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?uid=${userId}`;
-      const res = await axios.get(apiUrl);
-      setUserPosts({ ...userPosts, [userId]: res.data });
-    } catch (err) {
-      console.error("Error fetching user items:", err);
-      return [];
-    }
-  };
-
-  const handleClick = (postId) => {
-    // Construct the URL for the single post page with the clicked post ID
-    const postUrl = `${window.location.origin}/post/${postId}`;
-    // Open the URL in a new tab
-    window.open(postUrl, '_blank');
-  };
-
-  return (
-    <div className="PostClass PostClass12">
-      <div className="table-responsive">
-        <table className="table table-bordered">
-          <thead>
-            <tr>
-              <th width="10%">#</th>
-              <th width="20%" >Användarnamn</th>
-              <th width="45%">Hans inlägg</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user, index) => (
-              <tr key={user.id}>
-                <td width="10%">{index + 1}</td>
-                <td className="userClass" width="20%">{user.username}</td>
-                <td width="45%">
-                  <button onClick={() => fetchUserPosts(user.id)}>Posts</button>
-                  {userPosts[user.id] && userPosts[user.id].length > 0 && (
-                    <ul className="list-group">
-                      {userPosts[user.id].map((post, idx) => (
-                        <li className="list-group-item userClass" key={idx}>
-                          <Link className="titleClass" onClick={() => handleClick(post.id)}>{post.title}</Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {userPosts[user.id] && userPosts[user.id].length === 0 && (
-                    <ul className="list-group">
-                      <li className="list-group-item">Ingenting publicerades</li>
-                    </ul>
-                  )}
-                </td>
-                
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};

@@ -776,11 +776,17 @@ $gray:rgb(78, 78, 78);
         border-radius: 50%;
         background-color: rgb(210, 238, 210);
       }
-      
 
+      .iconClass4{
+        width: 25px;
+        height: 25px;
+        padding: 3px;
+        border-radius: 50%;
+        background-color: rgb(241, 190, 190);
+      }
+      
       td{
         color: #2A5913;
-        
       }
 
       .titleClass{
@@ -923,6 +929,22 @@ $gray:rgb(78, 78, 78);
     .PostClass12{
       .userClass{
         text-align: left;
+      }
+      .PostsClass{
+        margin:0px 5px;
+        background-color: $light;
+      }
+
+      .PostBtn{
+        float: inline-end;
+        font-size: 12px;
+        background-color: white;
+        border: 2px solid #e7e7e7;
+        margin: 2px;
+        &:hover {
+          background-color: $gold;
+          color:$Green;
+        }
       }
     }
   }
