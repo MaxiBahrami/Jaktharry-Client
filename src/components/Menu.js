@@ -22,6 +22,7 @@ const Menu = ({cat}) => {
   const handleClick = (postId) => {
     // Navigate to the single post page with the clicked post ID
     navigate(`/post/${postId}`);
+    window.scrollTo(0, 0);
   };
 
   return (

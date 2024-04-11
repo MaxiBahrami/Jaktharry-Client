@@ -35,22 +35,6 @@ $gray:rgb(78, 78, 78);
     }
   }
 
-  .star-rating {
-    display: flex;
-
-    .rating-icon {
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      margin-bottom: 10px ;
-    }
-
-    .rating-message {
-      font-size: 10px;
-      color: $lightGreen;
-    }
-  }
-
   .container{
       width:1200px;
     .link{
@@ -119,10 +103,186 @@ $gray:rgb(78, 78, 78);
         margin:20px auto ;
         color: #ffffff;
       }
+
+      @media screen and (max-width: 579px){
+    .container{
+      width: 95%;
+
+      .auth{
+        h1{
+          font-size: 20px;
+        }
+        form{
+          width: 300px;
+        }
+      }
+
+      .single{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .content{
+          flex:1;
+          gap: 20px;
+
+          img{
+            margin: 1px auto;
+            width: 80%;
+            height: 150px;
+          }
+        
+          .user{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            
+            img{
+              width: 40px;
+              height: 40px;
+            }
+          }
+
+          .edit{
+            display: flex;
+            gap: 5px;
+
+            img{
+              width: 20px;
+              height: 20px;
+              cursor: pointer;
+            }
+          } 
+        
+          h1{
+            font-size: 30px;
+          }
+
+          p{
+            text-align: justify;
+            line-height: 25px;
+          }
+          .descP{
+            font-size: 1.0rem;
+          }
+        }
+    
+        .menu{
+          margin-top: 20px;
+          flex-direction: column;
+          gap: 15px;
+
+          h1{
+            font-size: 20px;
+          }
+
+          .post{
+
+            img{
+              width: 50%;
+              height: 150px;
+            }
+
+            h3{
+              font-size: 15px;
+            }
+
+            button{
+              width: max-content;
+              padding: 4.5px 10px;
+            }
+          }
+        }
+      }
+
+      .add{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    
+        .content{
+          gap: 10px;
+          width: 90%;
+    
+          input{
+            padding: 5px;
+          }
+        }
+    
+        .menu{
+          width: 70%;
+          gap: 5px;
+    
+          .item{
+            padding: 5px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+    
+            input {
+              padding: 5px;
+              margin: 5px 5px;
+            }
+    
+            .cat{
+              gap: 2px;
+            }
+    
+            .item2{
+              padding: 5px 5px;
+              margin-top: 7px;
+              margin-bottom: 7px;
+            }
+          }
+        }
+      }
+
+      .conLayout{
+        margin: 15px auto;
+  
+        .rowClass{
+          margin: 5px 0px;
+          font-size: 14px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+  
+          .col1Class{
+            width: 80%;
+            
+            .groupClass{
+              margin-top: 10px;
+              gap: 1px;
+              font-size: 16px; 
+            }
+          }
+  
+          .col2Class{
+            border: solid 1px $gold;
+            padding: 0;
+            width: 100%;
+            margin-top: 20px;
+          }
+        }
+      }
+    }
+    
+  }
+  @media screen and (max-width: 579px){
+    
+        h1{
+          font-size: 20px;
+        }
+        form{
+          width: 350px;
+        }
+  }
+
     }
 
     //NAVBAR
-
     .navbar{
       font-weight: 500;
       width:100%;
@@ -237,7 +397,7 @@ $gray:rgb(78, 78, 78);
     //FOOTER
     
     footer{
-      margin-top: 10px;
+      margin-top: 30px;
       padding: 10px 20px;
       background-color: $lightGreen;
       display: flex;
@@ -251,7 +411,6 @@ $gray:rgb(78, 78, 78);
     }
 
     //HOME
-
     .home{
 
       .posts{
@@ -290,6 +449,11 @@ $gray:rgb(78, 78, 78);
             h1{
               font-size: 40px;
             }
+
+            .DateClass{
+              font-size: 15px;
+              color:$light;
+            }
             p{
               font-size: 18px;
             }
@@ -307,6 +471,22 @@ $gray:rgb(78, 78, 78);
                 border: 1px solid white;
                 background-color: $lightGreen;
                 color: $gold;
+              }
+            }
+
+            .star-rating {
+              display: flex;
+          
+              .rating-icon {
+                width: 20px;
+                height: 20px;
+                cursor: pointer;
+                margin-bottom: 10px ;
+              }
+          
+              .rating-message {
+                font-size: 10px;
+                color: $lightGreen;
               }
             }
           }
@@ -357,8 +537,9 @@ $gray:rgb(78, 78, 78);
 
       @media screen and (min-width: 591px) and (max-width: 767px) {
         .posts{
-          margin-top: 30px;
-          gap: 20px;
+          width: 100%;
+          margin: 20px auto;
+          gap: 30px;
   
           .post{
             flex-direction: column-reverse;
@@ -381,11 +562,14 @@ $gray:rgb(78, 78, 78);
             .content{
               flex: 3;
               display: flex;
-              text-align: center;
+              text-align: left;
               justify-content: center;
   
               h1{
                 font-size: 30px;
+              }
+              .DateClass{
+                font-size: 13px;
               }
               p{
                 font-size: 15px;
@@ -394,44 +578,39 @@ $gray:rgb(78, 78, 78);
               button{
                 padding: 5px 20px;
               }
+
             }
           }
         }
       }
 
       @media screen and (min-width: 768px) and (max-width: 1199px) {
-          
-          .posts{
+        .posts{
+          .post{
             
-            .post{
-              
-              .img {
-
-                img{
-                  max-height: 200px;
-                }
+            .img {
+              img{
+                max-height: 200px;
               }
-    
-              .content{
-    
-                h1{
-                  font-size: 35px;
-                }
-                p{
-                  font-size: 16px;
-                }
-    
-                button{
-                  padding: 8px 18px;
-                }
+            }
+  
+            .content{
+              h1{
+                font-size: 35px;
+              }
+              p{
+                font-size: 16px;
+              }
+              button{
+                padding: 8px 18px;
               }
             }
           }
+        }  
       }
     }
 
     //SINGLE
-
     .single{
       display: flex;
       gap: 50px;
@@ -476,8 +655,9 @@ $gray:rgb(78, 78, 78);
           gap: 5px;
 
           img{
-            width: 20px;
-            height: 20px;
+            margin-top: 5px;
+            width: 30px;
+            height: 30px;
             cursor: pointer;
           }
         } 
@@ -490,6 +670,7 @@ $gray:rgb(78, 78, 78);
         p{
           text-align: justify;
           line-height: 30px;
+          font-size: 1.1rem;
         }
 
         .star-rating {
@@ -511,6 +692,45 @@ $gray:rgb(78, 78, 78);
           color: $lightGreen;
           font-size: 1.3rem;
           font-weight: bold;
+          margin-top: 30px;
+        }
+
+        .textClass{
+          text-align: end;
+          img{
+            height: 50px;
+            width: 50px;
+            margin-left: 10px;
+          }
+        }
+
+        textarea {
+          width: 100%;
+          height: 150px;
+          padding: 12px 20px;
+          box-sizing: border-box;
+          border: 2px solid #ccc;
+          border-radius: 4px;
+          background-color: #f8f8f8;
+          font-size: 16px;  
+          resize: auto;
+          outline: none;
+        }
+        
+        .comment-section{
+          display: flex;
+          height: 100%;
+          gap: 10px;
+          flex-direction: column;
+        }
+        
+        .show-comments{
+          border: 2px solid #ccc;
+          padding: 10px;
+        }
+        
+        .comment-box{ 
+          padding-top: 10px;
         }
 
         .BtnClass{
@@ -535,8 +755,7 @@ $gray:rgb(78, 78, 78);
 
         h1{
           font-size: 20px;
-          color: $gray
-          ;
+          color: $gray ;
         }
 
         .post{
@@ -550,7 +769,7 @@ $gray:rgb(78, 78, 78);
             object-fit: cover;
           }
 
-          h2{
+          h3{
             color: $gray;
           }
 
@@ -572,6 +791,185 @@ $gray:rgb(78, 78, 78);
         }
       }
 
+      @media screen and (max-width: 590px){
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+        .content{
+          width:100%;
+          img{
+            height: 200px;
+          }
+          .info{
+            p{
+              font-size: 12px;
+            }
+          }
+          h1{
+            font-size: 25px;
+          }
+          .descP{
+            font-size: 1.1rem;
+            margin-top: 20px;
+          }
+          p{
+            line-height: 25px;
+            font-size: 0.90rem;
+          }
+          textarea {
+            font-size: 15px;  
+          }
+          .edit{
+            gap: 3px;
+  
+            img{
+              width: 20px;
+              height: 20px;
+            }
+          } 
+          .textClass{
+            img{
+              height: 30px;
+              width: 30px;
+            }
+          }
+          .BtnClass{
+            padding: 5px 7px;
+            font-size: 0.9rem;
+          }
+          .CommClass{
+            font-size: 18px;
+          }
+        }
+  
+        .menu{
+          width: 100%;
+          h1{
+            font-size: 18px;
+            border-top: #2A5913 solid 2px;
+            padding-top: 2px;
+          }
+          h3{
+            font-size: 18px;
+          }
+          .post{
+            img{
+              height: 150px;
+            }
+  
+            button{
+              padding: 3.5px 7px;
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+    
+      @media screen and (min-width: 591px) and (max-width: 767px) {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+        .content{
+          width:100%;
+
+          h1{
+            font-size: 30px;
+          }
+          textarea {
+            font-size: 15px;  
+          }
+          .edit{
+            gap: 3px;
+  
+            img{
+              width: 25px;
+              height: 25px;
+            }
+          } 
+          .textClass{
+            img{
+              height: 30px;
+              width: 30px;
+            }
+          }
+          .BtnClass{
+            padding: 5px 7px;
+            font-size: 0.9rem;
+          }
+        }
+  
+        .menu{
+          width: 100%;
+          h1{
+            font-size: 18px;
+          }
+          h3{
+            font-size: 18px;
+          }
+          .post{
+            img{
+              height: 150px;
+            }
+  
+            button{
+              padding: 3.5px 7px;
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+    
+      @media screen and (min-width: 768px) and (max-width: 1199px) {
+        gap: 20px;
+        
+        .content{
+          width:75%;
+          gap: 25px;
+  
+          img{
+            height: 250px;
+          }
+          
+          h1{
+            font-size: 35px;
+          }
+  
+          p{
+            line-height: 25px;
+          }
+  
+          .textClass{
+            img{
+              height: 40px;
+              width: 40px;
+            }
+          }
+  
+          textarea {
+            font-size: 15px;  
+          }
+        }
+  
+        .menu{
+          width: 25%;
+  
+          h1{
+            font-size: 18px;
+          }
+  
+          .post{
+            img{
+              height: 150px;
+            }
+  
+            button{
+              padding: 5.5px 10px;
+            }
+          }
+        }
+      }
     }
   
     //Write
@@ -951,7 +1349,7 @@ $gray:rgb(78, 78, 78);
 
   @media screen and (max-width: 579px){
     .container{
-      width: 95%;
+      width: 100%;
 
       .auth{
         h1{
@@ -959,85 +1357,6 @@ $gray:rgb(78, 78, 78);
         }
         form{
           width: 300px;
-        }
-      }
-
-      .single{
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-
-        .content{
-          flex:1;
-          gap: 20px;
-
-          img{
-            margin: 1px auto;
-            width: 80%;
-            height: 150px;
-          }
-        
-          .user{
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            
-            img{
-              width: 40px;
-              height: 40px;
-            }
-          }
-
-          .edit{
-            display: flex;
-            gap: 5px;
-
-            img{
-              width: 20px;
-              height: 20px;
-              cursor: pointer;
-            }
-          } 
-        
-          h1{
-            font-size: 30px;
-          }
-
-          p{
-            text-align: justify;
-            line-height: 25px;
-          }
-          .descP{
-            font-size: 1.0rem;
-          }
-        }
-    
-        .menu{
-          margin-top: 20px;
-          flex-direction: column;
-          gap: 15px;
-
-          h1{
-            font-size: 20px;
-          }
-
-          .post{
-
-            img{
-              width: 50%;
-              height: 150px;
-            }
-
-            h3{
-              font-size: 15px;
-            }
-
-            button{
-              width: max-content;
-              padding: 4.5px 10px;
-            }
-          }
         }
       }
 
@@ -1118,85 +1437,8 @@ $gray:rgb(78, 78, 78);
 
   @media screen and (min-width: 591px) and (max-width: 767px) {
     .container{
-      
-      .single{
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-
-        .content{
-          flex:1;
-          gap: 10px;
-  
-          img{
-            width: 100%;
-            height: 200px;
-          }
-          
-          .user{
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            
-            img{
-              width: 40px;
-              height: 40px;
-            }
-          }
-  
-          .edit{
-            display: flex;
-            gap: 5px;
-  
-            img{
-              width: 20px;
-              height: 20px;
-              cursor: pointer;
-            }
-          } 
-          
-          h1{
-            font-size: 35px;
-          }
-  
-          p{
-            text-align: justify;
-            line-height: 25px;
-          }
-          .descP{
-            font-size: 1.1rem;
-          }
-        }
-      
-        .menu{
-          margin-top: 20px;
-          flex-direction: column;
-          gap: 15px;
-  
-          h1{
-            font-size: 20px;
-          }
-  
-          .post{
-  
-            img{
-              width: 60%;
-              height: 150px;
-            }
-
-            h3{
-              font-size: 25px;
-            }
-
-            button{
-              width: max-content;
-              padding: 4.5px 10px;
-            }
-          }
-        }
-      }
-
+      width:100%;
+    
       .add{
         display: flex;
         flex-direction: column;
@@ -1272,6 +1514,7 @@ $gray:rgb(78, 78, 78);
   }
 
   @media screen and (min-width: 768px) and (max-width: 1199px) {
+    
     .add{
       margin-top: 30px;
       display: flex;
@@ -1395,31 +1638,3 @@ $gray:rgb(78, 78, 78);
 
 }
 
-textarea {
-  width: 100%;
-  height: 150px;
-  padding: 12px 20px;
-  box-sizing: border-box;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  background-color: #f8f8f8;
-  font-size: 16px;  
-  resize: auto;
-  outline: none;
-}
-
-.comment-section{
-  display: flex;
-  height: 100%;
-  gap: 10px;
-  flex-direction: column;
-}
-
-.show-comments{
-  border: 2px solid #ccc;
-  padding: 10px;
-}
-
-.comment-box{ 
-  padding-top: 10px;
-}

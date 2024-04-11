@@ -5,6 +5,7 @@ import axios from 'axios';
 import DOMPurify from 'dompurify';
 import StarRating from '../components/StarRating';
 import { AuthContext } from '../context/authContext';
+import moment from "moment";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -44,6 +45,7 @@ const Home = () => {
   const handleClick = (postId) => {
     // Navigate to the single post page with the clicked post ID
     navigate(`/post/${postId}`);
+    window.scrollTo(0, 0);
   };
 
   const sanitizeHTML = (html) => {
@@ -61,10 +63,11 @@ const Home = () => {
           <div className="content">
             <Link className='link' to={`/post/${post.id}`}>
               <h1>{post.title}</h1>
+              <p className="DateClass">Posted {moment(post.date).subtract(1, 'days').calendar()}</p>
               {/* Use the truncateText function for post.desc */}
               <p dangerouslySetInnerHTML={sanitizeHTML(truncateText(post.desc, 150))}></p>
               <StarRating disabled userId={currentUser?.id} post={post} />
-                <Button onClick={() => handleClick(post.id)}>Läs mer</Button>
+              <Button onClick={() => handleClick(post.id)}>Läs mer</Button>
             </Link>
           </div>
         </div>

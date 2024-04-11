@@ -4,18 +4,19 @@ import Menu from "../components/Menu";
 import axios from "axios";
 import moment from "moment";
 import { AuthContext } from "../context/authContext.js";
-import { Button, Container,Card , Toast } from "react-bootstrap";
-import DOMPurify from 'dompurify'; 
+import { Button, Container, Card, Toast } from "react-bootstrap";
+import DOMPurify from "dompurify";
+import arrow from "../img/fast-forward.gif"
 
 const Single = () => {
   const [post, setPost] = useState({});
-  
-  const [comment, setComment] = useState("");
-  const [addPostRes , setAddPostRes] = useState("")
-  const [ getPostRes ,  setgetPostRes] = useState("")
 
-  const [error , setError] = useState(false)
-  const [showToast, setShowToast] = useState(false); 
+  const [comment, setComment] = useState("");
+  const [addPostRes, setAddPostRes] = useState("");
+  const [getPostRes, setgetPostRes] = useState("");
+
+  const [error, setError] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const Single = () => {
   const postId = location.pathname.split("/")[2];
   const { currentUser } = useContext(AuthContext);
   axios.defaults.withCredentials = true;
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,14 +35,13 @@ const Single = () => {
         setPost(response.data);
       } catch (error) {
         console.log(error);
-      } 
+      }
     };
 
     fetchData();
   }, [postId]);
 
   const handleUserSignUp = async (postId, e) => {
-    
     e.preventDefault();
 
     if (!currentUser) {
@@ -51,16 +51,19 @@ const Single = () => {
       }
     } else {
       try {
-        const token = localStorage.getItem('accessToken'); 
-        const headers = { Authorization: `Bearer ${token}` }; 
+        const token = localStorage.getItem("accessToken");
+        const headers = { Authorization: `Bearer ${token}` };
         setIsLoading(true);
 
         const exist = await userPostExist(postId);
-         console.log(exist);
-         
-         if (!exist) {
-          await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId }, { headers });
-          ;
+        console.log(exist);
+
+        if (!exist) {
+          await axios.post(
+            `${process.env.REACT_APP_API_URL}/api/posts/signup`,
+            { postId },
+            { headers }
+          );
           window.alert("Perfect ... Du är registrerad för denna aktivitet");
           navigate("/");
         } else {
@@ -69,22 +72,24 @@ const Single = () => {
         }
       } catch (error) {
         console.error("Error signing up for activity:", error);
-      }finally {
+      } finally {
         setIsLoading(false); // Reset loading state regardless of the outcome
       }
     }
   };
 
   const userPostExist = async (postId) => {
-    
     try {
-      const token = localStorage.getItem('accessToken'); 
-      const headers = { Authorization: `Bearer ${token}` }; 
-    
+      const token = localStorage.getItem("accessToken");
+      const headers = { Authorization: `Bearer ${token}` };
+
       // Make a request to your backend to check user post status
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/signup/status?postId=${postId}`, { headers });
-      console.log(response)
-      
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/posts/signup/status?postId=${postId}`,
+        { headers }
+      );
+      console.log(response);
+
       // Response should contain a boolean indicating if the user has already signed up
       return response.data.exists;
     } catch (error) {
@@ -96,16 +101,18 @@ const Single = () => {
   const handleDelete = async (post) => {
     try {
       // Ask for confirmation before deleting
-      const confirmDelete = window.confirm("Are you sure you want to delete this post?");
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this post?"
+      );
       if (!confirmDelete) return;
-  
+
       // Retrieve the token from local storage
-      const token = localStorage.getItem('accessToken');
+      const token = localStorage.getItem("accessToken");
       console.log(token);
-  
+
       // Create headers with the Authorization header
       const headers = { Authorization: `Bearer ${token}` };
-      
+
       // Perform the delete operation with the Authorization header
       const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/${post.id}`;
       await axios.delete(apiUrl, { headers });
@@ -140,10 +147,10 @@ const Single = () => {
       try {
         // making request too get the comment data of news post
         const response = await axios.get(
-        `http://116.202.210.102:6969/api/comments/get/${postId}`
+          `${process.env.REACT_APP_API_URL}/api/comments/get/${postId}`
         );
-        setgetPostRes(response.data)
-       console.log(response)
+        setgetPostRes(response.data);
+        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -151,37 +158,38 @@ const Single = () => {
     fetchCommentData();
   }, [postId, addPostRes]);
 
-
   const handleUserComment = async (postId, e) => {
     e.preventDefault();
     try {
       const newComment = e.target.elements.newscomment.value;
       setComment(newComment);
+      console.log(comment);
+      
       const values = {
-        postId : postId, 
-        comment: newComment
-      }
-       const token = localStorage.getItem("accessToken");
-        const config = {
+        postId: postId,
+        comment: newComment,
+      };
+      const token = localStorage.getItem("accessToken");
+      const config = {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       };
 
       const response = await axios.post(
         "http://116.202.210.102:6969/api/comments/add",
-        values, config
+        values,
+        config
       );
-      setAddPostRes(response)
+      setAddPostRes(response);
       setShowToast(true);
-       e.target.elements.newscomment.value = "";
+      e.target.elements.newscomment.value = "";
     } catch (error) {
-      setError("Urnauthorized User Please login!!")
+      setError("Urnauthorized User Please login!!");
       console.log("Error in Adding Comments", error);
     }
     setComment("");
   };
-
 
   return (
     <Container className="single">
@@ -191,30 +199,38 @@ const Single = () => {
             <img src={post.img} alt="" />
           </div>
           {currentUser && (
-          <div className="user">
-            {post.userImage && <img src={post.userImage} alt="" />}
-            <div className="info">
-              <span>{post.username}</span>
-              <p>Posted {moment(post.date).fromNow()}</p>
-            </div>
-            {currentUser.username === post.username && (
-              <div className="edit">
-                <Link to={`/write?edit=2`} state={post} onClick={handleWriteClick}>
+            <div className="user">
+              {post.userImage && <img src={post.userImage} alt="" />}
+              <div className="info">
+                <span>{post.username}</span>
+                <p>Posted {moment(post.date).subtract(1, "days").calendar()}</p>
+              </div>
+              {currentUser.username === post.username && (
+                <div className="edit">
+                  <Link
+                    to={`/write?edit=2`}
+                    state={post}
+                    onClick={handleWriteClick}
+                  >
+                    <img
+                      src="https://logowik.com/content/uploads/images/888_edit.jpg"
+                      alt=""
+                    />
+                  </Link>
                   <img
-                    src="https://logowik.com/content/uploads/images/888_edit.jpg"
+                    onClick={() => handleDelete(post)}
+                    src="https://cdn.iconscout.com/icon/free/png-256/free-delete-2902143-2411575.png"
                     alt=""
                   />
-                </Link>
-                <img
-                  onClick={() => handleDelete(post)}
-                  src="https://cdn.iconscout.com/icon/free/png-256/free-delete-2902143-2411575.png"
-                  alt=""
-                />
-              </div>
-            )}
-          </div>)}
+                </div>
+              )}
+            </div>
+          )}
           <h1>{post.title}</h1>
-          <p className="descP" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.desc) }}></p>
+          <p
+            className="descP"
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.desc) }}
+          ></p>
           {/* Render each paragraph separately */}
           {paragraphs.map((paragraph, index) => (
             <p
@@ -225,56 +241,61 @@ const Single = () => {
             />
           ))}
         </div>
-        {currentUser && post.cat !== "aktiviteter" && (
-           <>
-           <h3 className="text-danger">Visa föregående kommentarer{comment}</h3>
+        {post.cat === "aktiviteter" && (
+          <div className="textClass">
+            <img src={arrow} alt="" />
+            <Button
+              onClick={(e) => handleUserSignUp(post.id, e)}
+              className="BtnClass"
+              disabled={isLoading}
+            >
+              {isLoading ? "Vänta..." : "Delta i aktiviteten"}
+            </Button>
+          </div>
+        )}
+        {currentUser && (
+          <>
             <div style={{ marginTop: "20px" }}>
-              <h5>Posta en kommentar</h5>
+              <h5 className="CommClass">Posta en kommentar</h5>
               <form onSubmit={(e) => handleUserComment(postId, e)}>
                 <div className="comment-section">
                   <textarea
                     name="newscomment"
                     id="newscomment"
                     cols="26"
-                    placeholder="Gå med i diskussionen..."></textarea>
+                    placeholder="Gå med i diskussionen..."
+                  ></textarea>
                   <div>
-                    <div style={{color:"red", padding :"4px"}}>{error}</div>
-                    <Button type="submit" variant="primary">
+                    <div style={{ color: "red", padding: "4px" }}>{error}</div>
+                    <Button className="BtnClass" type="submit" variant="primary">
                       Add a Comment
                     </Button>
-                  </div> 
+                  </div>
                 </div>
               </form>
             </div>
-               <Card style={{ width: "100%", border: "0px"}}>
-               <Card.Body> 
-              {getPostRes.length === 0 ? (
-               <div>
-              <Card.Title>No Comments on this Post</Card.Title>
-               </div>
-             ) : (  
-             <>
-        <Card.Title>Comments on this Post</Card.Title>
-        {getPostRes.map((comment, index) => (
-          <div className="comment-box" key={index}>
-          <hr />
-            <Card.Text>*{comment.comments}</Card.Text>
-          </div>
-        ))}
-      </>
-    )}
-  </Card.Body>
-</Card>
-           </>
-          )}
-        {post.cat === "aktiviteter" && (
-          <div className="text-center">
-            <Button onClick={(e) => handleUserSignUp(post.id, e)} className="BtnClass" disabled={isLoading}>
-            {isLoading ? 'Vänta...' : 'Delta i aktiviteten'}
-          </Button>
-          </div>
+            <Card style={{ width: "100%", border: "0px" }}>
+              <Card.Body>
+                {getPostRes.length === 0 ? (
+                  <div >
+                    <Card.Title className="CommClass">No Comments on this Post</Card.Title>
+                  </div>
+                ) : (
+                  <>
+                    <Card.Title>Comments on this Post</Card.Title>
+                    {getPostRes.map((comment, index) => (
+                      <div className="comment-box" key={index}>
+                        <hr />
+                        <Card.Text>*{comment.comments}</Card.Text>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </Card.Body>
+            </Card>
+          </>
         )}
-
+        
       </div>
       <Menu cat={post.cat} />
       <Toast
@@ -284,11 +305,11 @@ const Single = () => {
         autohide
         style={{
           position: "fixed",
-         bottom: "20px", 
-        left: "20px",
-         zIndex: 9999, 
-         backgroundColor: "#0B5ED7",
-         color: "white"
+          bottom: "20px",
+          left: "20px",
+          zIndex: 9999,
+          backgroundColor: "#0B5ED7",
+          color: "white",
         }}
       >
         <Toast.Header>
@@ -298,6 +319,6 @@ const Single = () => {
       </Toast>
     </Container>
   );
-}
+};
 
 export default Single;
