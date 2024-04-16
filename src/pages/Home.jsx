@@ -6,13 +6,14 @@ import DOMPurify from 'dompurify';
 import StarRating from '../components/StarRating';
 import { AuthContext } from '../context/authContext';
 import moment from "moment";
+import 'moment/locale/sv'; 
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const { currentUser } = useContext(AuthContext);
   const cat = useLocation().search;
   const navigate = useNavigate();
-
+  moment.locale('sv');
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -63,7 +64,7 @@ const Home = () => {
           <div className="content">
             <Link className='link' to={`/post/${post.id}`}>
               <h1>{post.title}</h1>
-              <p className="DateClass">Posted {moment(post.date).subtract(1, 'days').calendar()}</p>
+              <p className="DateClass">{moment(post.date).calendar()}</p>
               {/* Use the truncateText function for post.desc */}
               <p dangerouslySetInnerHTML={sanitizeHTML(truncateText(post.desc, 150))}></p>
               <StarRating disabled userId={currentUser?.id} post={post} />

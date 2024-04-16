@@ -3,28 +3,47 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Menu from "../components/Menu";
 import axios from "axios";
 import moment from "moment";
+import 'moment/locale/sv'; 
 import { AuthContext } from "../context/authContext.js";
-import { Button, Container, Card, Toast } from "react-bootstrap";
+import { Button, Container, Card, Toast, Modal,} from "react-bootstrap";
+import Form from 'react-bootstrap/Form';
+
 import DOMPurify from "dompurify";
-import arrow from "../img/fast-forward.gif"
+import arrow from "../img/fast-forward.gif";
+import verify from "../img/verify.png";
+import message from "../img/message.png";
+
+import StarRating from "../components/StarRating";
 
 const Single = () => {
+  moment.locale('sv');
   const [post, setPost] = useState({});
 
   const [comment, setComment] = useState("");
   const [addPostRes, setAddPostRes] = useState("");
   const [getPostRes, setgetPostRes] = useState("");
-
+  const [Registered, setRegistered] = useState(false);
   const [error, setError] = useState(false);
   const [showToast, setShowToast] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [showModal, setShowModal] = useState(false);
   const postId = location.pathname.split("/")[2];
   const { currentUser } = useContext(AuthContext);
   axios.defaults.withCredentials = true;
   const [isLoading, setIsLoading] = useState(false);
+  const [takenSpot, setTakenSpot] = useState(0);
+  const [inputs, setInputs] = useState({
+    name: "",
+    aftername: "",
+    email: "",
+    id: "",
+  });
+
+  const handleChange = (e) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,66 +56,28 @@ const Single = () => {
         console.log(error);
       }
     };
-
-    fetchData();
-  }, [postId]);
-
-  const handleUserSignUp = async (postId, e) => {
-    e.preventDefault();
-
-    if (!currentUser) {
-      const shouldLogin = window.confirm("Login to sign the activity");
-      if (shouldLogin) {
-        navigate("/login");
-      }
-    } else {
+    const getEntries = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-        const headers = { Authorization: `Bearer ${token}` };
-        setIsLoading(true);
-
-        const exist = await userPostExist(postId);
-        console.log(exist);
-
-        if (!exist) {
-          await axios.post(
-            `${process.env.REACT_APP_API_URL}/api/posts/signup`,
-            { postId },
-            { headers }
-          );
-          window.alert("Perfect ... Du är registrerad för denna aktivitet");
-          navigate("/");
-        } else {
-          console.error("User already signed up for this post");
-          window.alert("Du är redan registrerad för denna aktivitet");
-        }
-      } catch (error) {
-        console.error("Error signing up for activity:", error);
-      } finally {
-        setIsLoading(false); // Reset loading state regardless of the outcome
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/posts/getEntries/${postId}`
+        );
+        setTakenSpot(response.data);
+      } catch (err) {
+        console.log(err.message);
       }
-    }
-  };
-
-  const userPostExist = async (postId) => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      const headers = { Authorization: `Bearer ${token}` };
-
-      // Make a request to your backend to check user post status
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/posts/signup/status?postId=${postId}`,
-        { headers }
-      );
-      console.log(response);
-
-      // Response should contain a boolean indicating if the user has already signed up
-      return response.data.exists;
-    } catch (error) {
-      console.error("Error checking if user post exists:", error);
-      return false; // Assuming it doesn't exist if there's an error
-    }
-  };
+    };
+    const checkRegistrationStatus = async () => {
+      try {
+        const exist = await userPostExist(postId);
+        setRegistered(exist);
+      } catch (error) {
+        console.error("Error checking registration status:", error);
+      }
+    };
+    getEntries();
+    fetchData();
+    checkRegistrationStatus();
+  }, [postId]);
 
   const handleDelete = async (post) => {
     try {
@@ -108,7 +89,6 @@ const Single = () => {
 
       // Retrieve the token from local storage
       const token = localStorage.getItem("accessToken");
-      console.log(token);
 
       // Create headers with the Authorization header
       const headers = { Authorization: `Bearer ${token}` };
@@ -150,7 +130,6 @@ const Single = () => {
           `${process.env.REACT_APP_API_URL}/api/comments/get/${postId}`
         );
         setgetPostRes(response.data);
-        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -163,24 +142,23 @@ const Single = () => {
     try {
       const newComment = e.target.elements.newscomment.value;
       setComment(newComment);
-      console.log(comment);
-      
+
+      const token = localStorage.getItem("accessToken");
+      const headers = { Authorization: `Bearer ${token}` };
+
       const values = {
         postId: postId,
         comment: newComment,
-      };
-      const token = localStorage.getItem("accessToken");
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        uid: currentUser.id,
+        date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
       };
 
       const response = await axios.post(
-        "http://116.202.210.102:6969/api/comments/add",
+        `${process.env.REACT_APP_API_URL}/api/comments/add`,
         values,
-        config
+        { headers }
       );
+
       setAddPostRes(response);
       setShowToast(true);
       e.target.elements.newscomment.value = "";
@@ -189,11 +167,69 @@ const Single = () => {
       console.log("Error in Adding Comments", error);
     }
     setComment("");
+    console.log(comment);
+  };
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
+  const handleUserSignUp = async (postId, e) => {
+    e.preventDefault();
+
+    if (!currentUser) {
+      const shouldLogin = window.confirm("Login to sign the activity");
+      if (shouldLogin) {
+        navigate("/login");
+      }
+    } else {
+      try {
+        const token = localStorage.getItem('accessToken'); 
+        const headers = { Authorization: `Bearer ${token}` }; 
+        setIsLoading(true);
+
+        const exist = await userPostExist(postId);
+
+         if (!exist) {
+          await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId:postId,name:inputs.name,aftername:inputs.aftername,email:inputs.email,id_info:inputs.id}, { headers });
+          ;
+          setRegistered(true);
+          window.alert("Perfect ... Du är registrerad för denna aktivitet");
+          setShowModal(false);
+        } else {
+          console.error("User already signed up for this post");
+          window.alert("Du är redan registrerad för denna aktivitet");
+        }
+      } catch (error) {
+        console.error("Error signing up for activity:", error);
+      }finally {
+        setIsLoading(false); // Reset loading state regardless of the outcome
+      }
+    }
+  };
+
+  const userPostExist = async (postId) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const headers = { Authorization: `Bearer ${token}` };
+
+      // Make a request to your backend to check user post status
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/posts/signup/status?postId=${postId}`, { headers }
+      );
+      // Response should contain a boolean indicating if the user has already signed up
+      return response.data.exists;
+    } catch (error) {
+      console.error("Error checking if user post exists:", error);
+      return false; // Assuming it doesn't exist if there's an error
+    }
   };
 
   return (
     <Container className="single">
+      
       <div className="content">
+        {/* Post Details */}
         <div>
           <div className="img">
             <img src={post.img} alt="" />
@@ -203,9 +239,9 @@ const Single = () => {
               {post.userImage && <img src={post.userImage} alt="" />}
               <div className="info">
                 <span>{post.username}</span>
-                <p>Posted {moment(post.date).subtract(1, "days").calendar()}</p>
+                <p>{moment(post.date).calendar()}</p>
               </div>
-              {currentUser.username === post.username && (
+              {currentUser.id === post.id || currentUser.role === 1 ? (
                 <div className="edit">
                   <Link
                     to={`/write?edit=2`}
@@ -223,10 +259,12 @@ const Single = () => {
                     alt=""
                   />
                 </div>
-              )}
+              ) : null}
             </div>
           )}
+
           <h1>{post.title}</h1>
+          <StarRating disabled userId={currentUser?.id} post={post} />
           <p
             className="descP"
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.desc) }}
@@ -241,18 +279,45 @@ const Single = () => {
             />
           ))}
         </div>
-        {post.cat === "aktiviteter" && (
-          <div className="textClass">
-            <img src={arrow} alt="" />
-            <Button
-              onClick={(e) => handleUserSignUp(post.id, e)}
-              className="BtnClass"
-              disabled={isLoading}
-            >
-              {isLoading ? "Vänta..." : "Delta i aktiviteten"}
-            </Button>
+
+        {/* Activities */}
+        {post.cat === "aktiviteter" && post.status === "open" && (
+          <div className="row">
+            <div className="col-7 border border-1 border-warning py-4 ms-2 text-start gap-2 text-success">
+              <p className="pris-button">
+                  <b> Pris </b>: <span className="text-danger">{post.price}</span> kr
+              </p>
+              <p><b>Aktivitet äger rum i: </b>: {moment(post.adminDate).format('dddd, LL')}</p>
+              <p><b>Sista anmälningsdatum </b>: {moment(post.deadline).format('dddd, LL')}</p>
+              <p><b>Kvot</b>: Det finns{" "}
+                {post.spots ? post.spots - takenSpot : "obegränsat"} platser
+                kvar av {post.spots || "obegränsat"} platser
+              </p>
+            </div>
+            <div className="textClass col-4 m-auto">
+              { !Registered && <div>
+              <img src={arrow} alt="" />
+              <Button
+                onClick={() => {toggleModal();}}
+                className="BtnClass"
+                disabled={isLoading}
+              >
+                {isLoading ? "Vänta..." : "Delta i aktiviteten"}
+              </Button></div>
+              }
+              { Registered && <div className="textClass text-center">
+                <img src={verify} alt="" />
+                <h5 className="">Du är registrerad för denna aktivitet</h5>
+                <p className="text-center text-dark"><small> För att avbryta skicka e-post till admin</small>
+                <Link><span><img src={message} alt="" style={{ width: '20px',height: '20px' }}/></span>
+                </Link></p>
+              </div>
+              }
+            </div>
           </div>
         )}
+
+        {/* Comments */}
         {currentUser && (
           <>
             <div style={{ marginTop: "20px" }}>
@@ -267,7 +332,11 @@ const Single = () => {
                   ></textarea>
                   <div>
                     <div style={{ color: "red", padding: "4px" }}>{error}</div>
-                    <Button className="BtnClass" type="submit" variant="primary">
+                    <Button
+                      className="BtnClass"
+                      type="submit"
+                      variant="primary"
+                    >
                       Add a Comment
                     </Button>
                   </div>
@@ -277,16 +346,29 @@ const Single = () => {
             <Card style={{ width: "100%", border: "0px" }}>
               <Card.Body>
                 {getPostRes.length === 0 ? (
-                  <div >
-                    <Card.Title className="CommClass">No Comments on this Post</Card.Title>
+                  <div>
+                    <Card.Title className="CommClass">
+                      No Comments on this Post
+                    </Card.Title>
                   </div>
                 ) : (
                   <>
-                    <Card.Title>Comments on this Post</Card.Title>
+                    <Card.Title className="text-dark">
+                      Tidigare kommentarer ..
+                    </Card.Title>
                     {getPostRes.map((comment, index) => (
                       <div className="comment-box" key={index}>
                         <hr />
-                        <Card.Text>*{comment.comments}</Card.Text>
+                        <div className="user">
+                          <img src={comment.userImage} alt="" />
+                          <div className="info">
+                            <span>{comment.userName}</span>
+                            <p>{moment(comment.commentDate).calendar()}</p>
+                          </div>
+                        </div>
+                        <Card.Text className="bg-light p-4">
+                          {comment.comments}
+                        </Card.Text>
                       </div>
                     ))}
                   </>
@@ -295,7 +377,6 @@ const Single = () => {
             </Card>
           </>
         )}
-        
       </div>
       <Menu cat={post.cat} />
       <Toast
@@ -317,8 +398,56 @@ const Single = () => {
         </Toast.Header>
         <Toast.Body>Your comment has been successfully submitted!</Toast.Body>
       </Toast>
+
+      <Modal show={showModal} onHide={toggleModal} dialogClassName="custom-modal">
+        <Modal.Header closeButton>
+          <Modal.Title className="bg-sucess">Registreringsformulär</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={(e) => handleUserSignUp(post.id, e)} className="my-2">
+            <Form.Group controlId="formName" className="mb-3">
+              <Form.Label>Namn</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter name"
+                onChange={handleChange}
+                name="name"
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId="formAfterName" className="mb-3">
+              <Form.Label>Efternamn</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter aftername"
+                onChange={handleChange}
+                name="aftername"
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId="formEmail" className="mb-3">
+              <Form.Label>E-posta för att kontakta</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="namn@exempel.com"
+                onChange={handleChange}
+                name="email"
+                required
+              />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Registrera
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+
     </Container>
+
+    
   );
+
 };
 
 export default Single;
+

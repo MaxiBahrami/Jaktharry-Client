@@ -2,9 +2,9 @@ import React , { useContext }from "react";
 import { Col, Container, ListGroup, Row, Tab } from "react-bootstrap";
 import { TabContent2, TabContent3, TabContent4, 
   TabContent5} from "../components/adminContent.js";
-import { TabContent7, TabContent8, TabContent9, 
-    TabContent11} from "../components/adminContent2.js";
-import { TabContent12 } from "../components/adminContent3.js";  
+import { TabContent7, TabContent8, TabContent9, TabContent10,
+    TabContent12} from "../components/adminContent2.js";
+import { TabContent13 } from "../components/adminContent3.js";  
 import { AuthContext } from "../context/authContext";  
 
 
@@ -35,16 +35,17 @@ const tabItems2 = [
   { id: '#link7', title: 'Alla', content: <TabContent7 /> },
   { id: '#link8', title: 'För en användare', content: <TabContent8 /> },
   { id: '#link9', title: 'För en aktivitet', content: <TabContent9 /> },
+  { id: '#link10', title: 'Alla deltagare', content: <TabContent10 /> },
 ];
 
 const tabItems3 = [
-  { id: '#link10', title: 'Användarna' },
-  { id: '#link11', title: 'Alla användare', content: <TabContent11 /> },
-  { id: '#link12', title: 'Moderatorer', content: <TabContent12 /> },
+  { id: '#link11', title: 'Användarna' },
+  { id: '#link12', title: 'Alla användare', content: <TabContent12 /> },
+  { id: '#link13', title: 'Moderatorer', content: <TabContent13 /> },
 ];
 
 // Define the array containing non-clickable link IDs
-const nonClickableLinks = ['#link1', '#link6', '#link10'];
+const nonClickableLinks = ['#link1', '#link6', '#link11'];
 
   return (
     <Container className="conLayout">

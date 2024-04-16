@@ -7,11 +7,18 @@ import plus from "../img/plus.png";
 import circle from "../img/green-circle.png";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext.js";
+import Datetime from 'react-datetime';
+import 'react-datetime/css/react-datetime.css';
 
 export const TabContent7 = () => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
+  const [spots, setSpots] = useState({});
+  const [prices, setPrices] = useState({});
+
+  const [selectedDate, setSelectedDate] = useState({});
+  const [selectedDeadline, setSelectedDeadline] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,6 +28,27 @@ export const TabContent7 = () => {
         const sortedPosts = res.data.sort(
           (a, b) => new Date(b.date) - new Date(a.date)
         );
+        let allSpots = {};
+        sortedPosts.forEach(v => {
+          allSpots[v.id] = v.spots || ''
+        });
+        let allPrices = {};
+        sortedPosts.forEach(v => {
+          allPrices[v.id] = v.price || ''
+        });
+        let allDates = {};
+        sortedPosts.forEach(v => {
+          allDates[v.id] = v.adminDate || null
+        });
+        let allDeadlines = {};
+        sortedPosts.forEach(v => {
+          allDeadlines[v.id] = v.deadline || null
+        });
+
+        setSelectedDate(allDates)
+        setSelectedDeadline(allDeadlines)
+        setPrices(allPrices)
+        setSpots(allSpots)
         setPosts(sortedPosts);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -68,6 +96,99 @@ export const TabContent7 = () => {
     }
   };
 
+  const handleSpotsChange =async (e,post) => {
+    try {
+      const spotValue = e.target.value
+      setSpots(prev=>({...prev,[post.id]:spotValue}))
+      const token = localStorage.getItem('accessToken'); // Retrieve the token from local storage
+      const headers = { Authorization: `Bearer ${token}` }; // Create the Authorization header
+      
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${post.id}`, {
+        title:post.title,
+        desc: post.desc,
+        text:post.text ,
+        cat:post.cat,
+        img: post.img,
+        spots:+(+spotValue).toFixed(0),
+        price:prices?.[post.id]?+(+prices?.[post.id]).toFixed(0):post.price,
+        isAdmin:true
+      }, { headers })
+    } catch (err) {
+      console.log(err.message)
+    }
+    }
+    
+const handlePriceChange =async (e,post) => {
+  try {
+    const priceValue = e.target.value
+    setPrices(prev=>({...prev,[post.id]:priceValue}))
+    const token = localStorage.getItem('accessToken'); // Retrieve the token from local storage
+    const headers = { Authorization: `Bearer ${token}` }; // Create the Authorization header
+    
+    await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${post.id}`, {
+      title:post.title,
+      desc: post.desc,
+      text:post.text ,
+      cat:post.cat,
+      img: post.img,
+      spots:spots?.[post.id] ? +(+spots?.[post.id]).toFixed(2) : post.spots,
+      price: +(+priceValue).toFixed(2),
+      isAdmin:true
+    }, { headers })
+  } catch (err) {
+    console.log(err.message)
+  }
+  }
+    
+  const handleDateChange = async (date,post) => {
+    setSelectedDate(prev=>{
+      return {...prev,[post.id]:date}
+    })
+    try {
+      const token = localStorage.getItem('accessToken'); // Retrieve the token from local storage
+      const headers = { Authorization: `Bearer ${token}` }; // Create the Authorization header
+      
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${post.id}`, {
+        title:post.title,
+        desc: post.desc,
+        text:post.text ,
+        cat:post.cat,
+        img: post.img,
+        spots:spots?.[post.id] || post.spots,
+        price:prices?.[post.id] || post.price,
+        isAdmin:true,
+        adminDate:moment(date).format("LL LTS").toString()
+      }, { headers })
+    } catch (err) {
+      console.log(err.message)
+    }
+  };
+
+  const handleDeadlineChange = async (date,post) => {
+    setSelectedDeadline(prev=>{
+      return {...prev,[post.id]:date}
+    })
+    try {
+      const token = localStorage.getItem('accessToken'); // Retrieve the token from local storage
+      const headers = { Authorization: `Bearer ${token}` }; // Create the Authorization header
+      
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${post.id}`, {
+        title:post.title,
+        desc: post.desc,
+        text:post.text ,
+        cat:post.cat,
+        img: post.img,
+        spots:spots?.[post.id] || post.spots,
+        price:prices?.[post.id] || post.price,
+        isAdmin:true,
+        adminDate:selectedDate?.[post.id] || '',
+        deadline:moment(date).format("LL LTS").toString()
+      }, { headers })
+    } catch (err) {
+      console.log(err.message)
+    }
+  };
+
   return (
     <div className="PostClass">
       <div className="table-responsive">
@@ -77,6 +198,10 @@ export const TabContent7 = () => {
               <th>#</th>
               <th width="20%">Datum</th>
               <th width="40%">Titel</th>
+              <th >Total</th>
+              <th >Pris</th>
+              <th width="20%">Datum och tid</th>
+              <th width="20%">Sista anmälningsdatum</th>
               <th>Kategori</th>
               <th width="10%">Redigera</th>
               <th width="10%">Ta bort</th>
@@ -95,6 +220,28 @@ export const TabContent7 = () => {
                     {post.title}
                   </Link>
                 </td>
+                <td >
+                  <input style={{width:'100px'}} type="number" value={spots?.[post.id] || ""}
+                  placeholder='Antal fläckar' onChange={e=>handleSpotsChange(e,post)}/>
+                </td>
+                <td>
+                  <input style={{width:'100px'}} type="number" value={prices?.[post.id] || ""}
+                  placeholder='sätt pris' onChange={e=>handlePriceChange(e,post)}/>
+                </td>
+                <td width="20%">
+
+                  <Datetime 
+                  inputProps={{placeholder:'Datum och tid'}}
+                  value={selectedDate?.[post.id] || null} onChange={(date)=>handleDateChange(date,post)} className="w-150px"/>
+                  
+                </td>
+                <td width="20%">
+
+                  <Datetime 
+                  inputProps={{placeholder:'Sista anmälningsdatum'}}
+                  value={selectedDeadline?.[post.id] || null} onChange={(date)=>handleDeadlineChange(date,post)} className="w-200px"/>
+                  
+                </td>
                 <td>{post.cat}</td>
                 <td width="10%">
                   {/* Pass 'post' as an argument */}
@@ -111,7 +258,6 @@ export const TabContent7 = () => {
                     <img src={del} alt="" className="iconClass2" />
                   </Link>
                 </td>
-                {/* Add your edit and delete buttons here */}
               </tr>
             ))}
           </tbody>
@@ -523,7 +669,86 @@ export const TabContent9 = () => {
   );
 };
 
-export const TabContent11 = () => {
+export const TabContent10 = () => {
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/getUserActivities`;
+        const res = await axios.get(apiUrl);
+        setUsers(res.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
+  const handleDelete = async (user) => {
+    try {
+      // Ask for confirmation before deleting
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this UserActivity?"
+      );
+      if (!confirmDelete) return;
+
+      const token = localStorage.getItem("accessToken");
+      const headers = { Authorization: `Bearer ${token}` };
+
+      // Perform the delete operation with the Authorization header
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/delete/${user.aid}/${user.uid}`;
+
+      await axios.delete(apiUrl, { headers });
+
+      // Update the UI after successful deletion
+      setUsers(users.filter((p) => p.id !== user.id));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  };
+  return (
+    <div className="PostClass PostClass9">
+      <div>
+        {/* Display error message if error is not null */}
+        <div className="table-responsive">
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th width="10%">#</th>
+                <th width="30%">Titel</th>
+                <th width="15%">Name</th>
+                <th width="10%">Aftername</th>
+                <th width="15%">Mail address</th>
+                <th width="10%">Id</th>
+                <th width="10%">Ta bort</th>
+              </tr>
+            </thead>
+            <tbody>
+            {users && users.length > 0 && users.map((user, index) => (
+              <tr key={user.id}>
+                <td>{index + 1}</td>
+                <td>{user.title}</td>
+                <td>{user.name}</td>
+                <td>{user.aftername}</td>
+                <td>{user.email}</td>
+                <td>{user.id_info}</td>
+                <td>
+                <Link to="" onClick={() => handleDelete(user)}>
+                    <img src={del} alt="" className="iconClass2" />
+                  </Link>                  
+                </td>
+              </tr>
+            ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const TabContent12 = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {

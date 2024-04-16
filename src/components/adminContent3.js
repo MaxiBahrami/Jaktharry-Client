@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link} from "react-router-dom";
 import del from "../img/del.png";
 
-export const TabContent12 = () => {
+export const TabContent13 = () => {
   const [users, setUsers] = useState([]);
   const [userPosts, setUserPosts] = useState({});
   const [ModeratorKrestar, setModeratorKrestars] = useState({});
