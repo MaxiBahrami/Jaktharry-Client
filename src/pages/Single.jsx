@@ -52,7 +52,6 @@ const Single = () => {
           `${process.env.REACT_APP_API_URL}/api/posts/${postId}`
         );
         setPost(response.data);
-        console.log(response.data)
       } catch (error) {
         console.log(error);
       }
@@ -105,8 +104,10 @@ const Single = () => {
   };
 
   const handleWriteClick = () => {
-    navigate("/write", { state: { currentUser, ...post } });
-  };
+    const postWithId = { ...post, id: post.postId };
+    
+    navigate("/write", { state: { currentUser, ...postWithId } });
+  }
 
   const splitTextAfterThirdDot = (text) => {
     const sentences = text.split(".");

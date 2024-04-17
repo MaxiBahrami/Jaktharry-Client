@@ -38,38 +38,46 @@ const Write = () => {
     const formattedDeadline = deadline && moment(deadline, "YYYY-MM-DD", true).isValid()
       ? moment(deadline).format("YYYY-MM-DD")
       : moment().format("YYYY-MM-DD"); // default to current date
-
+    
     try {
       const token = localStorage.getItem('accessToken');
       const headers = { Authorization: `Bearer ${token}` };
       
-    state
-      ? await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.id}`, {
+      if (state && state.postId) { // Check if it's an update
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${state.postId}`, {
           title,
           desc: value1,
           text: value2,
           cat,
           img: imgUrl,
-          spots:spots || 10,
-          price:price || 0,
-          adminDate: formattedAdminDate,
-          deadline: formattedDeadline,
-          status: status,
-        }, { headers })
-      : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
+        }, { headers });
+
+        if(cat === "aktiviteter"){
+          await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/updateActDetails/${state.postId}`, {
+            status,
+            adminDate: formattedAdminDate,
+            deadline: formattedDeadline,
+            price: price,
+            spots: spots,
+          }, { headers });
+        }
+      
+      } else { // Otherwise, it's a new post
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
           title,
           desc: value1,
           text: value2,
           cat,
           img: imgUrl,
-          spots:spots || 10,
-          price:price || 0,
+          spots: spots || 10,
+          price: price || 0,
           adminDate: formattedAdminDate,
           deadline: formattedDeadline,
-          status: status,
+          status,
           date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         }, { headers });
-              navigate("/")
+      }
+        navigate("/")
     } catch (err) {
       setError(err.message); 
       console.log(err);
