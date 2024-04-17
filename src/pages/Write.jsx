@@ -19,8 +19,8 @@ const Write = () => {
   const [value2, setValue2] = useState(state?.text || "");
   const [imgUrl, setimgUrl] = useState(state?.img || "");
   const [cat, setCat] = useState(state?.cat || "");
-  const [adminDate, setAdminDate] = useState(state?.adminDate || "");
-  const [deadline, setDeadline] = useState(state?.deadline || "");
+  const [adminDate, setAdminDate] = useState(state?.adminDate ? moment(state.adminDate).format("YYYY-MM-DD") : "");
+  const [deadline, setDeadline] = useState(state?.deadline ? moment(state.deadline).format("YYYY-MM-DD") : "");
   const [price, setPrice] = useState(state?.price || 0);
   const [spots, setSpots] = useState(state?.spots || 20);
   const [status, setStatus] = useState(state?.status || "closed"); 
@@ -30,6 +30,15 @@ const Write = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+
+    const formattedAdminDate = adminDate && moment(adminDate, "YYYY-MM-DD", true).isValid()
+      ? moment(adminDate).format("YYYY-MM-DD")
+      : moment().format("YYYY-MM-DD"); // default to current date
+
+    const formattedDeadline = deadline && moment(deadline, "YYYY-MM-DD", true).isValid()
+      ? moment(deadline).format("YYYY-MM-DD")
+      : moment().format("YYYY-MM-DD"); // default to current date
+
     try {
       const token = localStorage.getItem('accessToken');
       const headers = { Authorization: `Bearer ${token}` };
@@ -41,10 +50,10 @@ const Write = () => {
           text: value2,
           cat,
           img: imgUrl,
-          spots:spots || 20,
+          spots:spots || 10,
           price:price || 0,
-          adminDate,
-          deadline,
+          adminDate: formattedAdminDate,
+          deadline: formattedDeadline,
           status: status,
         }, { headers })
       : await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/`, {
@@ -53,10 +62,10 @@ const Write = () => {
           text: value2,
           cat,
           img: imgUrl,
-          spots:spots || 20,
+          spots:spots || 10,
           price:price || 0,
-          adminDate,
-          deadline,
+          adminDate: formattedAdminDate,
+          deadline: formattedDeadline,
           status: status,
           date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
         }, { headers });
@@ -130,10 +139,7 @@ const Write = () => {
                   placeholder="Datum för aktivitet"
                   value={moment(adminDate).format("YYYY-MM-DD")}  
                   className="form-control"
-                  onChange={e => {
-                    setAdminDate(e.target.value);
-                    setDeadline(Math.min(e.target.value, deadline));
-                  }}
+                  onChange={e => {setAdminDate(e.target.value);}}
                   min={new Date().toISOString().split("T")[0]}/>
               <label htmlFor="status">Sista anmälningsdagen</label><br></br>
               <input type="date" id="deadline"

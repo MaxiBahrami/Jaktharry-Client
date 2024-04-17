@@ -52,6 +52,7 @@ const Single = () => {
           `${process.env.REACT_APP_API_URL}/api/posts/${postId}`
         );
         setPost(response.data);
+        console.log(response.data)
       } catch (error) {
         console.log(error);
       }
