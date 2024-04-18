@@ -87,35 +87,18 @@ export const TabContent7 = () => {
               <React.Fragment key={post.postId}>
                 <tr key={post.postId}>
                   <td width="10%">{index + 1}</td>
-                  <td width="20%">{moment(post.date).format("LL")}</td>
-                  <td width="40%">
-                    <Link
-                      className="titleClass"
-                      onClick={() => handleClick(post.postId)}
-                    >
-                      {post.title}
-                    </Link>
-                  </td>
-                  <td width="10%">
-                    {/* Pass 'post' as an argument */}
-                    <Link
-                      to={`/write?edit=2`}
-                      state={post}
-                      onClick={() => handleWriteClick(post)}
-                    >
-                      <img src={edit} alt="" className="iconClass1" />
-                    </Link>
-                  </td>
-                  <td width="10%">
-                    <Link to="" onClick={() => handleDelete(post)}>
-                      <img src={del} alt="" className="iconClass2" />
-                    </Link>
-                  </td>
-                </tr>
-                <tr>
-                    {post.status === "open" && (
-                      <td colSpan="12" className="PostsClass tdbg">
-                      <ul className="list-group list-group-horizontal">
+                  <td width="20%" className="text-start">{moment(post.date).format("LL")}</td>
+                  <td width="50%" className="text-start">
+                  <div>
+                    <div>
+                      <Link className="titleClass"
+                        onClick={() => handleClick(post.postId)}>
+                        <b>{post.title}</b>
+                      </Link>
+                    </div>
+                    {post.status === "open" && ( 
+                    <div className="tdbg">
+                      <ul className="list-group text-start">
                         <li className="list-group-item userClass">
                           <b>{post.status}</b>
                         </li>
@@ -140,8 +123,24 @@ export const TabContent7 = () => {
                           {post.spots}
                         </li>
                       </ul>
-                      </td>
-                    )}
+                    </div>)}
+                    </div>
+                  </td>
+                  <td width="10%">
+                    {/* Pass 'post' as an argument */}
+                    <Link
+                      to={`/write?edit=2`}
+                      state={post}
+                      onClick={() => handleWriteClick(post)}
+                    >
+                      <img src={edit} alt="" className="iconClass1" />
+                    </Link>
+                  </td>
+                  <td width="10%">
+                    <Link to="" onClick={() => handleDelete(post)}>
+                      <img src={del} alt="" className="iconClass2" />
+                    </Link>
+                  </td>
                 </tr>
               </React.Fragment>
             ))}
