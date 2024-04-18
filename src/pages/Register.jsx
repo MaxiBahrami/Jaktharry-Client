@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Button} from 'react-bootstrap';
+import message from "../img/message.png";
+import telephone from "../img/telephone.png";
+import user from "../img/user.png";
+import padlock from "../img/padlock.png";
 
 const Register = () => {
   const [inputs,setInputs] = useState({
@@ -9,6 +13,9 @@ const Register = () => {
     email:"",
     password:"",
     role: 0,
+    phone:"",
+    firstName:"",
+    lastName:"",
   })
 
   const [err,setError] = useState(null);
@@ -32,11 +39,33 @@ const Register = () => {
   return (
     <Container className='auth'>
       <div className="authDiv">
-      <h1>Registrera</h1>
+      <h1>Registreringsformulär</h1>
       <form >
-        <input required type="text" placeholder='Användarnamn' name='username' onChange={handleChange}/>
-        <input required type="email" placeholder='e-post' name='email' onChange={handleChange}/>
-        <input required type="password " placeholder='Lösenord' name='password' onChange={handleChange}/>
+        <div>
+            <label><img src={user} alt="" style={{ width: '15px',height: '15px' }}/></label>
+            <span><input required type="text" placeholder='Användarnamn' name='username' onChange={handleChange}/></span>
+        </div>
+        <div>
+            <label>Förnamn</label>
+            <span><input required type="text" placeholder='Skriv in namn' name='firstName' onChange={handleChange}/></span>
+        </div>
+        <div>
+            <label>Efternamn</label>
+            <span><input required type="text" placeholder='Skriv in namn' name='lastName' onChange={handleChange}/></span>
+        </div>
+        
+        <div>
+            <label><img src={message} alt="" style={{ width: '15px',height: '15px' }}/></label>
+            <span><input required type="email" placeholder='e-post' name='email' onChange={handleChange}/></span>
+        </div>
+        <div>
+            <label><img src={telephone} alt="" style={{ width: '15px',height: '15px' }}/></label>
+            <span><input required type="number" placeholder='telefonnummer' name='phone' onChange={handleChange}/></span>
+        </div>
+        <div>
+            <label><img src={padlock} alt="" style={{ width: '15px',height: '15px' }}/></label>
+            <span><input required type="password " placeholder='Lösenord' name='password' onChange={handleChange}/></span>
+        </div>
         <Button onClick={handleSubmit}>Registrera</Button>
         {err && <p>{err}</p>}
         <span>Har du ett konto?.. <Link to="/Login">Logga in</Link></span>

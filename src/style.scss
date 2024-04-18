@@ -75,10 +75,13 @@ $gray:rgb(78, 78, 78);
         padding: 50px;
         background-color: white;
         width: 400px;
-        gap: 20px;
+        gap: 10px;
+        border-radius: 20px;
 
         input{
+          width: 200px;
           padding: 10px;
+          margin-left: 15px;
           border: none;
           border-bottom: 1px solid gray;
         }
