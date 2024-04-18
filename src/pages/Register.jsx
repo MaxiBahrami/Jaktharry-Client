@@ -47,11 +47,11 @@ const Register = () => {
         </div>
         <div>
             <label>Förnamn</label>
-            <span><input required type="text" placeholder='Skriv in namn' name='firstName' onChange={handleChange}/></span>
+            <span><input required type="text" placeholder='skriv in ditt förnamn' name='firstName' onChange={handleChange}/></span>
         </div>
         <div>
             <label>Efternamn</label>
-            <span><input required type="text" placeholder='Skriv in namn' name='lastName' onChange={handleChange}/></span>
+            <span><input required type="text" placeholder='Skriv in ditt efternamn' name='lastName' onChange={handleChange}/></span>
         </div>
         
         <div>

@@ -58,11 +58,11 @@ export const TabContent2 = ({ kretsar }) => {
       const headers = { Authorization: `Bearer ${token}` };
   
       // Perform the delete operation with the Authorization header
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/${post.id}`;
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/${post.postId}`;
       await axios.delete(apiUrl, { headers });
   
       // Update the UI after successful deletion
-      setPosts(posts.filter(p => p.id !== post.id));
+      setPosts(posts.filter(p => p.id !== post.postId));
     } catch (error) {
       console.error("Error deleting post:", error);
     }
@@ -81,20 +81,20 @@ export const TabContent2 = ({ kretsar }) => {
               <th>#</th>
               <th width="20%">Datum</th>
               <th width="40%">Titel</th>
-              <th>Kategori</th>
+              <th>Skriven av</th>
               <th width="10%">Redigera</th>
               <th width="10%">Ta bort</th>
             </tr>
           </thead>
           <tbody>
             {posts.map((post, index) => (
-              <tr key={post.id}>
+              <tr key={post.postId}>
                 <td>{index + 1}</td>
-                <td width="20%">{moment(post.date).format("LL")}</td>
-                <td width="40%">
-                  <Link className="titleClass" onClick={() => handleClick(post.id)}>{post.title}</Link>
+                <td width="20%" className="text-start">{moment(post.date).format("LL")}</td>
+                <td width="40%" className="text-start">
+                  <Link className="titleClass" onClick={() => handleClick(post.postId)}>{post.title}</Link>
                 </td>
-                <td>{post.cat}</td>
+                <td>{post.username}</td>
                 <td width="10%">
                   {/* Pass 'post' as an argument */}
                   <Link to={`/write?edit=2`} state={post} onClick={() => handleWriteClick(post)}>

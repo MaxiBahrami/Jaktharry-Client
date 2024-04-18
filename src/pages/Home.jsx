@@ -57,18 +57,18 @@ const Home = () => {
     <Container className='home'>
     <div className="posts">
       {posts.map(post => (
-        <div className="post" key={post.id}>
+        <div className="post" key={post.postId}>
           <div className="img">
             <img src={post.img} alt="" />
           </div>
           <div className="content">
-            <Link className='link' to={`/post/${post.id}`}>
+            <Link className='link' to={`/post/${post.postId}`}>
               <h1>{post.title}</h1>
               <p className="DateClass">{moment(post.date).calendar()}</p>
               {/* Use the truncateText function for post.desc */}
               <p dangerouslySetInnerHTML={sanitizeHTML(truncateText(post.desc, 150))}></p>
               <StarRating disabled userId={currentUser?.id} post={post} />
-              <Button onClick={() => handleClick(post.id)}>Läs mer</Button>
+              <Button onClick={() => handleClick(post.postId)}>Läs mer</Button>
             </Link>
           </div>
         </div>

@@ -307,7 +307,7 @@ export const TabContent13 = () => {
                           <li className="list-group-item userClass" key={idx}>
                             <Link
                               className="titleClass"
-                              onClick={() => handleClick(post.id)}
+                              onClick={() => handleClick(post.postId)}
                             >
                               {post.title}
                             </Link>

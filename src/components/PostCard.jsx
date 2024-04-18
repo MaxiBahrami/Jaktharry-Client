@@ -23,7 +23,7 @@ const PostCard = ({ post = {}, onButtonClick }) => {
       <div className="post-content">{post.text}</div>
       {/* <div className="post-content">{post.title}</div> */}
       <div>
-        <Button size="sm" href={`/post/${post.id}`}>
+        <Button size="sm" href={`/post/${post.postId}`}>
           Läs mer
         </Button>
 
@@ -31,7 +31,7 @@ const PostCard = ({ post = {}, onButtonClick }) => {
           disabled={loading}
           size="sm"
           className="float-end btn-danger"
-          onClick={() => removeActivitySubscriptionHandler(post.id)}
+          onClick={() => removeActivitySubscriptionHandler(post.postId)}
         >
           Säga upp
         </Button>

@@ -94,7 +94,7 @@ const Single = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       // Perform the delete operation with the Authorization header
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/${post.id}`;
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/${post.postId}`;
       await axios.delete(apiUrl, { headers });
 
       navigate("/");
@@ -243,7 +243,7 @@ const Single = () => {
                 <span>{post.username}</span>
                 <p>{moment(post.date).calendar()}</p>
               </div>
-              {currentUser.id === post.id || currentUser.role === 1 ? (
+              {currentUser.id === post.postId || currentUser.role === 1 ? (
                 <div className="edit">
                   <Link
                     to={`/write?edit=2`}
@@ -406,7 +406,7 @@ const Single = () => {
           <Modal.Title className="bg-sucess">Registreringsformulär</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={(e) => handleUserSignUp(post.id, e)} className="my-2">
+          <Form onSubmit={(e) => handleUserSignUp(post.postId, e)} className="my-2">
             <Form.Group controlId="formName" className="mb-3">
               <Form.Label>Namn</Form.Label>
               <Form.Control

@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../img/JaktHarryLogo.png";
 import adsett from "../img/adsett.png";
+import admin from "../img/admin.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar, NavDropdown, Container, Nav } from "react-bootstrap";
 import { AuthContext } from "../context/authContext";
@@ -113,7 +114,7 @@ function CustomNavbar() {
       )}
       {isModerator && (
         <Link to="/moderatorPanel" className="linkClass">
-          <img src={adsett} alt="" className="adClass" />
+          <img src={admin} alt="" className="adClass" />
           <h6>Moderator</h6>
         </Link>
       )}

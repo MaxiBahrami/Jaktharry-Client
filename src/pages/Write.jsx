@@ -30,7 +30,7 @@ const Write = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-
+    
     const formattedAdminDate = adminDate && moment(adminDate, "YYYY-MM-DD", true).isValid()
       ? moment(adminDate).format("YYYY-MM-DD")
       : moment().format("YYYY-MM-DD"); // default to current date
@@ -38,7 +38,8 @@ const Write = () => {
     const formattedDeadline = deadline && moment(deadline, "YYYY-MM-DD", true).isValid()
       ? moment(deadline).format("YYYY-MM-DD")
       : moment().format("YYYY-MM-DD"); // default to current date
-    
+      
+      
     try {
       const token = localStorage.getItem('accessToken');
       const headers = { Authorization: `Bearer ${token}` };

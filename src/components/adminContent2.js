@@ -7,18 +7,12 @@ import plus from "../img/plus.png";
 import circle from "../img/green-circle.png";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext.js";
-import Datetime from 'react-datetime';
-import 'react-datetime/css/react-datetime.css';
+import "react-datetime/css/react-datetime.css";
 
 export const TabContent7 = () => {
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
-  const [spots, setSpots] = useState({});
-  const [prices, setPrices] = useState({});
-
-  const [selectedDate, setSelectedDate] = useState({});
-  const [selectedDeadline, setSelectedDeadline] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,27 +22,6 @@ export const TabContent7 = () => {
         const sortedPosts = res.data.sort(
           (a, b) => new Date(b.date) - new Date(a.date)
         );
-        let allSpots = {};
-        sortedPosts.forEach(v => {
-          allSpots[v.id] = v.spots || ''
-        });
-        let allPrices = {};
-        sortedPosts.forEach(v => {
-          allPrices[v.id] = v.price || ''
-        });
-        let allDates = {};
-        sortedPosts.forEach(v => {
-          allDates[v.id] = v.adminDate || null
-        });
-        let allDeadlines = {};
-        sortedPosts.forEach(v => {
-          allDeadlines[v.id] = v.deadline || null
-        });
-
-        setSelectedDate(allDates)
-        setSelectedDeadline(allDeadlines)
-        setPrices(allPrices)
-        setSpots(allSpots)
         setPosts(sortedPosts);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -67,8 +40,9 @@ export const TabContent7 = () => {
   };
 
   const handleWriteClick = (post) => {
-    // Pass the 'post' object as an argument
-    navigate("/write", { state: { currentUser, ...post } });
+    const postWithId = { ...post, id: post.ActivityId};
+    
+    navigate("/write", { state: { currentUser, ...postWithId } });
   };
 
   const handleDelete = async (post) => {
@@ -86,179 +60,90 @@ export const TabContent7 = () => {
       const headers = { Authorization: `Bearer ${token}` };
 
       // Perform the delete operation with the Authorization header
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/${post.id}`;
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts/${post.postId}`;
       await axios.delete(apiUrl, { headers });
 
       // Update the UI after successful deletion
-      setPosts(posts.filter((p) => p.id !== post.id));
+      setPosts(posts.filter((p) => p.id !== post.postId));
     } catch (error) {
       console.error("Error deleting post:", error);
     }
   };
-
-  const handleSpotsChange =async (e,post) => {
-    try {
-      const spotValue = e.target.value
-      setSpots(prev=>({...prev,[post.id]:spotValue}))
-      const token = localStorage.getItem('accessToken'); // Retrieve the token from local storage
-      const headers = { Authorization: `Bearer ${token}` }; // Create the Authorization header
-      
-      await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${post.id}`, {
-        title:post.title,
-        desc: post.desc,
-        text:post.text ,
-        cat:post.cat,
-        img: post.img,
-        spots:+(+spotValue).toFixed(0),
-        price:prices?.[post.id]?+(+prices?.[post.id]).toFixed(0):post.price,
-        isAdmin:true
-      }, { headers })
-    } catch (err) {
-      console.log(err.message)
-    }
-    }
-    
-const handlePriceChange =async (e,post) => {
-  try {
-    const priceValue = e.target.value
-    setPrices(prev=>({...prev,[post.id]:priceValue}))
-    const token = localStorage.getItem('accessToken'); // Retrieve the token from local storage
-    const headers = { Authorization: `Bearer ${token}` }; // Create the Authorization header
-    
-    await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${post.id}`, {
-      title:post.title,
-      desc: post.desc,
-      text:post.text ,
-      cat:post.cat,
-      img: post.img,
-      spots:spots?.[post.id] ? +(+spots?.[post.id]).toFixed(2) : post.spots,
-      price: +(+priceValue).toFixed(2),
-      isAdmin:true
-    }, { headers })
-  } catch (err) {
-    console.log(err.message)
-  }
-  }
-    
-  const handleDateChange = async (date,post) => {
-    setSelectedDate(prev=>{
-      return {...prev,[post.id]:date}
-    })
-    try {
-      const token = localStorage.getItem('accessToken'); // Retrieve the token from local storage
-      const headers = { Authorization: `Bearer ${token}` }; // Create the Authorization header
-      
-      await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${post.id}`, {
-        title:post.title,
-        desc: post.desc,
-        text:post.text ,
-        cat:post.cat,
-        img: post.img,
-        spots:spots?.[post.id] || post.spots,
-        price:prices?.[post.id] || post.price,
-        isAdmin:true,
-        adminDate:moment(date).format("LL LTS").toString()
-      }, { headers })
-    } catch (err) {
-      console.log(err.message)
-    }
-  };
-
-  const handleDeadlineChange = async (date,post) => {
-    setSelectedDeadline(prev=>{
-      return {...prev,[post.id]:date}
-    })
-    try {
-      const token = localStorage.getItem('accessToken'); // Retrieve the token from local storage
-      const headers = { Authorization: `Bearer ${token}` }; // Create the Authorization header
-      
-      await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/${post.id}`, {
-        title:post.title,
-        desc: post.desc,
-        text:post.text ,
-        cat:post.cat,
-        img: post.img,
-        spots:spots?.[post.id] || post.spots,
-        price:prices?.[post.id] || post.price,
-        isAdmin:true,
-        adminDate:selectedDate?.[post.id] || '',
-        deadline:moment(date).format("LL LTS").toString()
-      }, { headers })
-    } catch (err) {
-      console.log(err.message)
-    }
-  };
-
   return (
     <div className="PostClass">
       <div className="table-responsive">
         <table className="table table-bordered">
           <thead>
             <tr>
-              <th>#</th>
-              <th width="20%">Datum</th>
-              <th width="40%">Titel</th>
-              <th >Total</th>
-              <th >Pris</th>
-              <th width="20%">Datum och tid</th>
-              <th width="20%">Sista anmälningsdatum</th>
-              <th>Kategori</th>
+              <th width="10%">#</th>
+              <th width="20%">Publicera datum</th>
+              <th width="40%">Aktivitetstitel</th>
               <th width="10%">Redigera</th>
               <th width="10%">Ta bort</th>
             </tr>
           </thead>
           <tbody>
             {posts.map((post, index) => (
-              <tr key={post.id}>
-                <td>{index + 1}</td>
-                <td width="20%">{moment(post.date).format("LL")}</td>
-                <td width="40%">
-                  <Link
-                    className="titleClass"
-                    onClick={() => handleClick(post.id)}
-                  >
-                    {post.title}
-                  </Link>
-                </td>
-                <td >
-                  <input style={{width:'100px'}} type="number" value={spots?.[post.id] || ""}
-                  placeholder='Antal fläckar' onChange={e=>handleSpotsChange(e,post)}/>
-                </td>
-                <td>
-                  <input style={{width:'100px'}} type="number" value={prices?.[post.id] || ""}
-                  placeholder='sätt pris' onChange={e=>handlePriceChange(e,post)}/>
-                </td>
-                <td width="20%">
-
-                  <Datetime 
-                  inputProps={{placeholder:'Datum och tid'}}
-                  value={selectedDate?.[post.id] || null} onChange={(date)=>handleDateChange(date,post)} className="w-150px"/>
-                  
-                </td>
-                <td width="20%">
-
-                  <Datetime 
-                  inputProps={{placeholder:'Sista anmälningsdatum'}}
-                  value={selectedDeadline?.[post.id] || null} onChange={(date)=>handleDeadlineChange(date,post)} className="w-200px"/>
-                  
-                </td>
-                <td>{post.cat}</td>
-                <td width="10%">
-                  {/* Pass 'post' as an argument */}
-                  <Link
-                    to={`/write?edit=2`}
-                    state={post}
-                    onClick={() => handleWriteClick(post)}
-                  >
-                    <img src={edit} alt="" className="iconClass1" />
-                  </Link>
-                </td>
-                <td width="10%">
-                  <Link to="" onClick={() => handleDelete(post)}>
-                    <img src={del} alt="" className="iconClass2" />
-                  </Link>
-                </td>
-              </tr>
+              <React.Fragment key={post.postId}>
+                <tr key={post.postId}>
+                  <td width="10%">{index + 1}</td>
+                  <td width="20%">{moment(post.date).format("LL")}</td>
+                  <td width="40%">
+                    <Link
+                      className="titleClass"
+                      onClick={() => handleClick(post.postId)}
+                    >
+                      {post.title}
+                    </Link>
+                  </td>
+                  <td width="10%">
+                    {/* Pass 'post' as an argument */}
+                    <Link
+                      to={`/write?edit=2`}
+                      state={post}
+                      onClick={() => handleWriteClick(post)}
+                    >
+                      <img src={edit} alt="" className="iconClass1" />
+                    </Link>
+                  </td>
+                  <td width="10%">
+                    <Link to="" onClick={() => handleDelete(post)}>
+                      <img src={del} alt="" className="iconClass2" />
+                    </Link>
+                  </td>
+                </tr>
+                <tr>
+                    {post.status === "open" && (
+                      <td colSpan="12" className="PostsClass tdbg">
+                      <ul className="list-group list-group-horizontal">
+                        <li className="list-group-item userClass">
+                          <b>{post.status}</b>
+                        </li>
+                        <li className="list-group-item userClass">
+                          <span><b>Aktiviteten äger rum i: </b></span>
+                          {moment(post.adminDate).format("LL")}
+                        </li>
+                        <li className="list-group-item userClass">
+                          <span><b>Sista dag för anmälan: </b></span>
+                          {moment(post.deadline).format("LL")}
+                        </li>
+                        <li className="list-group-item userClass">
+                        <span><b>Total: </b></span>
+                          {post.total}
+                        </li>
+                        <li className="list-group-item userClass">
+                        <span><b>Pris: </b></span>
+                          {post.price}
+                        </li>
+                        <li className="list-group-item userClass">
+                        <span><b>Spots: </b></span>
+                          {post.spots}
+                        </li>
+                      </ul>
+                      </td>
+                    )}
+                </tr>
+              </React.Fragment>
             ))}
           </tbody>
         </table>
@@ -335,7 +220,7 @@ export const TabContent8 = () => {
 
   const handleDelete = async (post) => {
     try {
-      const postId = post.id;
+      const postId = post.postId;
       // Ask for confirmation before deleting
       const confirmDelete = window.confirm(
         "Är du säker på att du vill radera denna aktivitet?"
@@ -351,7 +236,7 @@ export const TabContent8 = () => {
       await axios.delete(apiUrl, { headers });
       setReloadData((prev) => !prev);
       // Update the UI after successful deletion
-      setPosts(posts.filter((p) => p.id !== post.id));
+      setPosts(posts.filter((p) => p.id !== post.postId));
     } catch (error) {
       console.error("Error deleting post:", error);
     }
@@ -456,13 +341,13 @@ export const TabContent8 = () => {
           </thead>
           <tbody>
             {posts.map((post, index) => (
-              <tr key={post.id}>
+              <tr key={post.postId}>
                 <td width="10%">{index + 1}</td>
                 <td width="20%">{moment(post.date).format("LL")}</td>
                 <td width="40%">
                   <Link
                     className="titleClass"
-                    onClick={() => handleClick(post.id)}
+                    onClick={() => handleClick(post.postId)}
                   >
                     {post.title}
                   </Link>
@@ -684,7 +569,7 @@ export const TabContent10 = () => {
 
     fetchData();
   }, []);
-  
+
   const handleDelete = async (user) => {
     try {
       // Ask for confirmation before deleting
@@ -725,21 +610,23 @@ export const TabContent10 = () => {
               </tr>
             </thead>
             <tbody>
-            {users && users.length > 0 && users.map((user, index) => (
-              <tr key={user.id}>
-                <td>{index + 1}</td>
-                <td>{user.title}</td>
-                <td>{user.name}</td>
-                <td>{user.aftername}</td>
-                <td>{user.email}</td>
-                <td>{user.id_info}</td>
-                <td>
-                <Link to="" onClick={() => handleDelete(user)}>
-                    <img src={del} alt="" className="iconClass2" />
-                  </Link>                  
-                </td>
-              </tr>
-            ))}
+              {users &&
+                users.length > 0 &&
+                users.map((user, index) => (
+                  <tr key={user.id}>
+                    <td>{index + 1}</td>
+                    <td>{user.title}</td>
+                    <td>{user.name}</td>
+                    <td>{user.aftername}</td>
+                    <td>{user.email}</td>
+                    <td>{user.id_info}</td>
+                    <td>
+                      <Link to="" onClick={() => handleDelete(user)}>
+                        <img src={del} alt="" className="iconClass2" />
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
@@ -884,4 +771,3 @@ export const TabContent12 = () => {
     </div>
   );
 };
-

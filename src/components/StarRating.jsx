@@ -32,7 +32,7 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
   const submitRating = async (rating) => {
     try {
       const data = {
-        postId: post.id,
+        postId: post.postId,
         rating,
       };
 
@@ -82,11 +82,11 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
   }, [disabled, isLoading, post, userHasRated]);
 
   useEffect(() => {
-    if (post?.id && userId && initUserHasRated) {
+    if (post?.postId && userId && initUserHasRated) {
       const fetchData = async () => {
         try {
           const res = await axios.get(
-            `${process.env.REACT_APP_API_URL}/posts/rate/${post.id}/${userId}`
+            `${process.env.REACT_APP_API_URL}/posts/rate/${post.postId}/${userId}`
           );
 
           const { status } = res.data;
@@ -98,7 +98,7 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
       };
       fetchData();
     }
-  }, [post.id, userId, initUserHasRated]);
+  }, [post.postId, userId, initUserHasRated]);
 
   return (
     <div className="star-rating">

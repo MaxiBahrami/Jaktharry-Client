@@ -29,12 +29,12 @@ const Menu = ({cat}) => {
     <Container className='menu'>
       <h1>Andra nyheter som du kan gilla</h1>
       {posts.map((post)=>(
-        <div className="post" key={post.id}>
+        <div className="post" key={post.postId}>
           <div className="img">
             <img src={post.img} alt="" />
           </div>
           <h3>{post.title}</h3>
-          <Button onClick={() => handleClick(post.id)}>Läs mer</Button>
+          <Button onClick={() => handleClick(post.postId)}>Läs mer</Button>
         </div>
       ))}
     </Container>
