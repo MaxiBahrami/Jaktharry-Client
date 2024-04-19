@@ -397,7 +397,10 @@ export const TabContent9 = () => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   const [activitySearched, setActivitySearched] = useState(false);
-  const [newUserName, setNewUserName] = useState("");
+  const [newMedlemsnr, setMedlemsnr] = useState("");
+  const [activityInformation, setActivityInformation] = useState(null); 
+  const [reloadData, setReloadData] = useState(false);
+  const [allActivities, setAllActivities] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -405,6 +408,8 @@ export const TabContent9 = () => {
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=aktiviteter`;
         const res = await axios.get(apiUrl);
         setPosts(res.data);
+        setAllActivities(res.data); 
+        return 
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Error fetching activities. Please try again later.");
@@ -415,14 +420,23 @@ export const TabContent9 = () => {
 
   const fetchUsersForActivity = async () => {
     try {
+      setReloadData(true);
       const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/activityUsers?activity=${selectedActivity}`;
       const res = await axios.get(apiUrl);
-
       setUsers(res.data.data);
       setActivitySearched(true);
+      if (allActivities.length > 0) {
+        const selectedActivityObj = allActivities.find(activity => activity.postId.toString() === selectedActivity);
+        
+        if (selectedActivityObj) {
+          setActivityInformation(selectedActivityObj);
+        }
+      }
+      setReloadData(false);
     } catch (err) {
       console.error("Error fetching users:", err);
       setError("Error fetching users. Please try again later.");
+      setReloadData(false);
     }
   };
 
@@ -432,6 +446,7 @@ export const TabContent9 = () => {
 
   const handleDelete = async (userId) => {
     try {
+      setReloadData(true);
       // Ask for confirmation before deleting
       const confirmDelete = window.confirm(
         "Är du säker på att du vill avregistrera användaren från denna aktivitet?"
@@ -449,33 +464,22 @@ export const TabContent9 = () => {
       fetchUsersForActivity();
     } catch (error) {
       console.error("Error deleting user from activity:", error);
+      setReloadData(false);
     }
   };
 
   const handleAdd = async () => {
     try {
       const postId = selectedActivity;
-
-      const userId = await checkUserExist(); // Wait for checkUserExist to complete
+      const userId  = await checkUserExist(); // Wait for checkUserExist to complete
 
       // Proceed only if userId is not null (i.e., user exists)
-      if (userId !== null) {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/posts/signup/status2?postId=${postId}&userId=${userId}`
-        );
-        const exist = response.data.exists;
-
-        if (!exist) {
-          await axios.post(
-            `${process.env.REACT_APP_API_URL}/api/posts/adminsignup`,
-            { postId: postId, userId: userId }
-          );
-          fetchUsersForActivity();
-          window.alert("Perfect ... Du är registrerad för denna aktivitet");
-        } else {
-          console.error("User already signed up for this post");
-          window.alert("Du är redan registrerad för denna aktivitet");
-        }
+      if (userId  !== null) {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/adminsignup`,
+            { optionId: postId, userId: userId  });
+            
+        fetchUsersForActivity();
+        window.alert("Perfekt ... Användaren har lagt till aktivitet");
       } else {
         // Handle case where userId is null (user does not exist)
         console.log("User does not exist");
@@ -485,7 +489,7 @@ export const TabContent9 = () => {
       }
 
       // Reset newUserName after adding
-      setNewUserName("");
+      setMedlemsnr("");
     } catch (error) {
       console.error("Error adding user to activity:", error);
     }
@@ -495,11 +499,11 @@ export const TabContent9 = () => {
     // Added async keyword
     try {
       // Fetch user ID based on the entered username
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/check?username=${newUserName}`;
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/check?membershipNo=${newMedlemsnr}`;
       const res = await axios.get(apiUrl); // Wait for axios call to finish
       const userData = res.data;
       if (userData.userExists) {
-        return userData.userId;
+        return userData.result[0].id;
       } else {
         console.log("Användaren hittades inte");
         window.confirm("Användaren hittades inte .. Verifiera användarnamnet");
@@ -519,7 +523,7 @@ export const TabContent9 = () => {
       <select className="inputClass" onChange={handleOptionSelect}>
         <option>Välj en aktivitet</option>
         {posts.map((activity, index) => (
-          <option key={index} value={activity.id}>
+          <option key={index} value={activity.postId}>
             {activity.title}
           </option>
         ))}
@@ -528,52 +532,93 @@ export const TabContent9 = () => {
         Sök
       </button>
       <div>
-        {error && <p>Error: {error}</p>}{" "}
-        {/* Display error message if error is not null */}
-        <h4>Användare registrerade för vald aktivitet:</h4>
-        <div className="table-responsive">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th width="10%">#</th>
-                <th width="30%">Användarnamn</th>
-                <th width="40%">e-post</th>
-                <th width="10%">Ta bort</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user, index) => (
-                <tr key={user.id}>
-                  <td width="10%">{index + 1}</td>
-                  <td width="30%">{user.username}</td>
-                  <td width="40%">{user.email}</td>
-                  <td width="10%">
-                    <Link to="" onClick={() => handleDelete(user.id)}>
-                      <img src={del} alt="delete" className="iconClass2" />
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+      {error && <p>Error: {error}</p>}{" "}
+      {reloadData && <p>Loading...</p>}
+      {activityInformation && (
+        <div className="userInfo">
+          <p className="text-start ps-3 mt-3"><strong>Aktivitetstitel: </strong>
+          <p className="text-success ms-5">{activityInformation.title}</p></p>
+          <ul className="list-group text-start mb-3 ms-5 w-75">
+            <li className="list-group-item userClass text-danger">
+            <span><b>Aktivitetsstatus: </b></span>
+            {activityInformation.status}
+            </li>
+            <li className="list-group-item userClass">
+              <span><b>Aktiviteten äger rum i: </b></span>
+              {moment(activityInformation.adminDate).format("LL")}
+            </li>
+            <li className="list-group-item userClass">
+              <span><b>Sista dag för anmälan: </b></span>
+              {moment(activityInformation.deadline).format("LL")}
+            </li>
+            <li className="list-group-item userClass">
+            <span><b>Antal registrerade användare: </b></span>
+              {activityInformation.total}
+            </li>
+            <li className="list-group-item userClass">
+            <span><b>Pris: </b></span>
+              {activityInformation.price}
+            </li>
+            <li className="list-group-item userClass">
+            <span><b>Totalt tillåtet antal att registrera: </b></span>
+              {activityInformation.spots}
+            </li>
+          </ul>
+          <h4 className="text-success">Användare registrerade i denna aktivitet</h4>
         </div>
-        {activitySearched && (
-          <div className="btnDiv">
-            <label className="form-label" htmlFor="form1">
-              registrera en ny användare
-            </label>
-            <input
-              type="text"
-              value={newUserName}
-              onChange={(e) => setNewUserName(e.target.value)}
-              placeholder="Användarnamn"
-            />
-            <button className="btnClass2" onClick={handleAdd}>
-              <img src={plus} alt="" className="iconClass1" />
-              <span>Lägg till</span>
-            </button>
-          </div>
-        )}
+      )}
+      {!activityInformation && <div>
+        <h5 className="my-3">Användare registrerade i denna aktivitet</h5>
+        </div>}
+      <div className="table-responsive">
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th width="10%">#</th>
+              <th width="30%">Användarnamn</th>
+              <th width="40%">e-post</th>
+              <th width="10%">Ta bort</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user, index) => (
+              <tr key={user.id}>
+                <td width="10%">{index + 1}</td>
+                <td width="30%">{user.username}</td>
+                <td width="40%">{user.email}</td>
+                <td width="10%">
+                  <Link to="" onClick={() => handleDelete(user.id)}>
+                    <img src={del} alt="delete" className="iconClass2" />
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {activitySearched && (
+        <div className="btnDiv">
+          <label className="form-label" htmlFor="form1">
+          <strong>För att registrera en ny användare .. Ange medlemsnr</strong>
+          </label>
+          
+          {activityInformation.status === "closed" && <button className="btnClass2" onClick={handleAdd} disabled>
+            <img src={plus} alt="" className="iconClass1" />
+            <span>Lägg till</span>
+          </button>}
+          {activityInformation.status === "open" && <div>
+          <input
+            type="text"
+            value={newMedlemsnr}
+            onChange={(e) => setMedlemsnr(e.target.value)}
+            placeholder="användarmedlemsnr" />
+          <button className="btn btn-dark btn-sm" onClick={handleAdd}>
+            <img src={plus} alt="" className="iconClass1" />
+            <span>Lägg till</span>
+          </button></div>}
+        </div>
+      )}
       </div>
     </div>
   );
