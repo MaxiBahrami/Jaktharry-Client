@@ -6,7 +6,6 @@ import moment from "moment";
 import 'moment/locale/sv'; 
 import { AuthContext } from "../context/authContext.js";
 import { Button, Container, Card, Toast, Modal,} from "react-bootstrap";
-import Form from 'react-bootstrap/Form';
 
 import DOMPurify from "dompurify";
 import arrow from "../img/fast-forward.gif";
@@ -34,16 +33,6 @@ const Single = () => {
   axios.defaults.withCredentials = true;
   const [isLoading, setIsLoading] = useState(false);
   const [takenSpot, setTakenSpot] = useState(0);
-  const [inputs, setInputs] = useState({
-    name: "",
-    aftername: "",
-    email: "",
-    id: "",
-  });
-
-  const handleChange = (e) => {
-    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,8 +56,11 @@ const Single = () => {
       }
     };
     const checkRegistrationStatus = async () => {
+      const value1 = {  
+        userId: currentUser.id,
+        activityToReg: postId}
       try {
-        const exist = await userPostExist(postId);
+        const exist = await userPostExist(value1 );
         setRegistered(exist);
       } catch (error) {
         console.error("Error checking registration status:", error);
@@ -77,7 +69,7 @@ const Single = () => {
     getEntries();
     fetchData();
     checkRegistrationStatus();
-  }, [postId]);
+  }, [postId, currentUser.id]);
 
   const handleDelete = async (post) => {
     try {
@@ -176,7 +168,7 @@ const Single = () => {
     setShowModal(!showModal);
   };
 
-  const handleUserSignUp = async (postId, e) => {
+  const handleUserSignUp = async (postId, userId, e) => {
     e.preventDefault();
 
     if (!currentUser) {
@@ -185,18 +177,30 @@ const Single = () => {
         navigate("/login");
       }
     } else {
+    if (post.total < post.spots){
       try {
         const token = localStorage.getItem('accessToken'); 
         const headers = { Authorization: `Bearer ${token}` }; 
         setIsLoading(true);
 
-        const exist = await userPostExist(postId);
+        const value = {  
+          userId: userId,
+          activityToReg: postId}
+
+        const exist = await userPostExist(value);
 
          if (!exist) {
-          await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, { postId:postId,name:inputs.name,aftername:inputs.aftername,email:inputs.email,id_info:inputs.id}, { headers });
+          await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, value, { headers });
           ;
           setRegistered(true);
           window.alert("Perfect ... Du är registrerad för denna aktivitet");
+
+          const totalValue = {
+            activityToUpdate: postId,
+            NewTotal: post.total + 1
+          } 
+          await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/totalUpdate`, totalValue, { headers });
+          ; 
           setShowModal(false);
         } else {
           console.error("User already signed up for this post");
@@ -206,21 +210,27 @@ const Single = () => {
         console.error("Error signing up for activity:", error);
       }finally {
         setIsLoading(false); // Reset loading state regardless of the outcome
-      }
+      }   
+    } else {
+      console.error("No place to register");
+      window.alert("Alla platser för denna aktivitet är tagna.");
+    }
+      
     }
   };
 
-  const userPostExist = async (postId) => {
+  const userPostExist = async (valueToCheck) => {
     try {
-      const token = localStorage.getItem("accessToken");
-      const headers = { Authorization: `Bearer ${token}` };
-
       // Make a request to your backend to check user post status
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/posts/signup/status?postId=${postId}`, { headers }
+        `${process.env.REACT_APP_API_URL}/api/posts/signup/status`, 
+        {
+          params: valueToCheck
+        }
       );
       // Response should contain a boolean indicating if the user has already signed up
       return response.data.exists;
+      
     } catch (error) {
       console.error("Error checking if user post exists:", error);
       return false; // Assuming it doesn't exist if there's an error
@@ -243,7 +253,7 @@ const Single = () => {
                 <span>{post.username}</span>
                 <p>{moment(post.date).calendar()}</p>
               </div>
-              {currentUser.id === post.postId || currentUser.role === 1 ? (
+              {currentUser.id === post.uid || currentUser.role === 1 ? (
                 <div className="edit">
                   <Link
                     to={`/write?edit=2`}
@@ -280,6 +290,7 @@ const Single = () => {
               }}
             />
           ))}
+          
         </div>
 
         {/* Activities */}
@@ -297,7 +308,7 @@ const Single = () => {
               </p>
             </div>
             <div className="textClass col-4 m-auto">
-              { !Registered && <div>
+              { post.total < post.spots && !Registered && <div>
               <img src={arrow} alt="" />
               <Button
                 onClick={() => {toggleModal();}}
@@ -313,6 +324,11 @@ const Single = () => {
                 <p className="text-center text-dark"><small> För att avbryta skicka e-post till admin</small>
                 <Link><span><img src={message} alt="" style={{ width: '20px',height: '20px' }}/></span>
                 </Link></p>
+              </div>
+              }
+              { post.total >= post.spots && !Registered && <div className="textClass text-center">
+                <img src={verify} alt="" />
+                <h5 className="">Alla platser för denna aktivitet är tagna</h5>
               </div>
               }
             </div>
@@ -358,7 +374,7 @@ const Single = () => {
                     <Card.Title className="text-dark">
                       Tidigare kommentarer ..
                     </Card.Title>
-                    {getPostRes.map((comment, index) => (
+                    {getPostRes && getPostRes.map((comment, index) => (
                       <div className="comment-box" key={index}>
                         <hr />
                         <div className="user">
@@ -380,6 +396,7 @@ const Single = () => {
           </>
         )}
       </div>
+      
       <Menu cat={post.cat} />
       <Toast
         onClose={() => setShowToast(false)}
@@ -402,51 +419,35 @@ const Single = () => {
       </Toast>
 
       <Modal show={showModal} onHide={toggleModal} dialogClassName="custom-modal">
-        <Modal.Header closeButton>
-          <Modal.Title className="bg-sucess">Registreringsformulär</Modal.Title>
+        <Modal.Header closeButton  className="bg-warning">
+          <Modal.Title><span>Registreringsformulär</span></Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={(e) => handleUserSignUp(post.postId, e)} className="my-2">
-            <Form.Group controlId="formName" className="mb-3">
-              <Form.Label>Namn</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter name"
-                onChange={handleChange}
-                name="name"
-                required
-              />
-            </Form.Group>
-            <Form.Group controlId="formAfterName" className="mb-3">
-              <Form.Label>Efternamn</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter aftername"
-                onChange={handleChange}
-                name="aftername"
-                required
-              />
-            </Form.Group>
-            <Form.Group controlId="formEmail" className="mb-3">
-              <Form.Label>E-posta för att kontakta</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="namn@exempel.com"
-                onChange={handleChange}
-                name="email"
-                required
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit">
-              Registrera
-            </Button>
-          </Form>
+        <div className="mb-3">
+            <strong>Medlemsnr:</strong> {currentUser.membershipNo}
+          </div>
+          <div className="mb-3">
+            <strong>Namn:</strong> <span>{currentUser.firstName}</span> &nbsp;<span>{currentUser.lastName}</span>
+          </div>
+          <div className="mb-3">
+            <strong>E-post:</strong> {currentUser.email}
+          </div>
+          <div className="mb-3">
+            <strong>Telefon:</strong> 0{currentUser.phone}
+          </div>
+          <div className="mb-3">
+            <strong>Aktivitet: </strong>{post.title}
+          </div>
+          <Button 
+            variant="primary" 
+            onClick={(e) => handleUserSignUp(postId, currentUser.id, e)}
+            className="btn-dark mt-4">
+            Registrera
+          </Button>
         </Modal.Body>
       </Modal>
 
     </Container>
-
-    
   );
 
 };

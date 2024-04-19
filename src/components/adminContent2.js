@@ -152,59 +152,74 @@ export const TabContent7 = () => {
 };
 
 export const TabContent8 = () => {
+
   const [posts, setPosts] = useState([]);
-  const [username, setUsername] = useState("");
+  const [membershipNo, setMembershipNo] = useState("");
   const [userId, setUserId] = useState(null);
+  const [userInformation, setUserInformation] = useState(null); 
   const [showOptions, setShowOptions] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [options, setOptions] = useState([]);
   const [reloadData, setReloadData] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (userId) {
-          // Fetch activities associated with the user ID
-          const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/user-activity?userId=${userId}`;
-          const res = await axios.get(apiUrl);
-          const items = res.data.data;
-          const sorteditems = items.sort(
-            (a, b) => new Date(b.date) - new Date(a.date)
-          );
-          if (items.length > 0) {
-            // Check if data is not empty
-            setPosts(sorteditems); // Set the posts state
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching data:", err);
+  const fetchData = async (userId) => {
+    setReloadData(true);
+  
+    if (!userId) {
+      setReloadData(false);
+      return;
+    }
+  
+    try {
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/user-activity?userId=${userId}`;
+  
+      const res = await axios.get(apiUrl);
+  
+      if (res.data.message === "Sign up list fetch successful") {
+        const items = res.data.data.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+  
+        setPosts(items);
+      } else {
+        console.log("No data found");
       }
-    };
-    fetchData();
-  }, [userId, reloadData]);
+    } catch (err) {
+      console.error("Error fetching data:", err.response ? err.response.data : err.message);
+      window.alert('An error occurred while fetching data. Please try again later.');
+    } finally {
+      setReloadData(false);
+    }
+  };
+
+  useEffect(() => {
+  if (userId) {
+    fetchData(userId);
+  }
+}, [userId]);
 
   const handleClick = (postId) => {
     const postUrl = `${window.location.origin}/post/${postId}`;
     window.open(postUrl, "_blank");
   };
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
+  const handleMembershipNoChange = (event) => {
+    setMembershipNo(event.target.value);
   };
 
   const handleSearch = async () => {
     try {
       // Fetch user ID based on the entered username
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/check?username=${username}`;
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/check?membershipNo=${membershipNo}`;
       const res = await axios.get(apiUrl);
-      const userData = res.data;
-      if (userData.userExists) {
+     
+      if (res.data.userExists) {
         // If user found, set the user ID
-        setUserId(userData.userId);
+        const user = res.data.result[0];
+        setUserId(user.id);
+        setUserInformation(user);
       } else {
-        // If user not found, handle appropriately (e.g., show error message)
-        console.log("Användaren hittades inte");
-        window.confirm("Användaren hittades inte .. Verifiera användarnamnet");
+        window.confirm("Medlemsnumret hittades inte .. Verifiera medlemsnumret");
       }
     } catch (error) {
       console.error("Error searching for user:", error);
@@ -219,7 +234,6 @@ export const TabContent8 = () => {
 
   const handleDelete = async (post) => {
     try {
-      const postId = post.postId;
       // Ask for confirmation before deleting
       const confirmDelete = window.confirm(
         "Är du säker på att du vill radera denna aktivitet?"
@@ -227,15 +241,14 @@ export const TabContent8 = () => {
       if (!confirmDelete) return;
 
       const token = localStorage.getItem("accessToken");
-
       const headers = { Authorization: `Bearer ${token}` };
-
-      // Perform the delete operation with the Authorization header
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/delete/${postId}/${userId}`;
+      
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/delete/${post.postId}/${userId}`;
+      
       await axios.delete(apiUrl, { headers });
       setReloadData((prev) => !prev);
       // Update the UI after successful deletion
-      setPosts(posts.filter((p) => p.id !== post.postId));
+      setPosts(posts.filter((p) => p.postId !== post.postId));
     } catch (error) {
       console.error("Error deleting post:", error);
     }
@@ -245,27 +258,28 @@ export const TabContent8 = () => {
     setShowOptions(!showOptions);
   };
 
-  const handleOptionSelect = async (option) => {
-    setSelectedOption(option.title);
-    const postId = option;
-
+  const handleOptionSelect = async (optionId) => {
+    setSelectedOption(options.find(option => option.postId === optionId).title);
     setShowOptions(false);
 
-    const response = await axios.get(
-      `${process.env.REACT_APP_API_URL}/api/posts/signup/status2?postId=${postId}&userId=${userId}`
-    );
-    const exist = response.data.exists;
-
-    if (!exist) {
-      await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/posts/adminsignup`,
-        { postId: postId, userId: userId }
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/posts/signup/status2?postId=${optionId}&userId=${userId}`
       );
-      setReloadData((prev) => !prev);
-      window.alert("Perfect ... Du är registrerad för denna aktivitet");
-    } else {
-      console.error("User already signed up for this post");
-      window.alert("Du är redan registrerad för denna aktivitet");
+      if (!response.data.exists) {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/posts/adminsignup`,
+          { optionId: optionId,
+            userId: userId, }
+        );
+        fetchData(userId); 
+
+        window.alert('Perfect ... Du är registrerad för denna aktivitet');
+      } else {
+        window.alert('Du är redan registrerad för denna aktivitet');
+      }
+    } catch (error) {
+      console.error('Error handling option selection:', error);
     }
   };
 
@@ -275,8 +289,8 @@ export const TabContent8 = () => {
         // Fetch options from the database
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=aktiviteter`;
         const res = await axios.get(apiUrl);
-        const optionsData = res.data;
-        setOptions(optionsData); // Set the options state
+        const filteredOptions = res.data.filter((post) => post.status === "open");
+        setOptions(filteredOptions); // Set the options state
       } catch (error) {
         console.error("Error fetching options:", error);
       }
@@ -288,21 +302,32 @@ export const TabContent8 = () => {
   return (
     <div className="PostClass PostClass8">
       <label className="form-label labelClass" htmlFor="form1">
-        Ange användarnamnet
+        Ange medlemsnr
       </label>
       <input
         className="inputClass"
         type="search"
-        value={username}
-        onChange={handleUsernameChange}
+        value={membershipNo}
+        onChange={handleMembershipNoChange}
         onKeyDown={handleKeyDown}
       />
+      
       <button className="btnClass" onClick={handleSearch}>
         Sök
       </button>
-
-      <h4>Användare är registrerad i dessa aktiviteter</h4>
-
+      {reloadData && <p>Loading...</p>}
+      {userInformation && (
+        <div className="userInfo">
+          <p className="text-start ps-5 mt-3" style={{ fontSize: '13px' }}><strong>Användarnamn: </strong><span> ... {userInformation.firstName} {userInformation.lastName}</span></p>
+          <p className="text-start ps-5" style={{ fontSize: '13px' }}><strong>E-post: </strong>{userInformation.email}</p>
+          <p className="text-start ps-5" style={{ fontSize: '13px' }}><strong>Telefon: </strong>0{userInformation.phone}</p>
+          <p className="text-start ps-5" style={{ fontSize: '13px' }}><strong>Medlemsnr: </strong>#{userInformation.membershipNo}</p>
+          <h5>{userInformation.username}  är registrerad i dessa aktiviteter</h5>
+        </div>
+      )}
+      {!userInformation && <div>
+        <h5 className="my-3">Användare är registrerad i dessa aktiviteter</h5>
+        </div>} 
       {userId && (
         <div className="btnDiv">
           <button className="btnClass2" onClick={handleAdd}>
@@ -312,13 +337,13 @@ export const TabContent8 = () => {
           {showOptions && (
             <div>
               <ul className="ulclass">
-                {options.map((option, index) => (
+                {options.map((option) => (
                   <li
                     className="liOptions"
-                    key={index}
-                    onClick={() => handleOptionSelect(option.id)}
+                    key={option.postId}
+                    onClick={() => handleOptionSelect(option.postId)}
                   >
-                    <Link>{option.title}</Link>
+                    <Link className="link">{option.title}</Link>
                   </li>
                 ))}
               </ul>
@@ -329,6 +354,7 @@ export const TabContent8 = () => {
       )}
 
       <div className="table-responsive">
+        
         <table className="table table-bordered">
           <thead>
             <tr>
@@ -721,7 +747,7 @@ export const TabContent12 = () => {
         <table className="table table-bordered">
           <thead>
             <tr>
-              <th width="5%">#</th>
+              <th width="5%">Medlemsnr</th>
               <th width="20%">Senaste aktivitet</th>
               <th width="20%">Användarnamn</th>
               <th width="30%">e-post</th>
@@ -733,7 +759,7 @@ export const TabContent12 = () => {
           <tbody>
             {sortedUsers.map((user, index) => (
               <tr width="5%" key={user.id}>
-                <td>{index + 1}</td>
+                <td># {user.membershipNo}</td>
                 <td width="20%">
                   {formatLastActivity(user.lastActivity) === "Online" && (
                     <img

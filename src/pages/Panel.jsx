@@ -32,15 +32,15 @@ const tabItems = [
 const tabItems2 = [
   { id: '#link6', title: 'AKTIVITETER' },
   { id: '#link7', title: 'Alla', content: <TabContent7 /> },
-  { id: '#link8', title: 'För en användare', content: <TabContent8 /> },
-  { id: '#link9', title: 'För en aktivitet', content: <TabContent9 /> },
+  { id: '#link8', title: 'Användaraktiviteter', content: <TabContent8 /> },
+  { id: '#link9', title: 'ِAktivitetsdeltagare', content: <TabContent9 /> },
   { id: '#link10', title: 'Alla deltagare', content: <TabContent10 /> },
 ];
 
 const tabItems3 = [
   { id: '#link11', title: 'Användarna' },
-  { id: '#link12', title: 'Alla användare', content: <TabContent12 /> },
-  { id: '#link13', title: 'Moderatorer', content: <TabContent13 /> },
+  { id: '#link12', title: 'Användarnas roller', content: <TabContent12 /> },
+  { id: '#link13', title: 'Moderator Kretsar', content: <TabContent13 /> },
 ];
 
 // Define the array containing non-clickable link IDs

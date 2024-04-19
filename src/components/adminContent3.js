@@ -202,7 +202,7 @@ export const TabContent13 = () => {
             {users.map((user, index) => (
               <React.Fragment key={user.id}>
               <tr>
-                <td width="10%">{index + 1}</td>
+                <td width="10%"># {user.membershipNo}</td>
                 <td className="userClass" width="25%">
                   {user.username}
                   <p>{user.email}</p>
