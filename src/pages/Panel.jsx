@@ -2,7 +2,7 @@ import React , { useContext }from "react";
 import { Col, Container, ListGroup, Row, Tab } from "react-bootstrap";
 import { TabContent3, TabContent4, 
   TabContent5} from "../components/adminContent.js";
-import { TabContent7, TabContent8, TabContent9, TabContent10,
+import { TabContent7, TabContent8, TabContent9,
     TabContent12} from "../components/adminContent2.js";
 import { TabContent13 } from "../components/adminContent3.js";  
 import { AuthContext } from "../context/authContext";  
@@ -34,7 +34,6 @@ const tabItems2 = [
   { id: '#link7', title: 'Alla', content: <TabContent7 /> },
   { id: '#link8', title: 'Användaraktiviteter', content: <TabContent8 /> },
   { id: '#link9', title: 'ِAktivitetsdeltagare', content: <TabContent9 /> },
-  { id: '#link10', title: 'Alla deltagare', content: <TabContent10 /> },
 ];
 
 const tabItems3 = [
