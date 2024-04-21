@@ -276,7 +276,12 @@ const Single = () => {
           )}
 
           <h1>{post.title}</h1>
-          <StarRating disabled userId={currentUser?.id} post={post} />
+          {post.cat !== 'aktiviteter' && (
+						<StarRating
+							userId={currentUser?.id}
+							post={post}
+						/>
+					)}
           <p
             className="descP"
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.desc) }}

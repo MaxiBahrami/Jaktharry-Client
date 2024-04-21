@@ -1,122 +1,185 @@
-import React, { useEffect, useState } from "react";
-import StarOutline from "../assets/img/star-outline.svg";
-import StarIcon from "../assets/img/star.svg";
-import HalfStarIcon from "../assets/img/star-half.svg";
-import axios from "axios";
+import React, { useContext, useEffect, useState } from 'react'
+import StarOutline from '../assets/img/star-outline.svg'
+import StarIcon from '../assets/img/star.svg'
+import HalfStarIcon from '../assets/img/star-half.svg'
+import axios from 'axios'
+import { Star } from 'lucide-react'
+import { AuthContext } from '../context/authContext'
+import { useNavigate } from 'react-router-dom'
 
 const defArr = Array(5)
-  .fill(0)
-  .map((e) => StarOutline);
+	.fill(0)
+	.map((e) => StarOutline)
 
 const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
-  const [postRatingArr, setPostRatingArr] = useState(defArr);
-  const [disableRating, setDisableRating] = useState(disabled);
-  const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [userHasRated, setUserHasRated] = useState(false);
+	const navigate = useNavigate()
+	const [postRatingArr, setPostRatingArr] = useState(defArr)
+	const [disableRating, setDisableRating] = useState(disabled)
+	const [message, setMessage] = useState('')
+	const [isLoading, setIsLoading] = useState(false)
+	const [userHasRated, setUserHasRated] = useState(false)
+	const [hoverValue, setHoverValue] = useState(0)
+	const { currentUser } = useContext(AuthContext)
+	const [userRating, setUserRating] = useState(null)
+	const [averageRating, setAverageRating] = useState(null)
 
-  const handleRating = (idx) => {
-    if (disableRating) return;
+	useEffect(() => {
+		;(async () => {
+			try {
+				const { data } = await axios.post(
+					`${process.env.REACT_APP_API_URL}/api/posts/getRating/${post.postId}`,
+					{ userId: currentUser.id }
+				)
+				setUserRating(data)
+				// const { data: ratingData } = await axios.get(
+				// 	`${process.env.REACT_APP_API_URL}/api/posts/getAverageRating/${post.postId}`
+				// )
+				// setAverageRating(ratingData)
+			} catch (err) {
+				console.log(err.message)
+			}
+		})()
+	}, [])
 
-    const newStars = postRatingArr.slice(0, idx + 1).map((s) => StarIcon);
-    setPostRatingArr([
-      ...newStars,
-      ...Array(5 - newStars.length)
-        .fill(0)
-        .map((e) => StarOutline),
-    ]);
+	useEffect(() => {
+		if (post?.averageRating) {
+			setAverageRating({
+				averageRating: post.averageRating,
+				totalLength: post.totalLength,
+				usersRated: post.usersRated,
+			})
+		}
+	}, [post])
 
-    submitRating(newStars.length);
-  };
+	const handleRating = (idx) => {
+		if (disableRating || !!userRating) return
 
-  const submitRating = async (rating) => {
-    try {
-      const data = {
-        postId: post.postId,
-        rating,
-      };
+		// const newStars = postRatingArr.slice(0, idx + 1).map((s) => StarIcon)
+		// setPostRatingArr([
+		// 	...newStars,
+		// 	...Array(5 - newStars.length)
+		// 		.fill(0)
+		// 		.map((e) => StarOutline),
+		// ])
 
-      setIsLoading(true);
+		setAverageRating((prev) => ({
+			...prev,
+			averageRating: prev?.averageRating
+				? (idx + prev?.averageRating) / (prev?.totalLength + 1)
+				: idx,
+		}))
+		setDisableRating(true)
+		submitRating(idx)
+	}
 
-      await axios.put(`${process.env.REACT_APP_API_URL}/posts/rate`, data);
+	const submitRating = async (rating) => {
+		try {
+			if (!currentUser?.id) {
+				return navigate('/login')
+			}
+			const data = {
+				postId: post.postId,
+				rating,
+				userId: currentUser.id,
+			}
+			setIsLoading(true)
 
-      setMessage("rating submitted successfully");
-      setIsLoading(false);
+			await axios.put(
+				`${process.env.REACT_APP_API_URL}/api/posts/rate/${data.postId}`,
+				data
+			)
 
-      setIsLoading(rating);
+			setMessage('rating submitted successfully')
+			setIsLoading(false)
 
-      setTimeout(() => {
-        setMessage("");
-      }, 3000);
-    } catch (err) {
-      setMessage(err.response.data || "Error submitting rating");
-      setIsLoading(false);
-    }
-  };
+			setIsLoading(rating)
 
-  useEffect(() => {
-    setDisableRating(disabled || isLoading || userHasRated);
+			setTimeout(() => {
+				setMessage('')
+			}, 3000)
+		} catch (err) {
+			setMessage(err.message || 'Error submitting rating')
+			setIsLoading(false)
+		}
+	}
 
-    if (post.avg_rating) {
-      const avgRating = Math.floor(post.avg_rating);
+	useEffect(() => {
+		setDisableRating(disabled || isLoading || userHasRated)
 
-      const newStars = Array(avgRating)
-        .fill(0)
-        .map((e) => StarIcon);
+		if (post.avg_rating) {
+			const avgRating = Math.floor(post.avg_rating)
 
-      if (post.avg_rating < 5 && post.avg_rating % 2 !== 0) {
-        newStars.push(HalfStarIcon);
-      }
+			const newStars = Array(avgRating)
+				.fill(0)
+				.map((e) => StarIcon)
 
-      const fullStarlen = newStars.length;
+			if (post.avg_rating < 5 && post.avg_rating % 2 !== 0) {
+				newStars.push(HalfStarIcon)
+			}
 
-      const allStars = [
-        ...newStars,
-        ...Array(5 - fullStarlen)
-          .fill(0)
-          .map((e) => StarOutline),
-      ];
+			const fullStarlen = newStars.length
 
-      setPostRatingArr(allStars);
-    }
-  }, [disabled, isLoading, post, userHasRated]);
+			const allStars = [
+				...newStars,
+				...Array(5 - fullStarlen)
+					.fill(0)
+					.map((e) => StarOutline),
+			]
 
-  useEffect(() => {
-    if (post?.postId && userId && initUserHasRated) {
-      const fetchData = async () => {
-        try {
-          const res = await axios.get(
-            `${process.env.REACT_APP_API_URL}/posts/rate/${post.postId}/${userId}`
-          );
+			setPostRatingArr(allStars)
+		}
+	}, [disabled, isLoading, post, userHasRated])
 
-          const { status } = res.data;
+	useEffect(() => {
+		if (post?.id && userId && initUserHasRated) {
+			const fetchData = async () => {
+				try {
+					const res = await axios.get(
+						`${process.env.REACT_APP_API_URL}/posts/rate/${post.postId}/${userId}`
+					)
 
-          setUserHasRated(status);
-        } catch (err) {
-          setMessage("Error processing rating");
-        }
-      };
-      fetchData();
-    }
-  }, [post.postId, userId, initUserHasRated]);
+					const { status } = res.data
 
-  return (
-    <div className="star-rating">
-      {postRatingArr.map((star, idx) => {
-        return (
-          <img
-            key={idx}
-            src={star}
-            style={{ cursor: disableRating && "auto" }}
-            alt="star rating"
-            onClick={() => handleRating(idx)}
-            className="rating-icon"
-          />
-        );
-      })}
-      {message && <p className="rating-message">{message}</p>}
-    </div>
-  );
-};
+					setUserHasRated(status)
+				} catch (err) {
+					setMessage('Error processing rating')
+				}
+			}
+			fetchData()
+		}
+	}, [post.postId, userId, initUserHasRated])
 
-export default StarRating;
+	return (
+		<div className='star-rating'>
+			{postRatingArr.map((star, idx) => {
+				return (
+					<Star
+						onMouseOver={() => setHoverValue(idx + 1)}
+						// onClick={() => handleRating(idx + 1)}
+						onClick={(e) => {
+							e.stopPropagation()
+							e.preventDefault()
+							handleRating(idx + 1)
+						}}
+						key={idx}
+						style={{
+							cursor: 'pointer',
+							color: '#FDCC0D', //value <= rating
+						}}
+						fill={
+							averageRating && idx < averageRating?.averageRating
+								? '#FDCC0D'
+								: hoverValue <= idx
+								? 'none'
+								: '#FDCC0D'
+						}
+						strokeWidth={2}
+						onMouseLeave={() => setHoverValue(0)}
+					/>
+				)
+			})}
+		</div>
+	)
+}
+
+export default StarRating
