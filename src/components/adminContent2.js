@@ -407,8 +407,10 @@ export const TabContent9 = () => {
       try {
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=aktiviteter`;
         const res = await axios.get(apiUrl);
-        setPosts(res.data);
-        setAllActivities(res.data); 
+        const sortedPosts = res.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      setPosts(sortedPosts);
+      setAllActivities(sortedPosts); 
         return 
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -619,87 +621,6 @@ export const TabContent9 = () => {
           </button></div>}
         </div>
       )}
-      </div>
-    </div>
-  );
-};
-
-export const TabContent10 = () => {
-  const [users, setUsers] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/getUserActivities`;
-        const res = await axios.get(apiUrl);
-        setUsers(res.data);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const handleDelete = async (user) => {
-    try {
-      // Ask for confirmation before deleting
-      const confirmDelete = window.confirm(
-        "Are you sure you want to delete this UserActivity?"
-      );
-      if (!confirmDelete) return;
-
-      const token = localStorage.getItem("accessToken");
-      const headers = { Authorization: `Bearer ${token}` };
-
-      // Perform the delete operation with the Authorization header
-      const apiUrl = `${process.env.REACT_APP_API_URL}/api/users/delete/${user.aid}/${user.uid}`;
-
-      await axios.delete(apiUrl, { headers });
-
-      // Update the UI after successful deletion
-      setUsers(users.filter((p) => p.id !== user.id));
-    } catch (error) {
-      console.error("Error deleting post:", error);
-    }
-  };
-  return (
-    <div className="PostClass PostClass9">
-      <div>
-        {/* Display error message if error is not null */}
-        <div className="table-responsive">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th width="10%">#</th>
-                <th width="30%">Titel</th>
-                <th width="15%">Name</th>
-                <th width="10%">Aftername</th>
-                <th width="15%">Mail address</th>
-                <th width="10%">Id</th>
-                <th width="10%">Ta bort</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users &&
-                users.length > 0 &&
-                users.map((user, index) => (
-                  <tr key={user.id}>
-                    <td>{index + 1}</td>
-                    <td>{user.title}</td>
-                    <td>{user.name}</td>
-                    <td>{user.aftername}</td>
-                    <td>{user.email}</td>
-                    <td>{user.id_info}</td>
-                    <td>
-                      <Link to="" onClick={() => handleDelete(user)}>
-                        <img src={del} alt="" className="iconClass2" />
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
       </div>
     </div>
   );

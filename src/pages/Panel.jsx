@@ -5,6 +5,7 @@ import { TabContent3, TabContent4,
 import { TabContent7, TabContent8, TabContent9,
     TabContent12} from "../components/adminContent2.js";
 import { TabContent13 } from "../components/adminContent3.js";  
+import { TabContent14 } from "../components/adminContent4.js";  
 
 import { AuthContext } from "../context/authContext";  
 
@@ -39,8 +40,9 @@ const tabItems2 = [
 
 const tabItems3 = [
   { id: '#link11', title: 'Användarna' },
-  { id: '#link12', title: 'Användarnas roller', content: <TabContent12 /> },
-  { id: '#link13', title: 'Moderator Kretsar', content: <TabContent13 /> },
+  { id: '#link12', title: 'Set Användarnas roller', content: <TabContent12 /> },
+  { id: '#link13', title: 'Set Moderator Kretsar', content: <TabContent13 /> },
+  { id: '#link14', title: 'Set moderator Aktiviteter', content: <TabContent14 /> },
 ];
 
 // Define the array containing non-clickable link IDs

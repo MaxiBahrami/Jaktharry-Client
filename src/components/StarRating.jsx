@@ -25,19 +25,19 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 
 	useEffect(() => {
 		;(async () => {
-			try {
-				const { data } = await axios.post(
-					`${process.env.REACT_APP_API_URL}/api/posts/getRating/${post.postId}`,
-					{ userId: currentUser.id }
-				)
-				setUserRating(data)
-				// const { data: ratingData } = await axios.get(
-				// 	`${process.env.REACT_APP_API_URL}/api/posts/getAverageRating/${post.postId}`
-				// )
-				// setAverageRating(ratingData)
-			} catch (err) {
-				console.log(err.message)
-			}
+			// try {
+			// 	const { data } = await axios.post(
+			// 		`${process.env.REACT_APP_API_URL}/api/posts/getRating/${post.postId}`,
+			// 		{ userId: currentUser.id }
+			// 	)
+			// 	setUserRating(data)
+			// 	// const { data: ratingData } = await axios.get(
+			// 	// 	`${process.env.REACT_APP_API_URL}/api/posts/getAverageRating/${post.postId}`
+			// 	// )
+			// 	// setAverageRating(ratingData)
+			// } catch (err) {
+			// 	console.log(err.message)
+			// }
 		})()
 	}, [])
 
@@ -96,6 +96,7 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 
 			setTimeout(() => {
 				setMessage('')
+				console.log(message)
 			}, 3000)
 		} catch (err) {
 			setMessage(err.message || 'Error submitting rating')
@@ -131,7 +132,7 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 	}, [disabled, isLoading, post, userHasRated])
 
 	useEffect(() => {
-		if (post?.id && userId && initUserHasRated) {
+		if (post?.postId && userId && initUserHasRated) {
 			const fetchData = async () => {
 				try {
 					const res = await axios.get(
