@@ -29,8 +29,6 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 			try {
         
 				if(post.postId && currentUser.id){
-          console.log("Fetching rating for post:", post.postId);
-          console.log("User ID:", currentUser.id);
 
           const { data } = await axios.get(
             `${process.env.REACT_APP_API_URL}/api/posts/getRating/${post.postId}`,
