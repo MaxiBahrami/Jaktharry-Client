@@ -75,7 +75,7 @@ export const TabContent7 = () => {
         <table className="table table-bordered">
           <thead>
             <tr>
-              <th width="10%">#</th>
+              <th width="10%">Akt-id</th>
               <th width="20%">Publicera datum</th>
               <th width="40%">Aktivitetstitel</th>
               <th width="10%">Redigera</th>
@@ -86,7 +86,7 @@ export const TabContent7 = () => {
             {posts.map((post, index) => (
               <React.Fragment key={post.postId}>
                 <tr key={post.postId}>
-                  <td width="10%">{index + 1}</td>
+                  <td width="10%">{post.postId}</td>
                   <td width="20%" className="text-start">{moment(post.date).format("LL")}</td>
                   <td width="50%" className="text-start">
                   <div>
@@ -360,7 +360,7 @@ export const TabContent8 = () => {
             <tr>
               <th width="10%">#</th>
               <th width="20%">Datum</th>
-              <th width="40%">Titel</th>
+              <th width="40%">Aktivitet (id-titel)</th>
               <th width="10%">Ta bort</th>
             </tr>
           </thead>
@@ -374,7 +374,7 @@ export const TabContent8 = () => {
                     className="titleClass"
                     onClick={() => handleClick(post.postId)}
                   >
-                    {post.title}
+                    #{post.postId}-{post.title}
                   </Link>
                 </td>
                 <td width="10%">
@@ -577,18 +577,20 @@ export const TabContent9 = () => {
         <table className="table table-bordered">
           <thead>
             <tr>
-              <th width="10%">#</th>
-              <th width="30%">Användarnamn</th>
-              <th width="40%">e-post</th>
+              <th width="10%">Medlemsnr</th>
+              <th width="20%">Användarnamn</th>
+              <th width="30%">Förnamn/Efternamn</th>
+              <th width="30%">e-post</th>
               <th width="10%">Ta bort</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((user, index) => (
+            {users.map((user) => (
               <tr key={user.id}>
-                <td width="10%">{index + 1}</td>
-                <td width="30%">{user.username}</td>
-                <td width="40%">{user.email}</td>
+                <td width="10%"># {user.membershipNo}</td>
+                <td width="20%">{user.username}</td>
+                <td width="30%" className="text-start"><small>{user.firstName} {user.lastName}</small></td>
+                <td width="30%">{user.email}</td>
                 <td width="10%">
                   <Link to="" onClick={() => handleDelete(user.id)}>
                     <img src={del} alt="delete" className="iconClass2" />

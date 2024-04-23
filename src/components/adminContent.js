@@ -67,20 +67,20 @@ export const TabContent3 = () => {
         <table className="table table-bordered">
           <thead>
             <tr>
-              <th>#</th>
+              <th width="10%">Post-id</th>
               <th width="20%">Datum</th>
-              <th width="40%">Titel</th>
+              <th width="45%">Titel</th>
               <th>skriven av</th>
               <th width="10%">Redigera</th>
               <th width="10%">Ta bort</th>
             </tr>
           </thead>
           <tbody>
-            {posts.map((post, index) => (
+            {posts.map((post) => (
               <tr key={post.postId}>
-                <td>{index + 1}</td>
+                <td width="10%">{post.postId}</td>
                 <td width="20%" className="text-start">{moment(post.date).format("LL")}</td>
-                <td width="40%" className="text-start">
+                <td width="45%" className="text-start">
                   <Link className="titleClass" onClick={() => handleClick(post.postId)}>{post.title}</Link>
                 </td>
                 <td>{post.username}</td>
@@ -165,7 +165,7 @@ export const TabContent4 = () => {
         <table className="table table-bordered">
           <thead>
             <tr>
-              <th>#</th>
+              <th width="10%">Post-id</th>
               <th width="20%">Datum</th>
               <th width="40%">Titel</th>
               <th>Skriven av</th>
@@ -174,9 +174,9 @@ export const TabContent4 = () => {
             </tr>
           </thead>
           <tbody>
-            {posts.map((post, index) => (
+            {posts.map((post) => (
               <tr key={post.postId}>
-                <td>{index + 1}</td>
+                <td width="10%">{post.postId}</td>
                 <td width="20%" className="text-start">{moment(post.date).format("LL")}</td>
                 <td width="40%" className="text-start">
                   <Link className="titleClass" onClick={() => handleClick(post.postId)}>{post.title}</Link>
@@ -294,7 +294,7 @@ export const TabContent5 = () => {
         <table className="table table-bordered">
           <thead>
             <tr>
-              <th>#</th>
+              <th width="10%">Post-id</th>
               <th width="20%">Datum</th>
               <th width="40%">Titel</th>
               <th>Kategori</th>
@@ -304,9 +304,9 @@ export const TabContent5 = () => {
             </tr>
           </thead>
           <tbody>
-            {posts.map((post, index) => (
+            {posts.map((post) => (
               <tr key={post.postId}>
-                <td>{index + 1}</td>
+                <td width="10%">{post.postId}</td>
                 <td width="20%" className="text-start">{moment(post.date).format("LL")}</td>
                 <td width="40%" className="text-start">
                   <Link className="titleClass" onClick={() => handleClick(post.postId)}>{post.title}</Link>
