@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import axios from "axios";
@@ -27,6 +27,27 @@ const Write = () => {
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
   const [error, setError] = useState("");
+  const [ModKrets, setModKrets] = useState([]);
+
+
+  useEffect(() => {
+    if (currentUser.role === 2) {
+      const apiUrl = `${process.env.REACT_APP_API_URL}/api/moderators/krestar/${currentUser.id}`;
+  
+      const fetchData = async () => {
+        try {
+          const res = await axios.get(apiUrl);
+          console.log(res.data);
+          setModKrets(res.data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+  
+      fetchData();
+    }
+  }, [currentUser]);
+
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -39,7 +60,7 @@ const Write = () => {
       ? moment(deadline).format("YYYY-MM-DD")
       : moment().format("YYYY-MM-DD"); // default to current date
       
-      
+      console.log("Selected cat:", cat);  
     try {
       const token = localStorage.getItem('accessToken');
       const headers = { Authorization: `Bearer ${token}` };
@@ -83,7 +104,7 @@ const Write = () => {
       setError(err.message); 
       console.log(err);
     }
-      };
+  };
 
     // Render the login message if currentUser is null
   if (!currentUser) {
@@ -117,22 +138,41 @@ const Write = () => {
           <hr />
           <div className="item">
             <h1>Category</h1>
+            {currentUser.role === 2 ? 
+            <div>
+            {Object.entries(ModKrets).map(([key, value]) => (
+              value !== null && (
+                <div key={key} className="cat">
+                  <input
+                    type="radio"
+                    checked={cat === key}
+                    name="Krets"
+                    value={value}
+                    id={key}
+                    onChange={e => setCat(e.target.value)}
+                  />
+                  <label htmlFor={key}>{value}</label>
+                </div>
+              )
+            ))}
+          </div> : <div>
+              <div className="cat">
+                <input type="radio" checked={cat === "riks"} name="cat" value="riks" id="riks" onChange={e=>setCat(e.target.value)}/>
+                <label htmlFor="riks">Riks</label>
+              </div>
+              <div className="cat">
+                <input type="radio" checked={cat === "lans"} name="cat" value="lans" id="lans" onChange={e=>setCat(e.target.value)}/>
+                <label htmlFor="lans">Läns</label>
+              </div>
+              <div className="cat">
+                <input type="radio" checked={cat === "lokalt"} name="cat" value="lokalt" id="lokalt" onChange={e=>setCat(e.target.value)}/>
+                <label htmlFor="lokalt">Lokalt</label>
+              </div>
+            </div>}
             <div className="cat">
-              <input type="radio" checked={cat === "riks"} name="cat" value="riks" id="riks" onChange={e=>setCat(e.target.value)}/>
-              <label htmlFor="riks">Riks</label>
-            </div>
-            <div className="cat">
-              <input type="radio" checked={cat === "lans"} name="cat" value="lans" id="lans" onChange={e=>setCat(e.target.value)}/>
-              <label htmlFor="lans">Läns</label>
-            </div>
-            <div className="cat">
-              <input type="radio" checked={cat === "lokalt"} name="cat" value="lokalt" id="lokalt" onChange={e=>setCat(e.target.value)}/>
-              <label htmlFor="lokalt">Lokalt</label>
-            </div>
-            <div className="cat">
-              <input type="radio" checked={cat === "aktiviteter"} name="cat" value="aktiviteter" id="aktiviteter" onChange={e=>setCat(e.target.value)}/>
-              <label htmlFor="aktiviteter">Aktiviteter</label>
-            </div>
+                <input type="radio" checked={cat === "aktiviteter"} name="cat" value="aktiviteter" id="aktiviteter" onChange={e=>setCat(e.target.value)}/>
+                <label htmlFor="aktiviteter">Aktiviteter</label>
+              </div>
             {cat === "aktiviteter" && (
             <div className="activity-details">
               <hr />
@@ -176,7 +216,7 @@ const Write = () => {
               />
               {error && <p className="error-message">{error}</p>} {/* Display error if there's any */}
             </div>
-          )}
+            )}
           </div>
           <div className="item2">
             <Button onClick={handleClick} >Publicera</Button>

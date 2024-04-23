@@ -20,30 +20,34 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 	const [userHasRated, setUserHasRated] = useState(false)
 	const [hoverValue, setHoverValue] = useState(0)
 	const { currentUser } = useContext(AuthContext)
+	const [userRating, setUserRating] = useState(null)
 	const [averageRating, setAverageRating] = useState(null)
 
 	useEffect(() => {
 		;(async () => {
-			// try {
-			// 	const { data } = await axios.post(
-			// 		`${process.env.REACT_APP_API_URL}/api/posts/getRating/${post.postId}`,
-			// 		{ userId: currentUser.id }
-			// 	)
-			// 	setUserRating(data)
-			// 	// const { data: ratingData } = await axios.get(
-			// 	// 	`${process.env.REACT_APP_API_URL}/api/posts/getAverageRating/${post.postId}`
-			// 	// )
-			// 	// setAverageRating(ratingData)
-			// } catch (err) {
-			// 	console.log(err.message)
-			// }
+			try {
+				if(post.postId){
+
+					const { data } = await axios.post(
+						`${process.env.REACT_APP_API_URL}/api/posts/getRating/${post.postId}`,
+						{ userId: currentUser.id }
+					)
+					setUserRating(data)
+				}
+				// const { data: ratingData } = await axios.get(
+				// 	`${process.env.REACT_APP_API_URL}/api/posts/getAverageRating/${post.postId}`
+				// )
+				// setAverageRating(ratingData)
+			} catch (err) {
+				console.log(err.message)
+			}
 		})()
-	}, [])
+	}, [post,currentUser.id])
 
 	useEffect(() => {
 		if (post?.averageRating) {
 			setAverageRating({
-				averageRating: post.averageRating,
+				averageRating: post.averageRating || post.avg_rating,
 				totalLength: post.totalLength,
 				usersRated: post.usersRated,
 			})
@@ -51,7 +55,7 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 	}, [post])
 
 	const handleRating = (idx) => {
-		if (disableRating ) return
+		if (disableRating || !!userRating) return
 
 		// const newStars = postRatingArr.slice(0, idx + 1).map((s) => StarIcon)
 		// setPostRatingArr([
@@ -95,7 +99,8 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 
 			setTimeout(() => {
 				setMessage('')
-				console.log(message)
+        
+        console.log(message)
 			}, 3000)
 		} catch (err) {
 			setMessage(err.message || 'Error submitting rating')
@@ -150,7 +155,7 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 	}, [post.postId, userId, initUserHasRated])
 
 	return (
-		<div className='star-rating'>
+		<div className='star-rating' style={{ marginBottom:10 }}>
 			{postRatingArr.map((star, idx) => {
 				return (
 					<Star
