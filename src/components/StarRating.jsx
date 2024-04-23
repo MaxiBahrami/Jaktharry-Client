@@ -20,7 +20,6 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 	const [userHasRated, setUserHasRated] = useState(false)
 	const [hoverValue, setHoverValue] = useState(0)
 	const { currentUser } = useContext(AuthContext)
-	const [userRating, setUserRating] = useState(null)
 	const [averageRating, setAverageRating] = useState(null)
 
 	useEffect(() => {
@@ -52,7 +51,7 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 	}, [post])
 
 	const handleRating = (idx) => {
-		if (disableRating || !!userRating) return
+		if (disableRating ) return
 
 		// const newStars = postRatingArr.slice(0, idx + 1).map((s) => StarIcon)
 		// setPostRatingArr([
