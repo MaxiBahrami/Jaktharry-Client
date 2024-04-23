@@ -24,25 +24,44 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 	const [averageRating, setAverageRating] = useState(null)
 
 	useEffect(() => {
+    if (!post.postId || !currentUser?.id) return;
 		;(async () => {
 			try {
-				if(post.postId){
+        
+				if(post.postId && currentUser.id){
+          console.log("Fetching rating for post:", post.postId);
+          console.log("User ID:", currentUser.id);
 
-					const { data } = await axios.post(
-						`${process.env.REACT_APP_API_URL}/api/posts/getRating/${post.postId}`,
-						{ userId: currentUser.id }
-					)
-					setUserRating(data)
-				}
-				// const { data: ratingData } = await axios.get(
-				// 	`${process.env.REACT_APP_API_URL}/api/posts/getAverageRating/${post.postId}`
-				// )
-				// setAverageRating(ratingData)
+          const { data } = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/posts/getRating/${post.postId}`,
+            { params: { userId: currentUser.id } }
+          );
+
+				  if (data) {
+            setUserRating(data);
+          } else {
+            setUserRating(null);
+            console.log("No rating found for the post.");
+          }
+				
+				  const { data: ratingData } = await axios.get(
+				  	`${process.env.REACT_APP_API_URL}/api/posts/getAverageRating/${post.postId}`
+				  )
+
+          if (ratingData) {
+            setAverageRating(ratingData);
+          } else {
+            setAverageRating(null);
+            console.log("No average rating found for the post.");
+          }
+        }
 			} catch (err) {
-				console.log(err.message)
-			}
+        console.log("Error fetching ratings:", err);
+        setMessage(err.message || 'Error fetching ratings');
+        
+    }
 		})()
-	}, [post,currentUser.id])
+  }, [post, currentUser.id]);
 
 	useEffect(() => {
 		if (post?.averageRating) {
@@ -55,15 +74,7 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 	}, [post])
 
 	const handleRating = (idx) => {
-		if (disableRating || !!userRating) return
-
-		// const newStars = postRatingArr.slice(0, idx + 1).map((s) => StarIcon)
-		// setPostRatingArr([
-		// 	...newStars,
-		// 	...Array(5 - newStars.length)
-		// 		.fill(0)
-		// 		.map((e) => StarOutline),
-		// ])
+		if (disableRating || !userRating) return
 
 		setAverageRating((prev) => ({
 			...prev,
@@ -93,14 +104,13 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 			)
 
 			setMessage('rating submitted successfully')
+      console.log(message)
 			setIsLoading(false)
 
 			setIsLoading(rating)
 
 			setTimeout(() => {
 				setMessage('')
-        
-        console.log(message)
 			}, 3000)
 		} catch (err) {
 			setMessage(err.message || 'Error submitting rating')
@@ -135,13 +145,16 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 		}
 	}, [disabled, isLoading, post, userHasRated])
 
+
 	useEffect(() => {
 		if (post?.postId && userId && initUserHasRated) {
+			console.log("-------------",userId)
 			const fetchData = async () => {
 				try {
-					const res = await axios.get(
-						`${process.env.REACT_APP_API_URL}/posts/rate/${post.postId}/${userId}`
-					)
+          const res = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/posts/getRating/${post.postId}`,
+            { params: { userId } }
+          );
 
 					const { status } = res.data
 

@@ -67,7 +67,7 @@ const Home = () => {
               <p className="DateClass">{moment(post.date).calendar()}</p>
               {/* Use the truncateText function for post.desc */}
               <p dangerouslySetInnerHTML={sanitizeHTML(truncateText(post.desc, 150))}></p>
-              {post.cat !== "aktiviteter" && <StarRating userId={currentUser?.id} post={post} />}
+              {currentUser && currentUser.id && <StarRating userId={currentUser.id} post={post} />}
               <Button onClick={() => handleClick(post.postId)}>Läs mer</Button>
             </Link>
           </div>
