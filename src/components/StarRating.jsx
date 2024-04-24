@@ -25,9 +25,9 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 
 	useEffect(() => {
     if (!post.postId || !currentUser?.id) return;
-		;(async () => {
+		(async () => {
 			try {
-        
+        console.log("------------")
 				if(post.postId && currentUser.id){
 
           const { data } = await axios.get(
