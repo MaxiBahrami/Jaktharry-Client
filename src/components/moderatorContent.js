@@ -263,6 +263,7 @@ export const TabContent3 = ({ activity }) => {
 
   return (
     <div className="PostClass PostClass9">
+      {reloadData && <p>Loading...</p>}
       {post && (
         <div className="userInfo">
           <p className="text-start ps-3 mt-3">
