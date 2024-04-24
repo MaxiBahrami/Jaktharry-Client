@@ -56,6 +56,11 @@ function CustomNavbar() {
                 </Link>
               </NavDropdown.Item>
               <NavDropdown.Item className="item">
+                <Link to="/?cat=open" className="nav-link itemClass">
+                  Öppen
+                </Link>
+              </NavDropdown.Item>
+              <NavDropdown.Item className="item">
                 <Link to="/?cat=riks" className="nav-link itemClass">
                   RIKS
                 </Link>
