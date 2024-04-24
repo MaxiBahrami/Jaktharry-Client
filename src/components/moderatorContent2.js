@@ -3,25 +3,16 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import del from "../img/del.png";
 import { Link } from "react-router-dom";
-import "react-datetime/css/react-datetime.css";
 
-export const TabContent16 = () => {
-  return (
+export const TabContent11 = ({ kretsar }) => {
+  return(
     <div>
-      <h3>Admin meddelanden</h3>
+      <h5>sssssssssssss</h5>
     </div>
-  );
-};
+  )
+}
 
-export const TabContent17 = () => {
-  return (
-    <div>
-      <h3>Mod meddelanden</h3>
-    </div>
-  );
-};
-
-export const TabContent18 = () => {
+export const TabContent12 = () => {
   const [comments, setComments] = useState([]);
   const [membershipNo, setMembershipNo] = useState("");
   const [userId, setUserId] = useState(null);
@@ -68,11 +59,6 @@ export const TabContent18 = () => {
       fetchData(userId);
     }
   }, [userId]);
-
-  // const handleClick = (postId) => {
-  //   const postUrl = `${window.location.origin}/post/${postId}`;
-  //   window.open(postUrl, "_blank");
-  // };
 
   const handleMembershipNoChange = (event) => {
     setMembershipNo(event.target.value);
@@ -221,7 +207,7 @@ export const TabContent18 = () => {
                     <span>dold </span>
                   )}
                   <span>
-                  <select onChange={(e) => handleVisibilityChange(comment.id, e.target.value)}>
+                  <select onChange={(e) => handleVisibilityChange(comment.id, e.target.value)} >
                     <option value="Dölj">Dölj</option>
                     <option value="Visa">Visa</option>
                   </select>
@@ -241,7 +227,7 @@ export const TabContent18 = () => {
   );
 };
 
-export const TabContent19 = () => {
+export const TabContent13 = () => {
   const [posts, setPosts] = useState([]);
   const [selectedActivity, setSelectedActivity] = useState("");
   const [error, setError] = useState(null);

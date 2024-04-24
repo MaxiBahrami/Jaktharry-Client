@@ -8,7 +8,7 @@ import plus from "../img/plus.png";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext.js";
 
-export const TabContent2 = ({ kretsar }) => {
+export const TabContent1 = ({ kretsar }) => {
   const [posts, setPosts] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -132,7 +132,7 @@ export const TabContent2 = ({ kretsar }) => {
   );
 };
 
-export const TabContent3 = ({ activity }) => {
+export const TabContent4 = ({ activity }) => {
   const [post, setPost] = useState([]);
   const [users, setUsers] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -382,7 +382,7 @@ export const TabContent3 = ({ activity }) => {
   );
 };
 
-export const TabContent5 = () => {
+export const TabContent8 = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {

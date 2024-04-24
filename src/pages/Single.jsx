@@ -374,7 +374,9 @@ const Single = () => {
                     <Card.Title className="text-dark">
                       Tidigare kommentarer ..
                     </Card.Title>
-                    {getPostRes && getPostRes.map((comment, index) => (
+                    {getPostRes && getPostRes
+                    .filter(comment => comment.Visibility === 'show')
+                    .map((comment, index) => (
                       <div className="comment-box" key={index}>
                         <hr />
                         <div className="user">
