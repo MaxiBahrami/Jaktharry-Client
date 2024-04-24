@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState,useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Container, Button } from 'react-bootstrap';
 import axios from 'axios';
@@ -14,6 +14,17 @@ const Home = () => {
   const cat = useLocation().search;
   const navigate = useNavigate();
   moment.locale('sv');
+  const [postsToShow, setPostsToShow] = useState([])
+  const postsPerPage = 10
+  const arrayForHoldingPostsRef = useRef([]);
+  const ref = useRef({ current: postsPerPage });
+  
+  const loopWithSlice = (start, end) => {
+    const slicedPosts = posts.slice(start, end);
+    setPostsToShow(prevPosts => [...prevPosts, ...slicedPosts]);
+    arrayForHoldingPostsRef.current = [...arrayForHoldingPostsRef.current, ...slicedPosts];
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -21,6 +32,8 @@ const Home = () => {
         const res = await axios.get(apiUrl);
         const sortedPosts = res.data.sort((a, b) => new Date(b.date) - new Date(a.date));
         setPosts(sortedPosts);
+        arrayForHoldingPostsRef.current = sortedPosts.slice(0, postsPerPage);
+        setPostsToShow(arrayForHoldingPostsRef.current);
 
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -53,10 +66,22 @@ const Home = () => {
     return { __html: DOMPurify.sanitize(html) };
   };
 
+  useEffect(() => {
+      loopWithSlice(0, postsPerPage)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentUser])
+
+
+    const handleShowMorePosts = () => {
+      loopWithSlice(ref.current.current, ref.current.current + postsPerPage);
+      ref.current.current += postsPerPage;
+    };
+    
+
   return (
     <Container className='home'>
     <div className="posts">
-      {posts.map(post => (
+      {postsToShow.map(post => (
         <div className="post" key={post.postId}>
           <div className="img">
             <img src={post.img} alt="" />
@@ -74,7 +99,10 @@ const Home = () => {
         </div>
       ))}
     </div>
-    </Container>
+    <div className="mt-5 me-5 text-end">
+      <button className='btn btn-dark' onClick={handleShowMorePosts}>Load more</button>
+    </div>    
+  </Container>
   );
 };
 
