@@ -9,6 +9,27 @@ import { Button} from "react-bootstrap";
 import bild from "../img/enter.png"
 import { AuthContext } from "../context/authContext.js";
 
+const kretsarList = [
+  "StockholmCentrala",
+  "Hallstavik",
+  "HaningeTyresö",
+  "Lidingö",
+  "Mälarö",
+  "Norrort",
+  "NorrtäljeNorra",
+  "NorrtäljeSödra",
+  "Nynäshamn",
+  "Rimbo",
+  "SolnaSundbyberg",
+  "Söderort",
+  "Södertälje",
+  "UpplandsBro",
+  "WermdöNacka",
+  "VäsbySollentunaJärfälla",
+  "Västerort",
+  "ÖsteråkerVaxholm",
+];
+
 const Write = () => {
   moment.locale('sv');
   const state = useLocation().state;
@@ -168,11 +189,27 @@ const Write = () => {
                 <input type="radio" checked={cat === "lokalt"} name="cat" value="lokalt" id="lokalt" onChange={e=>setCat(e.target.value)}/>
                 <label htmlFor="lokalt">Lokalt</label>
               </div>
+              <div className="cat">
+                <input type="radio" checked={cat === "open"} name="cat" value="open" id="open" onChange={e=>setCat(e.target.value)}/>
+                <label htmlFor="open">öppen</label>
+              </div>
+              <div className="cat">
+                <input type="radio" name="cat" checked={cat === "kretsar"} value="kretsar" id="kretsar" onChange={e=>setCat(e.target.value)}/>
+                <label htmlFor="kretsar">Kretsar</label>
+              </div>
+              {cat === "kretsar" && (<div>
+                <h6 className="mt-3">Välj Kretsar-kategori:</h6>
+                {kretsarList.map((krets, index) => (
+                  <div key={index} className="ps-4">
+                    <input type="radio" name="cat" checked={cat === krets} value={krets} id={krets} onChange={e=>setCat(e.target.value)}/>
+                    <label htmlFor={krets} >{krets}</label></div>
+                ))}
+              </div>)}
             </div>}
             <div className="cat">
                 <input type="radio" checked={cat === "aktiviteter"} name="cat" value="aktiviteter" id="aktiviteter" onChange={e=>setCat(e.target.value)}/>
                 <label htmlFor="aktiviteter">Aktiviteter</label>
-              </div>
+            </div>
             {cat === "aktiviteter" && (
             <div className="activity-details">
               <hr />
