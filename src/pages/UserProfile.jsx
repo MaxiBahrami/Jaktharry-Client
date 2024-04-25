@@ -7,6 +7,7 @@ import { AuthContext } from "../context/authContext";
 import { Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import IntresentNews from "../components/IntresentNews";
 
 const UserProfile = () => {
   const { currentUser } = useContext(AuthContext);
@@ -16,7 +17,6 @@ const UserProfile = () => {
 
   const handlePostCardButtonClick = async (postId) => {
     let isError = false;
-    console.log("/////////////")
     try {
       const apiUrl = `/api/users/post-signups/${postId}`;
 
@@ -30,9 +30,9 @@ const UserProfile = () => {
   };
 
   const updateUserProfileImg = (img) => {
-    currentUser.img = img;
+    const updatedUser = { ...currentUser, img };
 
-    localStorage.setItem("user", JSON.stringify(currentUser));
+    localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
   const fetchData = async (user) => {
@@ -64,50 +64,49 @@ const UserProfile = () => {
   }, [currentUser]);
   
   return (
-    <>
-      <div className="user-profile-pg w-100">
-        <div className="row mt-5 mx-auto w-75 bg-light">
-          <div className="allChildrenCenter d-flex justify-content-center align-items-center col col-4">
-            <UserAvatar
-              profileImg={currentUser.img}
-              onAvatarUpdate={updateUserProfileImg}
-            />
-          </div>
-          <div className="userInfo col col-6 mx-4">
-            <p className="text-start  mt-3" style={{ fontSize: '15px' }}><strong>Användarnamn: </strong><span> ... {currentUser.firstName} {currentUser.lastName}</span></p>
-            <p className="text-start" style={{ fontSize: '15px' }}><strong>E-post: </strong>{currentUser.email}</p>
-            <p className="text-start" style={{ fontSize: '15px' }}><strong>Telefon: </strong>0{currentUser.phone}</p>
-            <p className="text-start" style={{ fontSize: '15px' }}><strong>Medlemsnr: </strong>#{currentUser.membershipNo}</p>
-            <div className="allChildrenCenter my-3">
-              <Link to="/update-password">Uppdatera ditt lösenord</Link>
-            </div>
+    <div className="user-profile-pg w-100">
+      <div className="row mt-5 mx-auto w-75 bg-light">
+        <div className="allChildrenCenter d-flex justify-content-center align-items-center col col-4">
+          <UserAvatar
+            profileImg={currentUser.img}
+            onAvatarUpdate={updateUserProfileImg}
+          />
+        </div>
+        <div className="userInfo col col-6 mx-4">
+          <p className="text-start  mt-3" style={{ fontSize: '15px' }}><strong>Användarnamn: </strong><span> ... {currentUser.firstName} {currentUser.lastName}</span></p>
+          <p className="text-start" style={{ fontSize: '15px' }}><strong>E-post: </strong>{currentUser.email}</p>
+          <p className="text-start" style={{ fontSize: '15px' }}><strong>Telefon: </strong>0{currentUser.phone}</p>
+          <p className="text-start" style={{ fontSize: '15px' }}><strong>Medlemsnr: </strong>#{currentUser.membershipNo}</p>
+          <div className="allChildrenCenter my-3">
+            <Link to="/update-password" className="btn btn-danger btn-sm">Uppdatera ditt lösenord</Link>
           </div>
         </div>
+      </div>
 
-          <div className="user-post-signups mt-5">
-            <h3>Aktiviteter som du registrerat dig i</h3>
-            {posts.length > 0 ? (
-              <Container className="m-3">
-                <Row xs={1} sm={1}>
-                  {posts.map((post, idx) => {
-                    return (
-                      <Col key={idx}>
-                        <PostCard
-                          post={post}
-                          onButtonClick={handlePostCardButtonClick}
-                        />
-                      </Col>
-                    );
-                  })}
-                </Row>
-              </Container>
-            ) : (
-              <h6 className="text-center">Inga prenumerationer hittades!</h6>
-            )}
-          </div>
-        </div>
-    
-    </>
+      <IntresentNews cat={currentUser} />
+
+      <div className="user-post-signups mt-5">
+        <h5>Aktiviteter som du registrerat dig i</h5>
+        {posts.length > 0 ? (
+          <Container className="m-3">
+            <Row xs={1} sm={1}>
+              {posts.map((post, idx) => {
+                return (
+                  <Col key={idx}>
+                    <PostCard
+                      post={post}
+                      onButtonClick={handlePostCardButtonClick}
+                    />
+                  </Col>
+                );
+              })}
+            </Row>
+          </Container>
+        ) : (
+          <h6 className="text-center">Inga prenumerationer hittades!</h6>
+        )}
+      </div>
+    </div>
   );
 };
 

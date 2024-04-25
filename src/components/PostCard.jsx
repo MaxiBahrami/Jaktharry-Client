@@ -17,7 +17,7 @@ const PostCard = ({ post = {}, onButtonClick }) => {
       </div>
       <div>
         <Button className="btn btn-dark" size="sm" href={`/post/${post.postId}`}>
-          Läs mer
+          Mer info
         </Button>
       </div>
     </div>
