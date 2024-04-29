@@ -109,7 +109,7 @@ const IntresentNews = ({user}) => {
           <span className='mt-1 px-2'>Första intresse är inte satt</span>
         )}
         {newUser.intress2 ? (
-          <span className='mt-1 px-2 text-success'>Andra intresse: {newUser.intress2}</span>
+          <span className='mt-1 px-2 text-success'><strong>Andra intresse: </strong>{newUser.intress2}</span>
         ) : (
           <span className='mt-1 px-2'>Andra intresse är inte satt</span>
         )}

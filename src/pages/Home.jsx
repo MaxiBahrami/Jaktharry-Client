@@ -98,6 +98,12 @@ const Home = () => {
 
   return (
     <Container className='home'>
+      {postsToShow.length === 0 ? (
+      <div className="mt-4 mx-auto w-100 text-center">
+        <h5>Den här kategorin är inte en av dina valda intressekategorier</h5>
+        <h6>För att ändra detta, gå till <Link to="/profile">din profil</Link></h6>
+      </div>
+    ) : (
     <div className="posts">
       {postsToShow.map((post, index) => (
         <div className="post" key={`${post.postId}-${index}`}>
@@ -117,9 +123,11 @@ const Home = () => {
         </div>
       ))}
     </div>
+    )}
     <div className="mt-5 me-5 text-end">
       <button className='btn btn-dark' onClick={handleShowMorePosts}>Load more</button>
-    </div>    
+    </div>  
+      
   </Container>
   );
 };

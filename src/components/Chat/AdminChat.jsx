@@ -33,8 +33,9 @@ function ChatUI() {
         console.error("Error fetching data:", err);
       }
     };
-
-    fetchData();
+    if (currentUser?.id) {
+      fetchData();
+    }
   }, [currentUser.id]);
 
   const handleInputChange = (e) => {
