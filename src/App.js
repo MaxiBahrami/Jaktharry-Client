@@ -59,7 +59,7 @@ const router = createBrowserRouter([
       { path: "/panel", element: <Panel /> },
       { path: "/moderatorPanel", element: <ModeratorPanel /> },
       {
-        path: "/profile",
+        path: "/profile/*",
         element: (
           <PrivateRoute path="/" element={<UserProfile />} />
         )

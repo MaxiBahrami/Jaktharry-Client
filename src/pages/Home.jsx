@@ -30,7 +30,25 @@ const Home = () => {
       try {
         const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts${cat}`;
         const res = await axios.get(apiUrl);
-        const sortedPosts = res.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        let filteredPosts = []
+        let allPosts = res.data;
+
+        if (!currentUser || (!currentUser.intress1 && !currentUser.intress2)) {
+          const sortedPosts = allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+          setPosts(sortedPosts);
+          arrayForHoldingPostsRef.current = sortedPosts.slice(0, postsPerPage);
+          setPostsToShow(arrayForHoldingPostsRef.current);
+          return;
+        }
+
+        if (currentUser.intress1 || currentUser.intress2) {
+          filteredPosts = allPosts.filter(post => {
+            return post.cat === currentUser.intress1 || post.cat === currentUser.intress2 || post.cat === 'aktiviteter';
+          })
+        }else {
+          filteredPosts = allPosts
+        }
+        const sortedPosts = filteredPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
         setPosts(sortedPosts);
         arrayForHoldingPostsRef.current = sortedPosts.slice(0, postsPerPage);
         setPostsToShow(arrayForHoldingPostsRef.current);
@@ -41,7 +59,7 @@ const Home = () => {
   };
 
   fetchData();
-}, [cat]);
+}, [cat,currentUser]);
 
   const truncateText = (text, limit) => {
     // Find the second occurrence of a dot (.)
@@ -81,8 +99,8 @@ const Home = () => {
   return (
     <Container className='home'>
     <div className="posts">
-      {postsToShow.map(post => (
-        <div className="post" key={post.postId}>
+      {postsToShow.map((post, index) => (
+        <div className="post" key={`${post.postId}-${index}`}>
           <div className="img">
             <img src={post.img} alt="" />
           </div>

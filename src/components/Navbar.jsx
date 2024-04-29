@@ -10,6 +10,7 @@ import { chatsState } from "../recoil/atoms/chats";
 import { useRecoilState } from "recoil";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../firebase";
+import message from "../img/message2.png";
 
 function CustomNavbar() {
   const { currentUser, logout } = useContext(AuthContext);
@@ -141,7 +142,7 @@ function CustomNavbar() {
                   {currentUser?.username} Profil
                 </Link>
                 {!isAdmin && <Link to="/messages" className="nav-link" style={{position:"relative"}}>
-                  meddelande
+                <span><img src={message} alt="" style={{ width: '25px',height: '25px'}}/></span>
 
                   {!!messagesCount && <span style={{
                   minWidth: 24,

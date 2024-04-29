@@ -37,7 +37,6 @@ const UserProfile = () => {
 
   const fetchData = async (user) => {
     const userId = user.id;
-    console.log("------------")
     try {
       if (userId) {
         // Fetch activities associated with the user ID
@@ -56,7 +55,6 @@ const UserProfile = () => {
   };
   
   useEffect(() => {
-    console.log("1111111111111")
     if (currentUser) {
 
       fetchData(currentUser);
