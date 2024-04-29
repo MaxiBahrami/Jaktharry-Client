@@ -21,13 +21,17 @@ import React, { useContext } from "react";
 import Panel from "./pages/Panel";
 import ModeratorPanel from "./pages/ModeratorPanel";
 import { AuthContext } from "./context/authContext";
+import { RecoilRoot } from "recoil";
+import ChatUI from "./components/Chat/AdminChat";
 
 const Layout = ()=>{
   return (
     <>
-    <CustomNavbar/>
-    <Outlet/>
-    <Footer/>
+    <RecoilRoot>
+        <CustomNavbar />
+        <Outlet />
+        <Footer />
+      </RecoilRoot>
     </>
   )
 }
@@ -58,6 +62,12 @@ const router = createBrowserRouter([
         path: "/profile",
         element: (
           <PrivateRoute path="/" element={<UserProfile />} />
+        )
+      },
+      {
+        path: "/messages",
+        element: (
+          <PrivateRoute path="/" element={<ChatUI />} />
         )
       },
       {

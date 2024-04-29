@@ -7,7 +7,7 @@ import { TabContent7, TabContent8, TabContent9,
 import { TabContent13 } from "../components/adminContent3.js";  
 import { TabContent14 } from "../components/adminContent4.js";  
 import { TabContent16, TabContent17, TabContent18, TabContent19  } from "../components/adminContent5.js";
-
+import AdminChat from "../components/Chat/AdminChat"
 import { AuthContext } from "../context/authContext";  
 
 
@@ -51,6 +51,7 @@ const tabItems4 = [
   { id: '#link17', title: 'Mod meddelanden', content: <TabContent17 /> },
   { id: '#link18', title: 'Användarkommentarer', content: <TabContent18 /> },
   { id: '#link19', title: 'Inläggets kommentarer', content: <TabContent19 /> },
+  { id: '#link20', title: 'skicka meddelande', content: <AdminChat /> },
 ];
 
 // Define the array containing non-clickable link IDs

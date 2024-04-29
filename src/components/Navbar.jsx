@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../img/JaktHarryLogo.png";
 import adsett from "../img/adsett.png";
@@ -6,14 +6,18 @@ import admin from "../img/admin.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Navbar, NavDropdown, Container, Nav } from "react-bootstrap";
 import { AuthContext } from "../context/authContext";
+import { chatsState } from "../recoil/atoms/chats";
+import { useRecoilState } from "recoil";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { db } from "../firebase";
 
 function CustomNavbar() {
   const { currentUser, logout } = useContext(AuthContext);
-
+  const [allChats, setAllChats] = useRecoilState(chatsState)
   // Check if currentUser is admin
   const isAdmin = currentUser && currentUser.role === 1;
   const isModerator = currentUser && currentUser.role === 2;
-
+  const isUser = currentUser && currentUser.role === 0;
   // Define kretsarList
   const kretsarList = [
     "StockholmCentrala",
@@ -36,6 +40,50 @@ function CustomNavbar() {
     "ÖsteråkerVaxholm",
   ];
 
+  useEffect(() => {
+    if (currentUser && currentUser?.id) {
+      const chatRef = collection(db, 'Chats')
+      const chatQ = isUser ? query(
+        chatRef,
+        where('receiverId', '==', currentUser.id)
+      ) : query(
+        chatRef,
+        where('senderId', '==', currentUser.id)
+      )
+      const unsubscribe = onSnapshot(chatQ, (snapshot) => {
+        snapshot.docChanges().forEach((change, ind, items) => {
+          const { type, doc } = change;
+          if (type === "added") {
+            setAllChats(prev => ([...prev, { ...doc.data(), id: doc.id }].filter((value, index, self) =>
+              index === self.findIndex((t) => (
+                t.id === value.id
+              ))
+            )))
+          }
+          if (type === "removed") {
+            setAllChats((prev) =>
+              prev.filter((chat) => chat.id !== doc.id)
+            );
+          }
+
+          if (type === "modified") {
+            setAllChats((prev) =>
+              prev.map((chat) =>
+                chat.id === doc.id
+                  ? { ...chat, ...doc.data() }
+                  : chat
+              )
+            );
+          }
+        })
+      })
+      return unsubscribe
+    }
+  }, [currentUser,isUser, setAllChats])
+
+  const messagesCount = currentUser && allChats.filter(v => v.receiverId === currentUser.id && v.conversation.find(val => !val.isSeen && val.senderId !== currentUser.id))?.length;
+
+  
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-dark navbar-dark">
       <Container>
@@ -92,6 +140,21 @@ function CustomNavbar() {
                 <Link to="/profile" className="nav-link">
                   {currentUser?.username} Profil
                 </Link>
+                {!isAdmin && <Link to="/messages" className="nav-link" style={{position:"relative"}}>
+                  meddelande
+
+                  {!!messagesCount && <span style={{
+                  minWidth: 24,
+                  minHeight: 24,
+                  backgroundColor: '#664d03',
+                  borderRadius: '50%',
+                  position: 'absolute',
+                  top: 5,
+                  right: 5,
+                  color:'white',
+                  textAlign:'center'
+                }}>{messagesCount}</span>}
+                </Link>}
                 <Link className="nav-link" onClick={logout} to="/">
                   LoggaUt
                 </Link>
