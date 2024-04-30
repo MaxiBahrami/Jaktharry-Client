@@ -130,8 +130,11 @@ function ChatUI() {
       <Row>
         {isUser && <Col sm={3} md={3} lg={3} s>
           <ListGroup>
-            {allChats.filter(v => v.receiverId === currentUser.id)?.map((chat) => (
-              <ListGroup.Item
+            {allChats.filter(v => v.receiverId === currentUser.id)?.map((chat) => {
+              if (!users?.find(v => v.id === chat.senderId)) {
+                return null
+              }
+              return <ListGroup.Item
                 key={chat.id}
                 variant='warning'
                 active={selectedUser.id === chat.senderId}
@@ -150,7 +153,8 @@ function ChatUI() {
                   right: 5,
                 }} />}
               </ListGroup.Item>
-            ))}
+            }
+            )}
           </ListGroup>
         </Col>}
         {isUser && !allChats.filter(v => v.receiverId === currentUser.id)?.length && <p style={{ textAlign: 'center' }}>Inget meddelande från admin</p>}
@@ -214,7 +218,7 @@ function ChatUI() {
                   <p style={{ margin: 0 }}>{message.text}</p>
                 </div>
                 {selectedChat?.conversation?.length - 1 === index && message.senderId === currentUser.id && message.isSeen && <small style={{ textAlign: 'right', color: '#999', fontSize: '0.75rem' }}>
-                Sett
+                  Sett
                 </small>}
               </>
             ))}
