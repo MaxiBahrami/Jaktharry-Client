@@ -4,6 +4,7 @@ import { TabContent1, TabContent4, TabContent8 } from "../components/moderatorCo
 import { TabContent11, TabContent12, TabContent13 } from "../components/moderatorContent2";
 import axios from "axios";
 import { AuthContext } from "../context/authContext";
+import AdminChat from "../components/Chat/AdminChat"
 
 const ModeratorPanel = () => {
   const { currentUser } = useContext(AuthContext);
@@ -56,6 +57,7 @@ const ModeratorPanel = () => {
     { id: '#link11', title: 'Mod meddelanden', content: <TabContent11 /> },
     { id: '#link12', title: 'Användarkommentarer', content: <TabContent12 /> },
     { id: '#link13', title: 'Inläggets kommentarer', content: <TabContent13 /> },
+    { id: '#link20', title: 'skicka meddelande', content: <AdminChat /> },
   ];
 
   // Define the array containing non-clickable link IDs

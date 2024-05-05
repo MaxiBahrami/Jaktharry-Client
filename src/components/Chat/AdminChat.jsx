@@ -1,11 +1,30 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Container, Row, Col, Form, Button, ListGroup, Image } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, ListGroup, Image, Modal } from 'react-bootstrap';
 import axios from 'axios'
 import { AuthContext } from "../../context/authContext";
 import { collection, doc, setDoc, updateDoc, arrayUnion, } from 'firebase/firestore'
 import { db } from "../../firebase"
 import { useRecoilState } from 'recoil';
 import { chatsState } from '../../recoil/atoms/chats';
+
+function ConfirmModal({ show, onHide, onConfirm, loading }) {
+  return (
+    <Modal show={show} onHide={onHide} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Bekräfta åtgärd</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>Är du säker på att du vill skicka detta till alla?</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onHide}>
+          Annullera
+        </Button>
+        <Button variant="warning" onClick={onConfirm} disabled={loading}>
+          Bekräfta
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+}
 
 
 function ChatUI() {
@@ -16,7 +35,8 @@ function ChatUI() {
   const [users, setUsers] = useState([]);
   const [allChats] = useRecoilState(chatsState)
   const [loading, setLoading] = useState(false)
-  const isAdmin = currentUser && currentUser.role === 1;
+  const [showConfirmation, setShowConfirmation] = useState(false)
+  const isAdmin = currentUser && (currentUser.role === 1 || currentUser.role === 2);
   const isUser = currentUser && currentUser.role === 0;
 
   const handleSearchText = (e) => {
@@ -46,20 +66,55 @@ function ChatUI() {
     setSelectedUser(user);
   };
 
-  const selectedChat = allChats.find(v => isUser ? (v.senderId === selectedUser.id) : (v.receiverId === selectedUser.id))
+  const selectedChat = allChats.find(v => v.senderId === selectedUser.id || v.receiverId === selectedUser.id)
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (inputText.trim() !== '' && currentUser?.id && selectedUser?.id) {
+    e?.preventDefault();
+    if (inputText.trim() !== '' && currentUser?.id && (selectedUser?.id || selectedUser === 'all')) {
+      setLoading(true)
 
       try {
+        if (selectedUser === 'all') {
+          allChats.map(async v => {
+            if (v?.id) {
+              await updateDoc(doc(db, 'Chats', v.id), {
+                conversation: arrayUnion({ text: inputText, senderId: currentUser?.id, time: new Date(), isSeen: false })
+              })
+            }
+          })
+          const myChats = allChats?.filter(v => v.senderId === currentUser.id || v.receiverId === currentUser.id)
+          const uids = myChats.map(v => {
+            if (v.senderId !== currentUser.id) {
+              return v.senderId
+            } else {
+              return v.receiverId
+            }
+          })
+
+          const noChatsWith = users.filter(v => !uids.includes(v.id))
+
+          await Promise.all(noChatsWith.map(async user => {
+            const colRef = collection(db, 'Chats')
+            const docId = doc(colRef).id
+            const payload = {
+              id: docId,
+              time: new Date(),
+              senderId: currentUser?.id,
+              receiverId: user?.id,
+              conversation: [{ text: inputText, senderId: currentUser?.id, time: new Date(), isSeen: false }]
+            }
+            await setDoc(doc(db, 'Chats', docId), payload)
+          }))
+          setShowConfirmation(false)
+          return setInputText('');
+        }
+
         if (selectedChat?.id) {
           await updateDoc(doc(db, 'Chats', selectedChat.id), {
             conversation: arrayUnion({ text: inputText, senderId: currentUser?.id, time: new Date(), isSeen: false })
           })
         } else {
 
-          setLoading(true)
           const colRef = collection(db, 'Chats')
           const docId = doc(colRef).id
           const payload = {
@@ -124,11 +179,29 @@ function ChatUI() {
         })
       })()
     }
-  }, [selectedChat,currentUser.id])
+  }, [selectedChat, currentUser.id])
+
+  useEffect(() => {
+    if (users.length) {
+
+      const myChats = allChats?.filter(v => v.senderId === currentUser.id || v.receiverId === currentUser.id)
+      const uids = myChats.map(v => {
+        if (v.senderId !== currentUser.id) {
+          return v.senderId
+        } else {
+          return v.receiverId
+        }
+      })
+
+      const noChatsWith = users.filter(v => !uids.includes(v.id))
+      console.log({ noChatsWith })
+    }
+  }, [users, allChats])
+
   return (
     <Container fluid style={{ paddingTop: 10 }}>
       <Row>
-        {isUser && <Col sm={3} md={3} lg={3} s>
+        {/* {isUser && <Col sm={3} md={3} lg={3} s>
           <ListGroup>
             {allChats.filter(v => v.receiverId === currentUser.id)?.map((chat) => {
               if (!users?.find(v => v.id === chat.senderId)) {
@@ -156,10 +229,10 @@ function ChatUI() {
             }
             )}
           </ListGroup>
-        </Col>}
-        {isUser && !allChats.filter(v => v.receiverId === currentUser.id)?.length && <p style={{ textAlign: 'center' }}>Inget meddelande från admin</p>}
-        {isAdmin && <Col sm={3} md={3} lg={3} s>
-          <h6 style={{ paddingTop: 10 }}>Välj en användare</h6>
+        </Col>} */}
+        {/* {isUser && !allChats.filter(v => v.receiverId === currentUser.id)?.length && <p style={{ textAlign: 'center' }}>Inget meddelande från admin</p>} */}
+        <Col sm={3} md={3} lg={3}>
+          <h6 style={{ paddingTop: 10 }}>{isUser ? 'Välj en administratör' : 'Välj en användare'}</h6>
           <ListGroup>
             <ListGroup.Item>
               <Form.Control
@@ -169,7 +242,15 @@ function ChatUI() {
                 onChange={handleSearchText}
               />
             </ListGroup.Item>
-            {users?.filter(v => v.role === 0 && v?.username?.toLowerCase()?.includes(searchText))?.map((user) => (
+            {isAdmin && <ListGroup.Item
+              variant='warning'
+              active={selectedUser === 'all'}
+              onClick={() => handleUserSelect('all')}
+              style={{ display: 'flex', gap: '10px', position: 'relative', textAlign: 'center' }}
+            >
+              Allt
+            </ListGroup.Item>}
+            {users?.filter(v => isUser ? (v.role === 1 || v.role === 2) : true)?.filter(v => v?.username?.toLowerCase()?.includes(searchText))?.map((user) => (
               <ListGroup.Item
                 key={user.id}
                 variant='warning'
@@ -179,7 +260,7 @@ function ChatUI() {
               >
                 <Image src={user?.img} style={{ width: 24, height: 24 }} roundedCircle /> {user.username}
 
-                {!!allChats.filter(v => v.receiverId === currentUser.id && v.conversation.find(val => !val.isSeen && val.senderId !== currentUser.id))?.length && <span style={{
+                {!!allChats.filter(v => (v.receiverId === currentUser.id || v.senderId === currentUser.id) && !!v.conversation.filter(val => !val.isSeen && val.senderId !== currentUser.id && val.senderId === user.id)?.length)?.length && <span style={{
                   width: 10,
                   height: 10,
                   backgroundColor: '#664d03',
@@ -194,17 +275,17 @@ function ChatUI() {
               <p>Användaren hittades inte!</p>
             </ListGroup.Item>}
           </ListGroup>
-        </Col>}
+        </Col>
         <Col sm={9} md={9} lg={9}>
           {isAdmin && <h1 style={{ fontSize: 24 }}>{selectedUser?.id ? `Chatta med ${selectedUser.username}` : 'Välj en användare'}</h1>}
           <div style={{ height: '60vh', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
             {selectedChat?.conversation?.map((message, index) => (
-              <>
+              <React.Fragment key={index}>
                 {(getTimeString(message.time, selectedChat?.conversation?.[index + 1]?.time).isOneHourApart || index === 0) && <small style={{ textAlign: 'center', color: '#999', fontSize: '0.75rem' }}>
                   {getTimeString(message.time).time1}
                 </small>}
                 <div
-                  key={index}
+
                   style={{
                     backgroundColor: message.senderId === currentUser.id ? '#664d03' : '#f0f0f0',
                     color: message.senderId === currentUser.id ? '#ffffff' : '#000000',
@@ -220,10 +301,10 @@ function ChatUI() {
                 {selectedChat?.conversation?.length - 1 === index && message.senderId === currentUser.id && message.isSeen && <small style={{ textAlign: 'right', color: '#999', fontSize: '0.75rem' }}>
                   Sett
                 </small>}
-              </>
+              </React.Fragment>
             ))}
           </div>
-          {!!selectedUser?.id && <Form onSubmit={handleSubmit} style={{ display: 'flex', gap: 5 }}>
+          {(selectedUser === 'all' || !!selectedUser?.id) && <Form onSubmit={selectedUser === 'all' ? e => {e?.preventDefault();setShowConfirmation(true);} : handleSubmit} style={{ display: 'flex', gap: 5 }}>
             <Form.Group controlId="formBasicMessage" style={{ flex: 1 }}>
               <Form.Control
                 type="text"
@@ -233,13 +314,14 @@ function ChatUI() {
               />
             </Form.Group>
             <Button variant="warning" type="submit" style={{ backgroundColor: '#664d03', color: "#fff" }}
-              disabled={loading || !selectedUser?.id}
+              disabled={loading || inputText.trim() === ""}
             >
               Skicka
             </Button>
           </Form>}
         </Col>
       </Row>
+      <ConfirmModal show={showConfirmation} onHide={_ => setShowConfirmation(false)} onConfirm={handleSubmit} loading={loading} />
     </Container>
   );
 }

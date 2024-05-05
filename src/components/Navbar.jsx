@@ -41,15 +41,21 @@ function CustomNavbar() {
     "ÖsteråkerVaxholm",
   ];
 
+  const handleLogout = () => {
+    setAllChats([])
+    logout()
+  }
+
   useEffect(() => {
-    if (currentUser && currentUser?.id) {
+    if (currentUser?.id) {
       const chatRef = collection(db, 'Chats')
-      const chatQ = isUser ? query(
-        chatRef,
-        where('receiverId', '==', currentUser.id)
-      ) : query(
+      const chatQ = query(
         chatRef,
         where('senderId', '==', currentUser.id)
+      )
+      const receiverChatQ = query(
+        chatRef,
+        where('receiverId', '==', currentUser.id)
       )
       const unsubscribe = onSnapshot(chatQ, (snapshot) => {
         snapshot.docChanges().forEach((change, ind, items) => {
@@ -78,11 +84,41 @@ function CustomNavbar() {
           }
         })
       })
-      return unsubscribe
-    }
-  }, [currentUser,isUser, setAllChats])
+      const unsubscribeReceiver = onSnapshot(receiverChatQ, (snapshot) => {
+        snapshot.docChanges().forEach((change, ind, items) => {
+          const { type, doc } = change;
+          if (type === "added") {
+            setAllChats(prev => ([...prev, { ...doc.data(), id: doc.id }].filter((value, index, self) =>
+              index === self.findIndex((t) => (
+                t.id === value.id
+              ))
+            )))
+          }
+          if (type === "removed") {
+            setAllChats((prev) =>
+              prev.filter((chat) => chat.id !== doc.id)
+            );
+          }
 
-  const messagesCount = currentUser && allChats.filter(v => v.receiverId === currentUser.id && v.conversation.find(val => !val.isSeen && val.senderId !== currentUser.id))?.length;
+          if (type === "modified") {
+            setAllChats((prev) =>
+              prev.map((chat) =>
+                chat.id === doc.id
+                  ? { ...chat, ...doc.data() }
+                  : chat
+              )
+            );
+          }
+        })
+      })
+      return () => {
+        unsubscribe()
+        unsubscribeReceiver()
+      }
+    }
+  }, [currentUser, isUser])
+
+  const messagesCount = currentUser && allChats.filter(v => ((v.receiverId === currentUser.id || v.senderId === currentUser.id) && v.conversation.find(val => !val.isSeen && val.senderId !== currentUser.id)))?.length;
 
   
   return (
@@ -147,22 +183,22 @@ function CustomNavbar() {
                 <Link to="/profile" className="nav-link">
                   {currentUser?.username} <i class="fa fa-address-card-o"></i>
                 </Link>
-                {!isAdmin && <Link to="/messages" className="nav-link" style={{position:"relative"}}>
-                <span><img src={message} alt="" style={{ width: '25px',height: '25px'}}/></span>
+                {!isAdmin && <Link to="/messages" className="nav-link" style={{ position: "relative" }}>
+                  <span><img src={message} alt="" style={{ width: '25px', height: '25px' }} /></span>
 
                   {!!messagesCount && <span style={{
-                  minWidth: 24,
-                  minHeight: 24,
-                  backgroundColor: '#664d03',
-                  borderRadius: '50%',
-                  position: 'absolute',
-                  top: 5,
-                  right: 5,
-                  color:'white',
-                  textAlign:'center'
-                }}>{messagesCount}</span>}
+                    minWidth: 24,
+                    minHeight: 24,
+                    backgroundColor: '#664d03',
+                    borderRadius: '50%',
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    color: 'white',
+                    textAlign: 'center'
+                  }}>{messagesCount}</span>}
                 </Link>}
-                <Link className="nav-link" onClick={logout} to="/">
+                <Link className="nav-link" onClick={handleLogout} to="/">
                   LoggaUt
                 </Link>
               </>
