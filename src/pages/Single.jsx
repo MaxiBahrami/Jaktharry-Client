@@ -34,6 +34,14 @@ const Single = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [takenSpot, setTakenSpot] = useState(0);
 
+
+  useEffect(() => {
+    // Check if the user is not logged in, then navigate to the login page
+    if (!currentUser) {
+      navigate("/login");
+    }
+  }, [currentUser, navigate]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,7 +65,7 @@ const Single = () => {
     };
     const checkRegistrationStatus = async () => {
       const value1 = {  
-        userId: currentUser.id,
+        userId: currentUser?.id,
         activityToReg: postId}
       try {
         const exist = await userPostExist(value1 );
@@ -69,7 +77,7 @@ const Single = () => {
     getEntries();
     fetchData();
     checkRegistrationStatus();
-  }, [postId, currentUser.id]);
+  }, [postId, currentUser?.id]);
 
   const handleDelete = async (post) => {
     try {
@@ -143,7 +151,7 @@ const Single = () => {
       const values = {
         postId: postId,
         comment: newComment,
-        uid: currentUser.id,
+        uid: currentUser?.id,
         date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
       };
 
@@ -238,8 +246,8 @@ const Single = () => {
   };
 
   return (
+     currentUser ? (
     <Container className="single">
-      
       <div className="content">
         {/* Post Details */}
         <div>
@@ -253,7 +261,7 @@ const Single = () => {
                 <span>{post.username}</span>
                 <p>{moment(post.date).calendar()}</p>
               </div>
-              {currentUser.id === post.uid || currentUser.role === 1 ? (
+              {currentUser?.id === post.uid || currentUser.role === 1 ? (
                 <div className="edit">
                   <Link
                     to={`/write?edit=2`}
@@ -276,7 +284,7 @@ const Single = () => {
           )}
 
           <h1>{post.title}</h1>
-          {currentUser && currentUser.id && <StarRating userId={currentUser.id} post={post} />}
+          {currentUser && currentUser?.id && <StarRating userId={currentUser?.id} post={post} />}
           <p
             className="descP"
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.desc) }}
@@ -442,16 +450,18 @@ const Single = () => {
           </div>
           <Button 
             variant="primary" 
-            onClick={(e) => handleUserSignUp(postId, currentUser.id, e)}
+            onClick={(e) => handleUserSignUp(postId, currentUser?.id, e)}
             className="btn-dark mt-4">
             Registrera
           </Button>
         </Modal.Body>
       </Modal>
-
     </Container>
-  );
+  ) : (<div>
+    Please log in to access this page.
+  </div>)
 
+)
 };
 
 export default Single;

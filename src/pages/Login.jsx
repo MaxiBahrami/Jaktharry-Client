@@ -33,7 +33,7 @@ const Login = () => {
   return (
     <Container className='auth'>
       <h1>Logga in</h1>
-      <form >
+      <form>
         <input required type="text" placeholder='Användarnamn ' name="username" onChange={handleChange}/>
         <input required type="password " placeholder='Lösenord' name="password" onChange={handleChange}/>
         <Button onClick={handleSubmit}>Logga in</Button>
