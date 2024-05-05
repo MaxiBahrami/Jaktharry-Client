@@ -105,11 +105,6 @@ function CustomNavbar() {
                 </Link>
               </NavDropdown.Item>
               <NavDropdown.Item className="item">
-                <Link to="/?cat=open" className="nav-link itemClass">
-                  Öppen
-                </Link>
-              </NavDropdown.Item>
-              <NavDropdown.Item className="item">
                 <Link to="/?cat=riks" className="nav-link itemClass">
                   RIKS
                 </Link>
@@ -117,6 +112,17 @@ function CustomNavbar() {
               <NavDropdown.Item className="item">
                 <Link to="/?cat=lans" className="nav-link itemClass">
                   LÄNS
+                </Link>
+              </NavDropdown.Item>
+              <NavDropdown.Item className="item">
+                <Link to="/?cat=JAQT" className="nav-link itemClass">
+                  JAQT
+                </Link>
+              </NavDropdown.Item>
+              
+              <NavDropdown.Item className="item">
+                <Link to="/?cat=open" className="nav-link itemClass">
+                  Öppen
                 </Link>
               </NavDropdown.Item>
               <NavDropdown
@@ -134,12 +140,12 @@ function CustomNavbar() {
               </NavDropdown>
             </NavDropdown>
             <Link to="/?cat=aktiviteter" className="nav-link">
-              AKTIVITETER
+              <b>AKTIVITETER</b>
             </Link>
             {currentUser ? (
               <>
                 <Link to="/profile" className="nav-link">
-                  {currentUser?.username} Profil
+                  {currentUser?.username} <i class="fa fa-address-card-o"></i>
                 </Link>
                 {!isAdmin && <Link to="/messages" className="nav-link" style={{position:"relative"}}>
                 <span><img src={message} alt="" style={{ width: '25px',height: '25px'}}/></span>
@@ -194,3 +200,4 @@ function CustomNavbar() {
 }
 
 export default CustomNavbar;
+

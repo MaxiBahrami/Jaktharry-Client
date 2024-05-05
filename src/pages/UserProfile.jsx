@@ -81,7 +81,7 @@ const UserProfile = () => {
         </div>
       </div>
 
-      <IntresentNews cat={currentUser} />
+      <IntresentNews currentUser={currentUser} />
 
       <div className="user-post-signups mt-5">
         <h5>Aktiviteter som du registrerat dig i</h5>

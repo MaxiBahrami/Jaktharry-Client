@@ -1,10 +1,10 @@
-import React, { useContext, useState} from 'react';
-import { AuthContext } from '../context/authContext';
+import React, { useState} from 'react';
 import axios from "axios";
+import { useContext } from 'react';
+import { AuthContext } from '../context/authContext';
 
-const IntresentNews = ({user}) => {
-  const { currentUser } = useContext(AuthContext);
-  const [newUser, setNewUser] = useState(currentUser);
+const IntresentNews = ({ currentUser }) => {
+  const { setCurrentUser } = useContext(AuthContext);
   const [showCategoryList, setShowCategoryList] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [tempSelectedCategories, setTempSelectedCategories] = useState([]);
@@ -13,6 +13,7 @@ const IntresentNews = ({user}) => {
     "Riks",
     "Läns",
     "Öppen",
+    "JAQT",
     "StockholmCentrala",
     "Hallstavik",
     "HaningeTyresö",
@@ -32,6 +33,22 @@ const IntresentNews = ({user}) => {
     "Västerort",
     "ÖsteråkerVaxholm",
   ];
+
+  const displayCategories = (category) => {
+    switch (category) {
+      case '':
+        return 'Alla kategorier';
+      case 'riks':
+        return 'Riks';
+      case 'lans':
+        return 'Läns';
+      case 'open':
+        return 'Öppen';
+      // Add more cases for other categories as needed
+      default:
+        return category;
+    }
+  };
 
   const handleInterestChange = () => {
     setShowCategoryList(!showCategoryList);
@@ -63,7 +80,7 @@ const IntresentNews = ({user}) => {
       const mappedCategories = tempSelectedCategories.map(category => {
         switch (category) {
           case 'Alla kategorier':
-            return '(NULL,NULL)';
+            return '';
           case 'Riks':
             return 'riks';
           case 'Läns':
@@ -85,12 +102,11 @@ const IntresentNews = ({user}) => {
       // Update the selected categories state
       setSelectedCategories([...tempSelectedCategories]);
 
-      setNewUser({
-        ...newUser,
-        intress1: tempSelectedCategories[0],
-        intress2: tempSelectedCategories[1],
+      setCurrentUser({
+        ...currentUser,
+        intress1: mappedCategories[0],
+        intress2: mappedCategories[1]
       });
-
       // Close the category list after saving
       setShowCategoryList(false);
 
@@ -103,16 +119,40 @@ const IntresentNews = ({user}) => {
     <div className='mt-5'>
       <h5>Intressanta nyheter: </h5>
       <div className='m-4 border-1 border p-2 w-100 d-flex justify-content-between'>
-        {newUser.intress1 ? (
-          <span className='mt-1 px-2 text-success'><strong>Första intresse: </strong>{newUser.intress1}</span>
+        
+        {currentUser.intress1 &&  currentUser.intress2 ? (
+          <div>
+            <p className='mt-1 px-2 text-success'>Intresserad av: 
+            <strong className='px-3 text-success'>{displayCategories(currentUser.intress1)} </strong> & 
+            <strong className='px-3 text-success'>{displayCategories(currentUser.intress2)} </strong>nyheter</p>
+          </div>
         ) : (
-          <span className='mt-1 px-2'>Första intresse är inte satt</span>
+          <div>
+            {currentUser.intress1 &&  !currentUser.intress2 ? (
+              <div>
+                <span className='mt-1 px-2 text-success'>Intresserad av: 
+                <strong className='px-3 text-success'>{displayCategories(currentUser.intress1)} </strong>nyheter</span>
+              </div>
+            ) : (
+              <div>
+                {!currentUser.intress1 &&  currentUser.intress2 ? (
+                  <div>
+                    <span className='mt-1 px-2 text-success'>Intresserad av: 
+                    <strong className='px-3 text-success'>{displayCategories(currentUser.intress2)} </strong>nyheter</span>
+                  </div>
+                ) : (
+                  <div>
+                    <span className='mt-1 px-2'>Alla nyheter</span>   
+                  </div>
+
+                )}  
+              </div>
+            )}  
+          </div>
         )}
-        {newUser.intress2 ? (
-          <span className='mt-1 px-2 text-success'><strong>Andra intresse: </strong>{newUser.intress2}</span>
-        ) : (
-          <span className='mt-1 px-2'>Andra intresse är inte satt</span>
-        )}
+
+
+
         <p className=' px-2'>
           <button className='btn btn-outline-success' onClick={handleInterestChange}>Ändra intresse</button>
         </p>
