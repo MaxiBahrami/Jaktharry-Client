@@ -42,8 +42,8 @@ const Register = () => {
       <h1>Registreringsformulär</h1>
       <form >
         <div>
-            <label><img src={user} alt="" style={{ width: '15px',height: '15px' }}/></label>
-            <span><input required type="text" placeholder='Användarnamn' name='username' onChange={handleChange}/></span>
+            <label><img src={user} alt="" style={{ width: '15px',height: '15px' }}/> Användarnamn</label>
+            <span><input required type="text" placeholder='Välj användarnamn' name='username' onChange={handleChange} /></span>
         </div>
         <div>
             <label>Förnamn</label>

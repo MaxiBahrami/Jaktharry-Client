@@ -167,6 +167,7 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 		<div className='star-rating' style={{ marginBottom:10 }}>
 			{postRatingArr.map((star, idx) => {
 				return (
+          <div>
 					<Star
 						onMouseOver={() => setHoverValue(idx + 1)}
 						// onClick={() => handleRating(idx + 1)}
@@ -190,6 +191,7 @@ const StarRating = ({ disabled, userId, post, initUserHasRated }) => {
 						strokeWidth={2}
 						onMouseLeave={() => setHoverValue(0)}
 					/>
+          </div>
 				)
 			})}
 		</div>

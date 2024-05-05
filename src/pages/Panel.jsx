@@ -1,6 +1,6 @@
 import React , { useContext }from "react";
 import { Col, Container, ListGroup, Row, Tab } from "react-bootstrap";
-import { TabContent3, TabContent4, 
+import { TabContent3, TabContent4, TabContent2, TabContent10,
   TabContent5} from "../components/adminContent.js";
 import { TabContent7, TabContent8, TabContent9,
     TabContent12} from "../components/adminContent2.js";
@@ -27,7 +27,9 @@ const Panel = () => {
 const tabItems = [
   { id: '#link1', title: 'INLÄGG' },
   { id: '#link3', title: 'Riks', content: <TabContent3 /> },
-  { id: '#link4', title: 'Lans', content: <TabContent4 /> },
+  { id: '#link4', title: 'Läns', content: <TabContent4 /> },
+  { id: '#link2', title: 'JAQT', content: <TabContent2 /> },
+  { id: '#link10', title: 'Öppen', content: <TabContent10 /> },
   { id: '#link5', title: 'Kretsar', content: <TabContent5 /> },
 ];
 
