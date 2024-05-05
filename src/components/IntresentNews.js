@@ -181,7 +181,6 @@ const IntresentNews = ({ currentUser }) => {
               <button className='btn btn-outline-success btn-sm' onClick={handleInterestSaving}>
                 Ändra intresse
               </button>
-              <p className='text-danger'><small>Efter...Du måste logga ut och logga in igen för att återställa data</small></p>
             </div>
           </div>
         )}
