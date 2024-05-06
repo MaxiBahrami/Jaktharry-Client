@@ -33,6 +33,22 @@ const Single = () => {
   axios.defaults.withCredentials = true;
   const [isLoading, setIsLoading] = useState(false);
   const [takenSpot, setTakenSpot] = useState(0);
+  const [postOwner,setPostOwner] = useState(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const apiUrl = `${process.env.REACT_APP_API_URL}/api/users`;
+        const res = await axios.get(apiUrl);
+        setPostOwner(res?.data?.find(v => v?.id === post?.uid));
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+    if (post?.uid) {
+      fetchData();
+    }
+  }, [post]);
 
 
   useEffect(() => {
@@ -245,6 +261,14 @@ const Single = () => {
     }
   };
 
+  const handleSupportClick = () => {
+    const email =postOwner.email;
+    const subject = encodeURIComponent(post.title || '');
+    const emailBody = encodeURIComponent("Hello, ");
+
+    window.location.href = `mailto:${email}?subject=${subject}&body=${emailBody}`;
+  };
+
   return (
      currentUser ? (
     <Container className="single">
@@ -330,8 +354,8 @@ const Single = () => {
                 <img src={verify} alt="" />
                 <h5 className="">Du är registrerad för denna aktivitet</h5>
                 <p className="text-center text-dark"><small> För att avbryta skicka e-post till admin</small>
-                <Link><span><img src={message} alt="" style={{ width: '20px',height: '20px' }}/></span>
-                </Link></p>
+                <span onClick={handleSupportClick} style={{cursor:'pointer'}}><img src={message} alt="" style={{ width: '20px',height: '20px' }}/></span>
+                </p>
               </div>
               }
               { post.total >= post.spots && !Registered && <div className="textClass text-center">
