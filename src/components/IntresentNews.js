@@ -124,21 +124,21 @@ const IntresentNews = ({ currentUser }) => {
           <div>
             <p className='mt-1 px-2 text-success'>Intresserad av: 
             <strong className='px-3 text-success'>{displayCategories(currentUser.intress1)} </strong> & 
-            <strong className='px-3 text-success'>{displayCategories(currentUser.intress2)} </strong>nyheter</p>
+            <strong className='px-3 text-success'>{displayCategories(currentUser.intress2)} </strong></p>
           </div>
         ) : (
           <div>
             {currentUser.intress1 &&  !currentUser.intress2 ? (
               <div>
                 <span className='mt-1 px-2 text-success'>Intresserad av: 
-                <strong className='px-3 text-success'>{displayCategories(currentUser.intress1)} </strong>nyheter</span>
+                <strong className='px-3 text-success'>{displayCategories(currentUser.intress1)} </strong></span>
               </div>
             ) : (
               <div>
                 {!currentUser.intress1 &&  currentUser.intress2 ? (
                   <div>
                     <span className='mt-1 px-2 text-success'>Intresserad av: 
-                    <strong className='px-3 text-success'>{displayCategories(currentUser.intress2)} </strong>nyheter</span>
+                    <strong className='px-3 text-success'>{displayCategories(currentUser.intress2)} </strong></span>
                   </div>
                 ) : (
                   <div>

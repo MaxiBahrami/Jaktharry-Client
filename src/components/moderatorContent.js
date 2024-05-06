@@ -444,8 +444,8 @@ export const TabContent8 = () => {
                   {formatLastActivity(user.lastActivity)}
                 </td>
                 <td width="20%">{user.username}</td>
-                <td width="30%">{user.firstName} {user.lastName}</td>
-                <td width="20%">
+                <td width="30%" className="text-start">{user.firstName} {user.lastName}</td>
+                <td width="20%" className="text-start">
                   <p className="m-0">{user.email} </p>
                   <p className="m-0 text-dark">0{user.phone} </p>
                 </td>

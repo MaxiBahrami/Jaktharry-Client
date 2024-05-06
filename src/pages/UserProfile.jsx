@@ -62,8 +62,8 @@ const UserProfile = () => {
   }, [currentUser]);
   
   return (
-    <div className="user-profile-pg w-100">
-      <div className="row mt-5 mx-auto w-75 bg-light">
+    <Container className="user-profile-pg w-100">
+      <div className="row mt-5 mx-auto bg-light profilePic">
         <div className="allChildrenCenter d-flex justify-content-center align-items-center col col-4">
           <UserAvatar
             profileImg={currentUser.img}
@@ -71,12 +71,12 @@ const UserProfile = () => {
           />
         </div>
         <div className="userInfo col col-6 mx-4">
-          <p className="text-start  mt-3" style={{ fontSize: '15px' }}><strong>Användarnamn: </strong><span> ... {currentUser.firstName} {currentUser.lastName}</span></p>
+          <p className="text-start  mt-3" style={{ fontSize: '15px' }}><strong>Användarnamn: </strong>{currentUser.firstName} {currentUser.lastName}</p>
           <p className="text-start" style={{ fontSize: '15px' }}><strong>E-post: </strong>{currentUser.email}</p>
           <p className="text-start" style={{ fontSize: '15px' }}><strong>Telefon: </strong>0{currentUser.phone}</p>
           <p className="text-start" style={{ fontSize: '15px' }}><strong>Medlemsnr: </strong>#{currentUser.membershipNo}</p>
-          <div className="allChildrenCenter my-3">
-            <Link to="/update-password" className="btn btn-danger btn-sm">Uppdatera ditt lösenord</Link>
+          <div className="text-end mx-5">
+          <Link to="/update-password" className="btn btn-danger btn-sm w-auto my-3">Uppdatera ditt lösenord</Link>
           </div>
         </div>
       </div>
@@ -104,7 +104,7 @@ const UserProfile = () => {
           <h6 className="text-center">Inga prenumerationer hittades!</h6>
         )}
       </div>
-    </div>
+    </Container>
   );
 };
 
