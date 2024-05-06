@@ -116,6 +116,7 @@ function CustomNavbar() {
         unsubscribeReceiver()
       }
     }
+    // eslint-disable-next-line
   }, [currentUser, isUser])
 
   const messagesCount = currentUser && allChats.filter(v => ((v.receiverId === currentUser.id || v.senderId === currentUser.id) && v.conversation.find(val => !val.isSeen && val.senderId !== currentUser.id)))?.length;

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Col, Container, ListGroup, Row, Tab } from "react-bootstrap";
 import { TabContent1, TabContent4, TabContent8 } from "../components/moderatorContent";
-import { TabContent11, TabContent12, TabContent13 } from "../components/moderatorContent2";
+import { TabContent12, TabContent13 } from "../components/moderatorContent2";
 import axios from "axios";
 import { AuthContext } from "../context/authContext";
 import AdminChat from "../components/Chat/AdminChat"
@@ -54,7 +54,6 @@ const ModeratorPanel = () => {
 
   const tabItems4 = [
     { id: '#link10', title: 'Interaktion' },
-    { id: '#link11', title: 'Mod meddelanden', content: <TabContent11 /> },
     { id: '#link12', title: 'Användarkommentarer', content: <TabContent12 /> },
     { id: '#link13', title: 'Inläggets kommentarer', content: <TabContent13 /> },
     { id: '#link20', title: 'skicka meddelande', content: <AdminChat /> },

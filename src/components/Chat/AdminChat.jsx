@@ -196,6 +196,7 @@ function ChatUI() {
       const noChatsWith = users.filter(v => !uids.includes(v.id))
       console.log({ noChatsWith })
     }
+    // eslint-disable-next-line
   }, [users, allChats])
 
   return (

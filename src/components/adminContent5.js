@@ -5,21 +5,6 @@ import del from "../img/del.png";
 import { Link } from "react-router-dom";
 import "react-datetime/css/react-datetime.css";
 
-export const TabContent16 = () => {
-  return (
-    <div>
-      <h3>Admin meddelanden</h3>
-    </div>
-  );
-};
-
-export const TabContent17 = () => {
-  return (
-    <div>
-      <h3>Mod meddelanden</h3>
-    </div>
-  );
-};
 
 export const TabContent18 = () => {
   const [comments, setComments] = useState([]);
@@ -68,11 +53,6 @@ export const TabContent18 = () => {
       fetchData(userId);
     }
   }, [userId]);
-
-  // const handleClick = (postId) => {
-  //   const postUrl = `${window.location.origin}/post/${postId}`;
-  //   window.open(postUrl, "_blank");
-  // };
 
   const handleMembershipNoChange = (event) => {
     setMembershipNo(event.target.value);
@@ -252,7 +232,7 @@ export const TabContent19 = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=aktiviteter`;
+        const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts`;
         const res = await axios.get(apiUrl);
         const sortedPosts = res.data.sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -316,13 +296,13 @@ export const TabContent19 = () => {
   return (
     <div className="PostClass PostClass9">
       <h3 className="labelClass" htmlFor="form1">
-        Välj aktivitetens namn
+        Välj inläggets namn
       </h3>
       <select className="inputClass" onChange={handleOptionSelect}>
-        <option>Välj en aktivitet</option>
+        <option>Välj inlägg</option>
         {posts.map((activity, index) => (
           <option key={index} value={activity.postId}>
-            {activity.title}
+            #{activity.postId} - {activity.title}
           </option>
         ))}
       </select>
@@ -331,34 +311,51 @@ export const TabContent19 = () => {
       </button>
       <div>
         {error && <p>Error: {error}</p>}{" "}
-        {activityInformation && (
-        <div className="userInfo">
-          <p className="text-start ps-3 mt-3"><strong>Aktivitetstitel: </strong><br />
+        {activityInformation && activityInformation.cat === "aktiviteter" && (
+            <div className="userInfo">
+              <p className="text-start ps-3 mt-3"><strong>Aktivitetstitel: </strong><br />
+              <span className="text-success ms-5">{activityInformation.title}</span></p>
+              <ul className="list-group text-start mb-3 ms-5 w-75">
+                <li className="list-group-item userClass text-danger">
+                  <span><b>Aktivitetsstatus: </b></span>
+                  {activityInformation.status}
+                </li>
+                <li className="list-group-item userClass">
+                  <span><b>Aktiviteten äger rum i: </b></span>
+                  {moment(activityInformation.adminDate).format("LL")}
+                </li>
+                <li className="list-group-item userClass">
+                  <span><b>Sista dag för anmälan: </b></span>
+                  {moment(activityInformation.deadline).format("LL")}
+                </li>
+                <li className="list-group-item userClass">
+                <span><b>Antal registrerade användare: </b></span>
+                  {activityInformation.total}
+                </li>
+                <li className="list-group-item userClass">
+                <span><b>Pris: </b></span>
+                  {activityInformation.price}
+                </li>
+                <li className="list-group-item userClass">
+                <span><b>Totalt tillåtet antal att registrera: </b></span>
+                  {activityInformation.spots}
+                </li>
+              </ul>
+              <h4 className="text-success">Kommentarer till detta inlägg</h4>
+            </div>
+        )}
+          {activityInformation && activityInformation.cat !== "aktiviteter" && (
+          <div className="userInfo">
+          <p className="text-start ps-3 mt-3"><strong>Inläggets titel: </strong><br />
           <span className="text-success ms-5">{activityInformation.title}</span></p>
           <ul className="list-group text-start mb-3 ms-5 w-75">
-            <li className="list-group-item userClass text-danger">
-              <span><b>Aktivitetsstatus: </b></span>
-              {activityInformation.status}
+            <li className="list-group-item userClass">
+              <span><b>Inläggskategori: </b></span>
+              {activityInformation.cat}
             </li>
             <li className="list-group-item userClass">
-              <span><b>Aktiviteten äger rum i: </b></span>
-              {moment(activityInformation.adminDate).format("LL")}
-            </li>
-            <li className="list-group-item userClass">
-              <span><b>Sista dag för anmälan: </b></span>
-              {moment(activityInformation.deadline).format("LL")}
-            </li>
-            <li className="list-group-item userClass">
-            <span><b>Antal registrerade användare: </b></span>
-              {activityInformation.total}
-            </li>
-            <li className="list-group-item userClass">
-            <span><b>Pris: </b></span>
-              {activityInformation.price}
-            </li>
-            <li className="list-group-item userClass">
-            <span><b>Totalt tillåtet antal att registrera: </b></span>
-              {activityInformation.spots}
+              <span><b>Inläggsdatum: </b></span>
+              {moment(activityInformation.date).format("LL")}
             </li>
           </ul>
           <h4 className="text-success">Kommentarer till detta inlägg</h4>

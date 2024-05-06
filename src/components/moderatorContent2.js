@@ -1,16 +1,9 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import moment from "moment";
 import del from "../img/del.png";
 import { Link } from "react-router-dom";
-
-export const TabContent11 = ({ kretsar }) => {
-  return(
-    <div>
-      <h5>sssssssssssss</h5>
-    </div>
-  )
-}
+import { AuthContext } from "../context/authContext.js";
 
 export const TabContent12 = () => {
   const [comments, setComments] = useState([]);
@@ -234,25 +227,46 @@ export const TabContent13 = () => {
   const [activityInformation, setActivityInformation] = useState(null); 
   const [allActivities, setAllActivities] = useState([]);
   const [getPostRes, setgetPostRes] = useState("");
+  const { currentUser } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const apiUrl = `${process.env.REACT_APP_API_URL}/api/posts?cat=aktiviteter`;
-        const res = await axios.get(apiUrl);
-        const sortedPosts = res.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        // Fetch current user's moderator details
+        const apiUrl = `${process.env.REACT_APP_API_URL}/api/moderators/${currentUser.id}`;
+        const modResponse = await axios.get(apiUrl);
+        const modData = modResponse.data;
 
-      setPosts(sortedPosts);
-      setAllActivities(sortedPosts); 
-      return 
+        // Fetch posts
+        const postUrl = `${process.env.REACT_APP_API_URL}/api/posts`;
+        const postResponse = await axios.get(postUrl);
+        const sortedPosts = postResponse.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+        
+
+      const filteredPosts = sortedPosts.filter(post => 
+        (post.postId === modData[0].Activityid1 ||
+        post.postId === modData[0].Activityid2 || 
+        post.postId === modData[0].Activityid3 ||
+        post.cat === modData[0].Krets1 || 
+        post.cat === modData[0].Krets2)
+      )
+
+      setPosts(filteredPosts);
+      
+      setAllActivities(filteredPosts);
+  
       } catch (err) {
         console.error("Error fetching data:", err);
-        setError("Error fetching activities. Please try again later.");
+        setError("Error fetching data. Please try again later.");
       }
     };
-    fetchData();
-    /* eslint-disable react-hooks/exhaustive-deps */
-  }, [selectedActivity]);
+  
+    if (currentUser) {
+      fetchData();
+    }
+    
+  }, [currentUser]);
 
   const fetchCommentData = async () => {
     try {
@@ -302,22 +316,26 @@ export const TabContent13 = () => {
   return (
     <div className="PostClass PostClass9">
       <h3 className="labelClass" htmlFor="form1">
-        Välj aktivitetens namn
+        Välj inläggets namn
       </h3>
       <select className="inputClass" onChange={handleOptionSelect}>
-        <option>Välj en aktivitet</option>
-        {posts.map((activity, index) => (
-          <option key={index} value={activity.postId}>
-            {activity.title}
-          </option>
-        ))}
+        <option>Välj inlägg</option>
+        {posts.length > 0 ? (
+          posts.map((activity, index) => (
+            <option key={index} value={activity.postId}>
+              #{activity.postId} - {activity.title}
+            </option>
+          ))
+        ) : (
+          <option>Inga inlägg finns tillgängliga</option>
+        )}
       </select>
       <button className="btnClass" onClick={fetchCommentData}>
         Sök
       </button>
       <div>
         {error && <p>Error: {error}</p>}{" "}
-        {activityInformation && (
+        {activityInformation && activityInformation.cat === "aktiviteter" && (
         <div className="userInfo">
           <p className="text-start ps-3 mt-3"><strong>Aktivitetstitel: </strong><br />
           <span className="text-success ms-5">{activityInformation.title}</span></p>
@@ -345,6 +363,23 @@ export const TabContent13 = () => {
             <li className="list-group-item userClass">
             <span><b>Totalt tillåtet antal att registrera: </b></span>
               {activityInformation.spots}
+            </li>
+          </ul>
+          <h4 className="text-success">Kommentarer till detta inlägg</h4>
+        </div>
+        )}
+        {activityInformation && activityInformation.cat !== "aktiviteter" && (
+          <div className="userInfo">
+          <p className="text-start ps-3 mt-3"><strong>Inläggets titel: </strong><br />
+          <span className="text-success ms-5">{activityInformation.title}</span></p>
+          <ul className="list-group text-start mb-3 ms-5 w-75">
+            <li className="list-group-item userClass">
+              <span><b>Inläggskategori: </b></span>
+              {activityInformation.cat}
+            </li>
+            <li className="list-group-item userClass">
+              <span><b>Inläggsdatum: </b></span>
+              {moment(activityInformation.date).format("LL")}
             </li>
           </ul>
           <h4 className="text-success">Kommentarer till detta inlägg</h4>
