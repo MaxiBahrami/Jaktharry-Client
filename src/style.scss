@@ -872,6 +872,16 @@ $gray:rgb(78, 78, 78);
           .CommClass{
             font-size: 18px;
           }
+          .RegBox{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            margin: 5px auto;
+          }
+          .ActDetail{
+            width: 100%;
+            margin: 20px auto;
+          }
         }
   
         .menu{
@@ -928,6 +938,15 @@ $gray:rgb(78, 78, 78);
           .BtnClass{
             padding: 5px 7px;
             font-size: 0.9rem;
+          }
+          .RegBox{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+          }
+          .ActDetail{
+            width: 100%;
+            margin: 20px auto;
           }
         }
   

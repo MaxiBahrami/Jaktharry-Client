@@ -210,8 +210,9 @@ const Single = () => {
         const value = {  
           userId: userId,
           activityToReg: postId}
-
+          console.log("value",value)
         const exist = await userPostExist(value);
+        console.log("exist",exist)
 
          if (!exist) {
           await axios.post(`${process.env.REACT_APP_API_URL}/api/posts/signup`, value, { headers });
@@ -327,8 +328,8 @@ const Single = () => {
 
         {/* Activities */}
         {post.cat === "aktiviteter" && post.status === "open" && (
-          <div className="row">
-            <div className="col-7 border border-1 border-warning py-4 ms-2 text-start gap-2 text-success">
+          <div className="row RegBox">
+            <div className="col-7 ActDetail border border-1 border-warning py-4 ms-2 text-start gap-2 text-success">
               <p className="pris-button">
                   <b> Pris </b>: <span className="text-danger">{post.price}</span> kr
               </p>
@@ -339,7 +340,7 @@ const Single = () => {
                 kvar av {post.spots || "obegränsat"} platser
               </p>
             </div>
-            <div className="textClass col-4 m-auto">
+            <div className="textClass ActDetail col-4 m-auto">
               { post.total < post.spots && !Registered && <div>
               <img src={arrow} alt="" />
               <Button
